@@ -1,31 +1,71 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-project(testproject)
+project(gamutpal)
 
-INCLUDE(CPack)
+enable_testing()
 
-# Find includes in corresponding build directories
+include( InstallRequiredSystemLibraries )
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
-
 set(CMAKE_AUTOUIC ON)
-
 set(CMAKE_AUTORCC ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Find the QtWidgets library
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
+add_executable(gamutpal WIN32 main.cpp mainwindow.cpp resources.qrc)
 
-# Tell CMake to create the helloworld executable
-add_executable(helloworld WIN32 main.cpp mainwindow.cpp resources.qrc)
+target_link_libraries(gamutpal Qt5::Widgets)
+target_link_libraries(gamutpal Qt5::Core)
+target_link_libraries(gamutpal Qt5::Gui)
 
-# Use the Widgets module from Qt 5.
-target_link_libraries(helloworld Qt5::Widgets)
-
-INSTALL(TARGETS helloworld
-		RUNTIME DESTINATION bin
+INSTALL(TARGETS gamutpal
+		BUNDLE DESTINATION .
+		RUNTIME DESTINATION .
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
 		)
+
+IF(MINGW)
+	function(force_find_library file_name)
+		SET(FOUND_LIB "FOUND_LIB-NOTFOUND")
+		find_library(FOUND_LIB NAMES ${file_name} PATHS ${CMAKE_FIND_ROOT_PATH}/bin/ NO_DEFAULT_PATH)
+		if(FOUND_LIB)
+			file(COPY ${FOUND_LIB} DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+		else()
+			message(FATAL_ERROR "${file_name} not found")
+		endif()
+	endfunction()
+	
+	force_find_library("libgcc_s_seh-1.dll")
+	force_find_library("libstdc++-6.dll")
+	force_find_library("libwinpthread-1.dll")
+	force_find_library("libpcre16-0.dll")
+	force_find_library("libpcre-1.dll")
+	force_find_library("libGLESv2.dll")
+	force_find_library("libharfbuzz-0.dll")
+	force_find_library("libglib-2.0-0.dll")
+	force_find_library("zlib1.dll")
+	force_find_library("libintl-8.dll")
+	force_find_library("iconv.dll")
+	force_find_library("libpng16-16.dll")
+	force_find_library("libEGL.dll")
+
+	file(COPY ${CMAKE_FIND_ROOT_PATH}/lib/qt5/plugins/platforms/ DESTINATION ${CMAKE_BINARY_DIR}/bin/platforms/)
+
+	install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION . FILES_MATCHING PATTERN "*.dll" )
+
+	get_target_property(Qt5_Core_Location Qt5::Core LOCATION)
+	get_target_property(Qt5_Gui_Location Qt5::Gui LOCATION)
+	get_target_property(Qt5_Widgets_Location Qt5::Widgets LOCATION)
+
+	INSTALL(FILES ${Qt5_Core_Location} DESTINATION . COMPONENT Libraries)
+	INSTALL(FILES ${Qt5_Gui_Location} DESTINATION . COMPONENT Libraries)
+	INSTALL(FILES ${Qt5_Widgets_Location} DESTINATION . COMPONENT Libraries)
+
+ENDIF(MINGW)
+
+INCLUDE(CPack)

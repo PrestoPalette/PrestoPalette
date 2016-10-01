@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/main">
         <file>YWheel_Course.png</file>
-        <file>palette.png</file>
+        <file>Save_Icon.png</file>
     </qresource>
 </RCC>

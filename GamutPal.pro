@@ -20,7 +20,8 @@ HEADERS  += mainwindow.h
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    YWheel_Course.png
+    YWheel_Course.png \
+    Save_Icon.png
 
 RESOURCES += \
     resources.qrc

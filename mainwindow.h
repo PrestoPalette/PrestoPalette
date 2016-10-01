@@ -21,6 +21,9 @@ private slots:
 	void on_backgroundSlider_sliderMoved(int position);
 
 private:
+	bool eventFilter( QObject* watched, QEvent* event );
+
+private:
 	Ui::MainWindow *ui;
 };
 

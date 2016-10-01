@@ -14,13 +14,13 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="colorWheel">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>711</width>
-      <height>711</height>
+      <x>90</x>
+      <y>50</y>
+      <width>600</width>
+      <height>600</height>
      </rect>
     </property>
     <property name="text">
@@ -28,6 +28,9 @@
     </property>
     <property name="pixmap">
      <pixmap resource="resources.qrc">:/main/YWheel_Course.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
@@ -61,7 +64,7 @@ QGroupBox::title {
       </rect>
      </property>
      <property name="text">
-      <string>Fine</string>
+      <string>Fi&amp;ne</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="radioButton_2">
@@ -252,31 +255,54 @@ QGroupBox::title {
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>790</y>
-      <width>171</width>
-      <height>111</height>
+      <y>780</y>
+      <width>163</width>
+      <height>153</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="resources.qrc">:/main/palette.png</pixmap>
+     <pixmap resource="resources.qrc">:/main/Save_Icon.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="backgroundArea" native="true">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>450</y>
-      <width>271</width>
-      <height>201</height>
+      <x>0</x>
+      <y>-10</y>
+      <width>1091</width>
+      <height>771</height>
      </rect>
     </property>
+    <widget class="QLabel" name="lblColorName">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>131</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>No Color Selected</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+    </widget>
    </widget>
+   <zorder>backgroundArea</zorder>
+   <zorder>colorWheel</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>groupBox_2</zorder>
+   <zorder>groupBox_3</zorder>
+   <zorder>groupBox_4</zorder>
+   <zorder>label_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

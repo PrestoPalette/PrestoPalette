@@ -8,20 +8,25 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = GamutPal
+TARGET = PrestoPalette
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    visualpalette.cpp \
+    circlepalette.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    visualpalette.h \
+    circlepalette.h
 
 FORMS    += mainwindow.ui
 
 DISTFILES += \
     YWheel_Course.png \
-    Save_Icon.png
+    Save_Icon.png \
+    PaintSwatch.png
 
 RESOURCES += \
     resources.qrc

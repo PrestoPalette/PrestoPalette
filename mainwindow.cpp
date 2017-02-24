@@ -5,6 +5,10 @@
 #include <QMessageBox>
 #include <QtDebug>
 
+#include <QPainter>
+
+const qreal circleWidth = 14.0;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -51,5 +55,23 @@ bool MainWindow::eventFilter( QObject* watched, QEvent* event )
 		ui->lblColorName->setText(rgbText + '\n' + hexText);
 	}
 
+	if (watched == ui->colorWheel && event->type() == QEvent::Paint)
+	{
+		QPainter painter(ui->colorWheel);
+
+		/* draw circle */
+		QPen circlePen(Qt::red);
+		circlePen.setWidth(2);
+		painter.setPen(circlePen);
+		painter.drawEllipse(10.0, 10.0, circleWidth, circleWidth);
+
+		/* draw line */
+		QPen linePen(Qt::white);
+		linePen.setWidth(1);
+		painter.setPen(linePen);
+		painter.drawLine(50, 50, 150, 100);
+	}
+
 	return false;
 }
+

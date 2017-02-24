@@ -1,5 +1,5 @@
 INCLUDE(InstallRequiredSystemLibraries)
-SET(CPACK_PACKAGE_NAME "gamutpal")
+SET(CPACK_PACKAGE_NAME "prestopalette")
 SET(CPACK_PACKAGE_CONTACT "write email here")
 set(CPACK_PACKAGE_VENDOR "write me")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "write me")

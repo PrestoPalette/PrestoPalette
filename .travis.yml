@@ -1,0 +1,32 @@
+language: cpp
+
+sudo: false
+
+compiler:
+  - gcc
+  - clang
+
+os:
+  - linux
+  - osx
+
+env:
+  matrix:
+    - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
+    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
+
+script:
+  - mkdir build
+  - cd build
+  - cmake --version
+  - cmake -trace --warn-uninitialized --warn-unused_vars -Wdev -G "Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX=../install $FLAGS
+  - make && ctest && make install && cpack -G "TGZ"
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - cmake-data
+    sources:
+    - kalakris-cmake
+    - george-edison55-precise-backports

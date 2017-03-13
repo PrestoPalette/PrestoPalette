@@ -8,7 +8,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext& context,
 {
    // now output to debugger console
 #ifdef Q_OS_WIN
-    OutputDebugString(msg.toStdWString().c_str());
+    //OutputDebugString(msg.toStdWString().c_str());
 #else
     std::cerr << msg.toStdString() << std::endl;
 #endif

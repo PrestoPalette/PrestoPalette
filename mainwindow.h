@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "gui_mainwindow.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -17,8 +19,13 @@ public:
 	
 private slots:
 	void on_actionExit_triggered();
-
 	void on_backgroundSlider_sliderMoved(int position);
+	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
+	void on_rdoGamutShapeLine_clicked(bool checked = false);
+	void on_rdoGamutShapeSquare_clicked(bool checked = false);
+	void on_btnSaveJPG_clicked();
+	void on_btnClipboard_clicked();
+	void on_colorWheel_selectedColorsChanged();
 
 private:
 	bool eventFilter( QObject* watched, QEvent* event );

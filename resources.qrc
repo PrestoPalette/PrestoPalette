@@ -27,5 +27,6 @@
         <file>graphics/TopLeftCorner.png</file>
         <file>graphics/TopRightCorner.png</file>
         <file>graphics/Wheel_BG.png</file>
+        <file>graphics/PPLogo.png</file>
     </qresource>
 </RCC>

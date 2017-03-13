@@ -15,13 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     visualpalette.cpp \
-    circlepalette.cpp
+    circlepalette.cpp \
+    clickablelabel.cpp
 
 HEADERS  += mainwindow.h \
     visualpalette.h \
-    circlepalette.h
+    circlepalette.h \
+    gui_mainwindow.h \
+    clickablelabel.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 DISTFILES += \
     YWheel_Course.png \

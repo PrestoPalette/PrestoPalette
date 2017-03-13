@@ -14,6 +14,7 @@ class VisualPalette : public QWidget
 public:
 	explicit VisualPalette(QWidget *parent = 0);
 	void setColorAt(int row, int column, const QColor &fillColor);
+	void Formulate(QVector<QColor> seedColors);
 
 signals:
 

@@ -209,8 +209,8 @@ TARGET        = PrestoPalette
 first: all
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h $(OBJECTS)  
-	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
+#$(TARGET): ui_mainwindow.h $(OBJECTS)  
+#	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: PrestoPalette.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/common/unix.conf \
@@ -525,7 +525,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
+	#$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -571,11 +571,11 @@ moc_mainwindow.cpp: mainwindow.h \
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
-compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
-ui_mainwindow.h: mainwindow.ui
-	/usr/lib64/qt5/bin/uic mainwindow.ui -o ui_mainwindow.h
+compiler_uic_make_all: # ui_mainwindow.h
+compiler_uic_clean: 
+	#-$(DEL_FILE) ui_mainwindow.h
+#ui_mainwindow.h: mainwindow.ui
+#	/usr/lib64/qt5/bin/uic mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -590,8 +590,7 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 main.o: main.cpp mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-mainwindow.o: mainwindow.cpp mainwindow.h \
-		ui_mainwindow.h
+mainwindow.o: mainwindow.cpp mainwindow.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 qrc_resources.o: qrc_resources.cpp 

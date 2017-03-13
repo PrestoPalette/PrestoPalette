@@ -16,7 +16,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
-add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp)
+add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp)
 
 target_link_libraries(prestopalette Qt5::Widgets)
 target_link_libraries(prestopalette Qt5::Core)

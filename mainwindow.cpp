@@ -1,11 +1,14 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "gui_mainwindow.h"
 
 #include <QMouseEvent>
 #include <QMessageBox>
 #include <QtDebug>
-
+#include <QFileDialog>
 #include <QPainter>
+#include <QSizeGrip>
+#include <QStandardPaths>
+#include <QClipboard>
 
 const qreal circleWidth = 14.0;
 
@@ -15,7 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	ui->colorWheel->installEventFilter(this);
+	this->installEventFilter(this);
+
+	// select the triangle by default
+	this->ui->rdoGamutShapeTriangle->click();
 }
 
 MainWindow::~MainWindow()
@@ -37,8 +43,47 @@ void MainWindow::on_backgroundSlider_sliderMoved(int position)
 	ui->backgroundArea->setPalette(Pal);
 }
 
-bool MainWindow::eventFilter( QObject* watched, QEvent* event )
+void MainWindow::on_rdoGamutShapeLine_clicked(bool checked)
 {
+	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeLine);
+}
+
+void MainWindow::on_rdoGamutShapeTriangle_clicked(bool checked)
+{
+	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeTriangle);
+}
+
+void MainWindow::on_rdoGamutShapeSquare_clicked(bool checked)
+{
+	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeSquare);
+}
+
+void MainWindow::on_btnSaveJPG_clicked()
+{
+	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+	auto docDir = QDir(docPath);
+	auto fullPath = docDir.filePath("palette.png");
+	auto fileName = QFileDialog::getSaveFileName(this,
+						     tr("Save Palette"),
+						     fullPath,
+						     tr("PNG Files (*.png)"));
+
+	this->ui->visualPalette->grab().save(fileName);
+}
+
+void MainWindow::on_btnClipboard_clicked()
+{
+	QApplication::clipboard()->setPixmap(this->ui->visualPalette->grab());
+}
+
+void MainWindow::on_colorWheel_selectedColorsChanged()
+{
+	this->ui->visualPalette->Formulate(this->ui->colorWheel->selectedColors);
+}
+
+bool MainWindow::eventFilter(QObject* watched, QEvent* event)
+{
+	/*
 	if (watched == ui->colorWheel && event->type() == QEvent::MouseButtonPress)
 	{
 		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
@@ -54,23 +99,7 @@ bool MainWindow::eventFilter( QObject* watched, QEvent* event )
 
 		ui->lblColorName->setText(rgbText + '\n' + hexText);
 	}
-
-	if (watched == ui->colorWheel && event->type() == QEvent::Paint)
-	{
-		QPainter painter(ui->colorWheel);
-
-		/* draw circle */
-		QPen circlePen(Qt::red);
-		circlePen.setWidth(2);
-		painter.setPen(circlePen);
-		painter.drawEllipse(10.0, 10.0, circleWidth, circleWidth);
-
-		/* draw line */
-		QPen linePen(Qt::white);
-		linePen.setWidth(1);
-		painter.setPen(linePen);
-		painter.drawLine(50, 50, 150, 100);
-	}
+	*/
 
 	return false;
 }

@@ -17,6 +17,16 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 	
+	void refreshPalette();
+
+private:
+	qreal stringLight;
+	qreal stringDark;
+	bool enableLighting;
+	qreal ambientColorBrightness;
+	qreal power;
+	int mixString;
+
 private slots:
 	void on_actionExit_triggered();
 	void on_backgroundSlider_sliderMoved(int position);
@@ -26,6 +36,14 @@ private slots:
 	void on_btnSaveJPG_clicked();
 	void on_btnClipboard_clicked();
 	void on_colorWheel_selectedColorsChanged();
+	void on_lightSlider_sliderMoved(int position);
+	void on_darkSlider_sliderMoved(int position);
+	void on_brightnessSlider_sliderMoved(int position);
+	void on_powerSlider_sliderMoved(int position);
+
+	void on_rdoMixString1_clicked(bool checked = false);
+	void on_rdoMixString3_clicked(bool checked = false);
+	void on_rdoMixString5_clicked(bool checked = false);
 
 private:
 	bool eventFilter( QObject* watched, QEvent* event );

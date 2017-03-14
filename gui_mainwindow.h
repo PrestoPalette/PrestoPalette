@@ -21,6 +21,9 @@
 #include "visualpalette.h"
 #include "clickablelabel.h"
 
+//#define APP_WIDTH 1090
+//#define APP_HEIGHT 989
+
 #define APP_WIDTH 1090
 #define APP_HEIGHT 989
 
@@ -48,6 +51,10 @@ public:
     QRadioButton *rdoMixString5;
     QGroupBox *groupBox_4;
     QSlider *backgroundSlider;
+    QSlider *lightSlider;
+    QSlider *darkSlider;
+    QSlider *brightnessSlider;
+    QSlider *powerSlider;
     QFrame *line_5;
     ClickableLabel *btnClipboard;
     QWidget *backgroundArea;
@@ -181,6 +188,27 @@ public:
 	backgroundSlider->setObjectName(QStringLiteral("backgroundSlider"));
 	backgroundSlider->setGeometry(QRect(10, 40, 160, 20));
 	backgroundSlider->setOrientation(Qt::Horizontal);
+
+	lightSlider = new QSlider(groupBox_4);
+	lightSlider->setObjectName(QStringLiteral("lightSlider"));
+	lightSlider->setGeometry(QRect(10, 60, 160, 20));
+	lightSlider->setOrientation(Qt::Horizontal);
+
+	darkSlider = new QSlider(groupBox_4);
+	darkSlider->setObjectName(QStringLiteral("darkSlider"));
+	darkSlider->setGeometry(QRect(10, 80, 160, 20));
+	darkSlider->setOrientation(Qt::Horizontal);
+
+	brightnessSlider = new QSlider(groupBox_4);
+	brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
+	brightnessSlider->setGeometry(QRect(10, 100, 160, 20));
+	brightnessSlider->setOrientation(Qt::Horizontal);
+
+	powerSlider = new QSlider(groupBox_4);
+	powerSlider->setObjectName(QStringLiteral("powerSlider"));
+	powerSlider->setGeometry(QRect(10, 120, 160, 20));
+	powerSlider->setOrientation(Qt::Horizontal);
+
 	line_5 = new QFrame(groupBox_4);
 	line_5->setObjectName(QStringLiteral("line_5"));
 	line_5->setGeometry(QRect(200, 0, 20, 101));

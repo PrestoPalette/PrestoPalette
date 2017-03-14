@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// select the triangle by default
 	this->ui->rdoGamutShapeTriangle->click();
+
+	this->mixString = 5;
+	this->ui->rdoMixString5->click();
 }
 
 MainWindow::~MainWindow()
@@ -43,6 +46,42 @@ void MainWindow::on_backgroundSlider_sliderMoved(int position)
 	ui->backgroundArea->setPalette(Pal);
 }
 
+void MainWindow::on_lightSlider_sliderMoved(int position)
+{
+	qreal v = (((double)position) / 100.0);
+
+	this->stringLight = v;
+
+	refreshPalette();
+}
+
+void MainWindow::on_darkSlider_sliderMoved(int position)
+{
+	qreal v = (((double)position) / 100.0);
+
+	this->stringDark = v;
+
+	refreshPalette();
+}
+
+void MainWindow::on_brightnessSlider_sliderMoved(int position)
+{
+	qreal v = ((100.0 - (double)position) / 100.0);
+
+	this->ambientColorBrightness = v;
+
+	refreshPalette();
+}
+
+void MainWindow::on_powerSlider_sliderMoved(int position)
+{
+	qreal v = ((100.0 - (double)position) / 100.0);
+
+	this->power = v;
+
+	refreshPalette();
+}
+
 void MainWindow::on_rdoGamutShapeLine_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeLine);
@@ -56,6 +95,24 @@ void MainWindow::on_rdoGamutShapeTriangle_clicked(bool checked)
 void MainWindow::on_rdoGamutShapeSquare_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeSquare);
+}
+
+void MainWindow::on_rdoMixString1_clicked(bool checked)
+{
+	this->mixString = 1;
+	refreshPalette();
+}
+
+void MainWindow::on_rdoMixString3_clicked(bool checked)
+{
+	this->mixString = 3;
+	refreshPalette();
+}
+
+void MainWindow::on_rdoMixString5_clicked(bool checked)
+{
+	this->mixString = 5;
+	refreshPalette();
 }
 
 void MainWindow::on_btnSaveJPG_clicked()
@@ -76,9 +133,24 @@ void MainWindow::on_btnClipboard_clicked()
 	QApplication::clipboard()->setPixmap(this->ui->visualPalette->grab());
 }
 
+void MainWindow::refreshPalette()
+{
+	this->ui->visualPalette->Formulate(this->ui->colorWheel->selectedColors,
+					   this->ui->colorWheel->selectedColors, // don't need this
+					   QVector<QColor>(), // don't need this
+					   QColor(128, 128, 128),
+					   this->mixString,
+					   this->stringLight,
+					   this->stringDark,
+					   this->enableLighting,
+					   QColor(232, 128, 23),
+					   this->ambientColorBrightness,
+					   this->power);
+}
+
 void MainWindow::on_colorWheel_selectedColorsChanged()
 {
-	this->ui->visualPalette->Formulate(this->ui->colorWheel->selectedColors);
+	refreshPalette();
 }
 
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)

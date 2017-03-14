@@ -9,7 +9,9 @@
 #include <QtMath>
 #include <QFileDialog>
 
-const int circleRadius = 25;
+const int primaryRadius = 15;
+const int secondaryRadius = 5;
+const int centroidRadius = 5;
 
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
@@ -38,15 +40,44 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	QMetaObject::connectSlotsByName(this);
 }
 
-static void _draw_line_imp(QPainter &painter,const QPoint &p1, const QPoint &p2)
+static void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius)
+{
+	painter.setPen(QPen(Qt::blue, 3));
+	//painter.setBrush(Qt::BrushStyle::SolidPattern);
+	painter.drawEllipse(p, circleRadius, circleRadius);
+
+	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
+	colors->append(color);
+}
+
+static void _draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
 {
 	QPen linePen(Qt::red);
 	linePen.setWidth(1);
 	painter.setPen(linePen);
 	painter.drawLine(p1, p2);
+
+	QPoint midpoint((p1.x() + p2.x()) / 2, (p1.y() + p2.y()) / 2);
+
+	painter.setPen(QPen(Qt::red, 3));
+	painter.drawEllipse(midpoint, circleRadius, circleRadius);
+
+	QColor color = colorWheel->pixmap()->toImage().pixelColor(midpoint.x(), midpoint.y());
+	colors->append(color);
 }
 
-bool CirclePalette::eventFilter( QObject* watched, QEvent* event )
+static void _draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius)
+{
+	QPoint centroid;
+	for (auto p : points)
+	{
+		centroid += *p;
+	}
+	centroid /= points.size();
+	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius);
+}
+
+bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
 	if (watched == drawnElements && event->type() == QEvent::Paint)
 	{
@@ -56,59 +87,34 @@ bool CirclePalette::eventFilter( QObject* watched, QEvent* event )
 
 		if (gamutShape == PrestoPalette::GamutShapeLine)
 		{
-			// draw the circles
-			for (auto p : this->points)
-			{
-				painter.setPen(QPen(Qt::blue, 3));
-				//painter.setBrush(Qt::BrushStyle::SolidPattern);
-				painter.drawEllipse(*p, circleRadius, circleRadius);
-
-				QColor color = colorWheel->pixmap()->toImage().pixelColor(p->x(), p->y());
-				colors.append(color);
-			}
-
-			// draw the line
-			_draw_line_imp(painter, *this->points[0], *this->points[1]);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
 		}
-
 
 		if (gamutShape == PrestoPalette::GamutShapeTriangle)
 		{
-			// draw the circles
-			for (auto p : this->points)
-			{
-				painter.setPen(QPen(Qt::blue, 3));
-				//painter.setBrush(Qt::BrushStyle::SolidPattern);
-				painter.drawEllipse(*p, circleRadius, circleRadius);
-
-				QColor color = colorWheel->pixmap()->toImage().pixelColor(p->x(), p->y());
-				colors.append(color);
-			}
-
-			// draw the lines
-			_draw_line_imp(painter, *this->points[0], *this->points[1]);
-			_draw_line_imp(painter, *this->points[1], *this->points[2]);
-			_draw_line_imp(painter, *this->points[2], *this->points[0]);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[2], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[0], secondaryRadius);
+			_draw_centroid(painter, &colors, colorWheel, this->points, centroidRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeSquare)
 		{
-			// draw the circles
-			for (auto p : this->points)
-			{
-				painter.setPen(QPen(Qt::blue, 3));
-				//painter.setBrush(Qt::BrushStyle::SolidPattern);
-				painter.drawEllipse(*p, circleRadius, circleRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[2], secondaryRadius);
 
-				QColor color = colorWheel->pixmap()->toImage().pixelColor(p->x(), p->y());
-				colors.append(color);
-			}
-
-			// draw the lines
-			_draw_line_imp(painter, *this->points[0], *this->points[1]);
-			_draw_line_imp(painter, *this->points[1], *this->points[3]);
-			_draw_line_imp(painter, *this->points[2], *this->points[3]);
-			_draw_line_imp(painter, *this->points[0], *this->points[2]);
+			_draw_centroid(painter, &colors, colorWheel, this->points, centroidRadius);
 		}
 
 		if (this->selectedColors != colors)
@@ -125,7 +131,7 @@ bool CirclePalette::eventFilter( QObject* watched, QEvent* event )
 
 static bool _is_collision(const QPoint &circle, const QPoint &hitTest)
 {
-	int r2 = circleRadius * circleRadius;
+	int r2 = primaryRadius * primaryRadius;
 	int d2 = (hitTest.x() - circle.x()) * (hitTest.x() - circle.x())
 			+
 	(hitTest.y() - circle.y()) * (hitTest.y() - circle.y());

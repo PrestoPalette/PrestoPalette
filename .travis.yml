@@ -27,7 +27,7 @@ addons:
     packages:
     - cmake
     - cmake-data
-    - qt5-qmake
+    - qtbase5-dev
     sources:
     - kalakris-cmake
     - george-edison55-precise-backports

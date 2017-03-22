@@ -9,6 +9,8 @@
 #include <QtMath>
 #include <QFileDialog>
 
+#include <algorithm>
+
 const int primaryRadius = 15;
 const int secondaryRadius = 5;
 const int centroidRadius = 5;
@@ -17,21 +19,21 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
 	gamutShape = PrestoPalette::GamutShapeNone;
 
-	QRect position = QRect(30, 50, 600, 600);
-
 	backgroundWheel = new QLabel(parent);
-	backgroundWheel->setGeometry(position);
+	backgroundWheel->setGeometry(QRect(44, 37, 549, 549));
 	backgroundWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Wheel_BG.png")));
 	backgroundWheel->setScaledContents(true);
 
+	QRect wheelPostion = QRect(70, 62, 499, 499);
+
 	colorWheel = new QLabel(parent);
-	colorWheel->setGeometry(position);
+	colorWheel->setGeometry(wheelPostion);
 	colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));
 	colorWheel->setScaledContents(true);
 	colorWheel->raise();
 
 	drawnElements = new QWidget(parent);
-	drawnElements->setGeometry(position);
+	drawnElements->setGeometry(wheelPostion);
 	drawnElements->raise();
 	drawnElements->installEventFilter(this);
 
@@ -42,9 +44,16 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 
 static void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius)
 {
-	painter.setPen(QPen(Qt::blue, 3));
+	// TODO put this elsewhere
+	QPixmap pic(QString::fromUtf8(":/main/graphics/PrimaryHandle.png"));
+
+	QPoint p_center(p.x() - circleRadius, p.y() - circleRadius);
+
+	painter.drawPixmap(p_center, pic);
+
+	//painter.setPen(QPen(Qt::blue, 3));
 	//painter.setBrush(Qt::BrushStyle::SolidPattern);
-	painter.drawEllipse(p, circleRadius, circleRadius);
+	//painter.drawEllipse(p, circleRadius, circleRadius);
 
 	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
 	colors->append(color);
@@ -77,6 +86,14 @@ static void _draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *c
 	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius);
 }
 
+struct tup
+{
+	QPoint *point;
+	double angle; // in radians
+};
+
+bool sort_angles (struct tup i, struct tup j) { return (i.angle > j.angle); }
+
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
 	if (watched == drawnElements && event->type() == QEvent::Paint)
@@ -85,36 +102,103 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 
 		QVector<QColor> colors;
 
+		std::vector<QPoint*> sortedPoints;
+
+		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
+
+		std::list<struct tup> intermediaryPoints;
+
+
+
+		for (auto p : this->points)
+		{
+			auto t = QPoint(p->x(), p->y());
+			t = t - center;
+
+			p->setX(t.x());
+			p->setY(t.y());
+
+			struct tup r;
+			if (p->x() == 0)
+			{
+				r.angle = -3.14159265;
+			}
+			else
+			{
+				r.angle = atan(p->y() / p->x());
+			}
+
+			if (p->x() < 0)
+			{
+				r.angle -= M_PI_4;
+			}
+
+			r.angle += M_PI;
+
+			// go back a bit for the sections being not aligned to top
+			// this is 1/2 a section
+			r.angle += 15.0 * M_PI / 180.0;
+
+			// rotate backwards by pi/2 radians
+			//r.angle -= M_PI_2;
+
+			r.point = p;
+			intermediaryPoints.push_back(r);
+
+		};
+
+		//std::sort(intermediaryPoints.begin(), intermediaryPoints.end(), sort_angles);
+		intermediaryPoints.sort(sort_angles);
+
+		// rotate by 1
+		//intermediaryPoints.push_back(*intermediaryPoints.begin());
+		//intermediaryPoints.pop_front();
+
+		int index = 0;
+		for (auto i : intermediaryPoints)
+		{
+			qInfo() << "hi " << index << *i.point << " angle " << i.angle;
+			index++;
+
+			auto t = QPoint(i.point->x(), i.point->y());
+			t = t + center;
+
+			i.point->setX(t.x());
+			i.point->setY(t.y());
+
+			sortedPoints.push_back(i.point);
+		};
+
 		if (gamutShape == PrestoPalette::GamutShapeLine)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *this->points[1], secondaryRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeTriangle)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[2], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[0], secondaryRadius);
-			_draw_centroid(painter, &colors, colorWheel, this->points, centroidRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[1], *sortedPoints[2], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[2], *sortedPoints[0], secondaryRadius);
+			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeSquare)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[2], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[1], *sortedPoints[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[2], *sortedPoints[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[3], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[2], secondaryRadius);
 
-			_draw_centroid(painter, &colors, colorWheel, this->points, centroidRadius);
+			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
 		}
 
 		if (this->selectedColors != colors)

@@ -28,7 +28,6 @@ private:
 	int mixString;
 
 private slots:
-	void on_actionExit_triggered();
 	void on_backgroundSlider_sliderMoved(int position);
 	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
 	void on_rdoGamutShapeLine_clicked(bool checked = false);

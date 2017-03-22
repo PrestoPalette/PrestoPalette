@@ -32,11 +32,6 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::on_actionExit_triggered()
-{
-	::exit(0);
-}
-
 void MainWindow::on_backgroundSlider_sliderMoved(int position)
 {
 	int rgb = ((100.0 - (double)position) / 100.0) * 255.0;

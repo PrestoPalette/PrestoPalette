@@ -71,13 +71,13 @@ void VisualPalette::resetSwatches()
 		}
 	}
 
-	for (int y = 0; y < col_height; y++)
+	/*for (int y = 0; y < col_height; y++)
 	{
 		for (int x = 0; x < row_width; x++)
 		{
-			setColorAt(x, y, Qt::gray);
+			//setColorAt(x, y, Qt::gray);
 		}
-	}
+	}*/
 }
 
 void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> primaryColors, QVector<QColor> secondaryColors,

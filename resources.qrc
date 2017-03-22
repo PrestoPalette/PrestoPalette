@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/main">
         <file>graphics/YWheel_Course.png</file>
-        <file>graphics/Save_Icon.png</file>
         <file>graphics/PaintSwatch.png</file>
         <file>graphics/BottomBorder.png</file>
         <file>graphics/BottomLeftCorner.png</file>
@@ -16,7 +15,6 @@
         <file>graphics/LightnessSliderBG.png</file>
         <file>graphics/OptionBG.png</file>
         <file>graphics/PrimaryHandle.png</file>
-        <file>graphics/PSIcon.png</file>
         <file>graphics/RightBorder.png</file>
         <file>graphics/Sec_Neut_Point.png</file>
         <file>graphics/SelectRing_01.png</file>

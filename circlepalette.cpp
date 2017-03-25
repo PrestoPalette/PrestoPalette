@@ -11,12 +11,11 @@
 
 #include <algorithm>
 
-const int primaryRadius = 15;
-const int secondaryRadius = 5;
-const int centroidRadius = 5;
-
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
+	circlePic = QPixmap(QString::fromUtf8(":/main/graphics/PrimaryHandle.png"));
+	primaryRadius = (double)circlePic.width() / 2.0;
+
 	gamutShape = PrestoPalette::GamutShapeNone;
 
 	backgroundWheel = new QLabel(parent);
@@ -42,14 +41,11 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	QMetaObject::connectSlotsByName(this);
 }
 
-static void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius)
+void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius)
 {
-	// TODO put this elsewhere
-	QPixmap pic(QString::fromUtf8(":/main/graphics/PrimaryHandle.png"));
-
 	QPoint p_center(p.x() - circleRadius, p.y() - circleRadius);
 
-	painter.drawPixmap(p_center, pic);
+	painter.drawPixmap(p_center, circlePic);
 
 	//painter.setPen(QPen(Qt::blue, 3));
 	//painter.setBrush(Qt::BrushStyle::SolidPattern);
@@ -59,7 +55,7 @@ static void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel
 	colors->append(color);
 }
 
-static void _draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
+void CirclePalette::_draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
 {
 	QPen linePen(Qt::red);
 	linePen.setWidth(1);
@@ -75,14 +71,18 @@ static void _draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *c
 	colors->append(color);
 }
 
-static void _draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius)
+void CirclePalette::_draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius)
 {
 	QPoint centroid;
+
 	for (auto p : points)
 	{
 		centroid += *p;
 	}
 	centroid /= points.size();
+
+	// shift over the centroid (because the above is using top-left)
+	centroid = QPoint(centroid.x() - circleRadius, centroid.y() - circleRadius);
 	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius);
 }
 
@@ -213,12 +213,13 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 	return false;
 }
 
-static bool _is_collision(const QPoint &circle, const QPoint &hitTest)
+bool CirclePalette::_is_collision(const QPoint &circle, const QPoint &hitTest)
 {
+	QPoint circleCenter = QPoint(circle.x() + primaryRadius, circle.y() + primaryRadius);
 	int r2 = primaryRadius * primaryRadius;
-	int d2 = (hitTest.x() - circle.x()) * (hitTest.x() - circle.x())
+	int d2 = (hitTest.x() - circleCenter.x()) * (hitTest.x() - circleCenter.x())
 			+
-	(hitTest.y() - circle.y()) * (hitTest.y() - circle.y());
+	(hitTest.y() - circleCenter.y()) * (hitTest.y() - circleCenter.y());
 
 	if (d2 <= r2)
 	{
@@ -245,7 +246,7 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;
 					this->dragPoint = p;
-					this->relativeDistance = *p - dragStartPosition;
+					this->relativeDistance = dragStartPosition - *p;
 					qInfo() << "CLICK: " << event->pos() << " CIRCLE: " << *p;
 					break;
 				}
@@ -338,6 +339,8 @@ void CirclePalette::destroy_gamut()
 		delete p;
 	}
 	this->points.clear();
+
+	mouseReleaseEvent(NULL);
 
 	gamutShape = PrestoPalette::GamutShapeNone;
 }

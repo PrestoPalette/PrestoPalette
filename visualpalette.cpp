@@ -17,6 +17,12 @@ VisualPalette::VisualPalette(QWidget *parent) : QWidget(parent)
 void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
 {
 	QLabel *swatch;
+	auto cell = this->layout->itemAtPosition(row, column);
+	if (cell == NULL)
+	{
+		return;
+	}
+
 	swatch = (QLabel *)this->layout->itemAtPosition(row, column)->widget();
 
 	auto pm = new QPixmap(":/main/graphics/PaintSwatch.png");

@@ -19,8 +19,13 @@ env:
     - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
+before_install:
+  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev
+  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+  
 script:
-  - apt-get install -qq
   - mkdir build
   - cd build
   - cmake --version
@@ -33,7 +38,7 @@ addons:
     - cmake
     - cmake-data
     #- qt5-default
-    - qt5-qmake
+    #- qt5-qmake
     - gcc-6
     sources:
     - ubuntu-toolchain-r-test

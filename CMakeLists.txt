@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.1.0)
 
 project(prestopalette)
 
@@ -21,6 +21,9 @@ add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualp
 target_link_libraries(prestopalette Qt5::Widgets)
 target_link_libraries(prestopalette Qt5::Core)
 target_link_libraries(prestopalette Qt5::Gui)
+
+set_property(TARGET prestopalette PROPERTY CXX_STANDARD 11)
+set_property(TARGET prestopalette PROPERTY CXX_STANDARD_REQUIRED ON)
 
 INSTALL(TARGETS prestopalette
 		BUNDLE DESTINATION .

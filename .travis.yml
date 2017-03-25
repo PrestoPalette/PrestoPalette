@@ -3,7 +3,8 @@ language: cpp
 #dist: trusty
 dist: precise
 
-sudo: required
+sudo: false
+#sudo: required
 
 compiler:
   - gcc
@@ -19,6 +20,7 @@ env:
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 script:
+  - apt-get install -qq
   - mkdir build
   - cd build
   - cmake --version

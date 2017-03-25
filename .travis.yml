@@ -3,8 +3,8 @@ language: cpp
 dist: trusty
 #dist: precise
 
-#sudo: false
-sudo: required
+sudo: false
+#sudo: required
 
 compiler:
   - gcc
@@ -19,11 +19,11 @@ env:
     - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
-before_install:
-  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq qt5-default qt5-qmake
-  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+#before_install:
+#  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+#  - sudo apt-get update -qq
+#  - sudo apt-get install -qq qt5-default qt5-qmake
+#  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
   
 script:
   - mkdir build

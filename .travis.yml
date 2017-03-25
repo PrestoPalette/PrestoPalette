@@ -30,6 +30,9 @@ addons:
     - cmake
     - cmake-data
     - qt5-default
+    - gcc-6
+    sources:
+    - ubuntu-toolchain-r-test
     #sources:
     #- kalakris-cmake
     #- george-edison55-precise-backports

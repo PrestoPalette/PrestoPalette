@@ -60,9 +60,11 @@ public:
     QLabel *borderRight;
     QLabel *borderLeft;
     VisualPalette *visualPalette;
-    QLabel *lblColorName;
     ClickableLabel *btnSaveJPG;
     QLabel *lblCurrentColor;
+    QLabel *currentColorSwatch;
+    QLabel *currentColorSwatchCaption;
+
     QLabel *cornerBottomLeft;
     QLabel *cornerBottomRight;
     QLabel *borderBottom;
@@ -246,13 +248,6 @@ public:
 	borderLeft->setGeometry(QRect(0, APP_FRAMETOP + 52, BORDER_SIZE, APP_HEIGHT - 52 - 52));
 	borderLeft->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/LeftBorder.png")));
 	borderLeft->setScaledContents(true);
-	lblColorName = new QLabel(centralWidget);
-	lblColorName->setObjectName(QStringLiteral("lblColorName"));
-	lblColorName->setGeometry(QRect(20, 680, 131, 61));
-	QFont font1;
-	font1.setFamily(QStringLiteral("MuseJazz"));
-	lblColorName->setFont(font1);
-	lblColorName->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
 	btnSaveJPG = new ClickableLabel(centralWidget);
 	btnSaveJPG->setObjectName(QStringLiteral("btnSaveJPG"));
 	btnSaveJPG->setGeometry(QRect(1171, 682, 41, 52));
@@ -263,6 +258,16 @@ public:
 	lblCurrentColor->setGeometry(QRect(20, 569, 161, 41));
 	lblCurrentColor->setFont(font);
 	lblCurrentColor->setAlignment(Qt::AlignCenter);
+	currentColorSwatch = new QLabel(centralWidget);
+	currentColorSwatch->setObjectName(QStringLiteral("currentColorSwatch"));
+	currentColorSwatch->setGeometry(QRect(20, 600, 161, 141));
+	currentColorSwatch->setFont(font);
+	currentColorSwatch->setAlignment(Qt::AlignCenter);	
+	currentColorSwatchCaption = new QLabel(centralWidget);
+	currentColorSwatchCaption->setObjectName(QStringLiteral("currentColorSwatchCaption"));
+	currentColorSwatchCaption->setGeometry(QRect(20, 700, 161, 41));
+	currentColorSwatchCaption->setFont(font);
+	currentColorSwatchCaption->setAlignment(Qt::AlignCenter);
 	cornerBottomLeft = new QLabel(centralWidget);
 	cornerBottomLeft->setObjectName(QStringLiteral("label_9"));
 	cornerBottomLeft->setGeometry(QRect(0, APP_HEIGHT - 52, 52, 52));
@@ -326,7 +331,6 @@ public:
 	groupBoxMixString->raise();
 	groupBoxBackgroundSlider->raise();
 	btnClipboard->raise();
-	lblColorName->raise();
 	lblCurrentColor->raise();
 	btnSaveJPG->raise();
 	toolbarBackground->lower();
@@ -361,7 +365,6 @@ public:
 	borderRight->setText(QString());
 	borderLeft->setText(QString());
 	//swatchSample->setText(QString());
-	lblColorName->setText(QApplication::translate("MainWindow", "No Color Selected", 0));
 	btnSaveJPG->setText(QString());
 	lblCurrentColor->setText(QApplication::translate("MainWindow", "CURRENT COLOR", 0));
 	cornerBottomLeft->setText(QString());

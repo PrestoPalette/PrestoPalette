@@ -9,6 +9,7 @@
 #include <QSizeGrip>
 #include <QStandardPaths>
 #include <QClipboard>
+#include <QBitmap>
 
 const qreal circleWidth = 14.0;
 
@@ -18,13 +19,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	this->installEventFilter(this);
+	//this->installEventFilter(this);
 
 	// select the triangle by default
 	this->ui->rdoGamutShapeTriangle->click();
 
 	this->mixString = 5;
 	this->ui->rdoMixString5->click();
+	
+	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
 }
 
 MainWindow::~MainWindow()
@@ -148,8 +151,16 @@ void MainWindow::on_colorWheel_selectedColorsChanged()
 	refreshPalette();
 }
 
+void MainWindow::on_colorWheel_hoverColor(const QColor &color)
+{
+	SetCurrentColor(color);
+}
+
+/*
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
+		qInfo() << "et" << event->type();
+*/
 	/*
 	if (watched == ui->colorWheel && event->type() == QEvent::MouseButtonPress)
 	{
@@ -167,7 +178,21 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 		ui->lblColorName->setText(rgbText + '\n' + hexText);
 	}
 	*/
-
+/*
 	return false;
-}
+}*/
 
+void MainWindow::SetCurrentColor(const QColor &color)
+{
+	auto pm = new QPixmap(":/main/graphics/PaintSwatch.png");
+	auto pxr = new QPixmap(pm->size());
+	pxr->fill(color);
+	pxr->setMask(pm->createMaskFromColor(Qt::transparent));
+	this->ui->currentColorSwatch->setPixmap(*pxr);
+	this->ui->currentColorSwatch->setScaledContents(true);
+
+	QString rgbText = QString::number(color.red()) + ", " + QString::number(color.green()) + ", " + QString::number(color.blue());
+	QString hexText = "#" + QString::number(color.red(), 16) + QString::number(color.green(), 16) + QString::number(color.blue(), 16);
+
+	this->ui->currentColorSwatchCaption->setText(QString("RGB:" + rgbText + "\r\nHEX: " + hexText));
+}

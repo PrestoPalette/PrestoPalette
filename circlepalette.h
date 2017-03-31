@@ -30,6 +30,7 @@ public:
 
 signals:
 	void selectedColorsChanged();
+	void hoverColor(const QColor &color);
 
 private slots:
 
@@ -63,7 +64,7 @@ private:
 	void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius);
 	void _draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius);
 	void _draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius);
-	bool _is_collision(const QPoint &circle, const QPoint &hitTest);
+	bool _is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest);
 };
 
 #endif // CIRCLEPALETTE_H

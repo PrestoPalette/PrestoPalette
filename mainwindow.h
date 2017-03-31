@@ -18,7 +18,8 @@ public:
 	~MainWindow();
 	
 	void refreshPalette();
-
+	void SetCurrentColor(const QColor &fillColor);
+	
 private:
 	qreal stringLight;
 	qreal stringDark;
@@ -39,13 +40,14 @@ private slots:
 	void on_darkSlider_sliderMoved(int position);
 	void on_brightnessSlider_sliderMoved(int position);
 	void on_powerSlider_sliderMoved(int position);
+	void on_colorWheel_hoverColor(const QColor &color);
 
 	void on_rdoMixString1_clicked(bool checked = false);
 	void on_rdoMixString3_clicked(bool checked = false);
 	void on_rdoMixString5_clicked(bool checked = false);
 
 private:
-	bool eventFilter( QObject* watched, QEvent* event );
+	//bool eventFilter( QObject* watched, QEvent* event );
 
 private:
 	Ui::MainWindow *ui;

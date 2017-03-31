@@ -36,7 +36,11 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	drawnElements->raise();
 	drawnElements->installEventFilter(this);
 
+	setMouseTracking(true);
+
 	this->installEventFilter(this);
+	//colorWheel->installEventFilter(this);
+	//this->installEventFilter(colorWheel);
 
 	QMetaObject::connectSlotsByName(this);
 }
@@ -96,6 +100,22 @@ bool sort_angles (struct tup i, struct tup j) { return (i.angle > j.angle); }
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
+	if (event->type() == QEvent::MouseMove)
+	{
+		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
+		//might want to check the buttons here
+		const QPoint p = me->pos(); //...or ->globalPos();
+
+		if (_is_collision(colorWheel->pos(), colorWheel->width() / 2, p))
+		{
+			// TODO save off this image at the start -- not in this event
+			QImage img = colorWheel->pixmap()->toImage();
+			QColor color = img.pixelColor(p.x(), p.y());
+
+			emit hoverColor(color);
+		}
+	}
+
 	if (watched == drawnElements && event->type() == QEvent::Paint)
 	{
 		QPainter painter(drawnElements);
@@ -107,8 +127,6 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
 
 		std::list<struct tup> intermediaryPoints;
-
-
 
 		for (auto p : this->points)
 		{
@@ -157,7 +175,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		int index = 0;
 		for (auto i : intermediaryPoints)
 		{
-			qInfo() << "hi " << index << *i.point << " angle " << i.angle;
+			//qInfo() << "hi " << index << *i.point << " angle " << i.angle;
 			index++;
 
 			auto t = QPoint(i.point->x(), i.point->y());
@@ -213,10 +231,10 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 	return false;
 }
 
-bool CirclePalette::_is_collision(const QPoint &circle, const QPoint &hitTest)
+bool CirclePalette::_is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest)
 {
-	QPoint circleCenter = QPoint(circle.x() + primaryRadius, circle.y() + primaryRadius);
-	int r2 = primaryRadius * primaryRadius;
+	QPoint circleCenter = QPoint(circle.x() + circleRadius, circle.y() + circleRadius);
+	int r2 = circleRadius * circleRadius;
 	int d2 = (hitTest.x() - circleCenter.x()) * (hitTest.x() - circleCenter.x())
 			+
 	(hitTest.y() - circleCenter.y()) * (hitTest.y() - circleCenter.y());
@@ -241,7 +259,7 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 			// http://math.stackexchange.com/questions/198764/how-to-know-if-a-point-is-inside-a-circle
 			for (auto p : this->points)
 			{
-				if (_is_collision(*p, event->pos()))
+				if (_is_collision(*p, primaryRadius, event->pos()))
 				{
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;

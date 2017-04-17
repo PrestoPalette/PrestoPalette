@@ -48,6 +48,7 @@ private:
 
 	std::vector<QPoint*> points;
 	std::vector<QLabel*> lines;
+	QPoint *lighting;
 
 	QPoint dragStartPosition;
 	bool isDragging;
@@ -55,6 +56,8 @@ private:
 	QPoint relativeDistance;
 	PrestoPalette::GlobalGamutShape gamutShape;
 	QPixmap circlePic;
+
+	QPixmap lightingPic;
 
 	void create_gamut_line();
         void create_gamut_triangle();

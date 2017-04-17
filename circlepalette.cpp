@@ -13,6 +13,8 @@
 
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
+	lightingPic = QPixmap(QString::fromUtf8(":/main/graphics/LightingIcon.png"));
+
 	circlePic = QPixmap(QString::fromUtf8(":/main/graphics/PrimaryHandle.png"));
 	primaryRadius = (double)circlePic.width() / 2.0;
 
@@ -31,6 +33,10 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	colorWheel->setScaledContents(true);
 	colorWheel->raise();
 
+	int radius = colorWheel->width() / 2;
+	radius = (float)radius * 0.70;
+	lighting = new QPoint(radius * 2.0, 40);
+
 	drawnElements = new QWidget(parent);
 	drawnElements->setGeometry(wheelPostion);
 	drawnElements->raise();
@@ -39,8 +45,6 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	setMouseTracking(true);
 
 	this->installEventFilter(this);
-	//colorWheel->installEventFilter(this);
-	//this->installEventFilter(colorWheel);
 
 	QMetaObject::connectSlotsByName(this);
 }
@@ -125,6 +129,9 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		std::vector<QPoint*> sortedPoints;
 
 		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
+
+		/* draw the lighting icon */
+		painter.drawPixmap(*lighting, lightingPic);
 
 		std::list<struct tup> intermediaryPoints;
 
@@ -241,10 +248,12 @@ bool CirclePalette::_is_collision(const QPoint &circle, int circleRadius, const 
 
 	if (d2 <= r2)
 	{
+		//qInfo() << "pos: " << hitTest << " center: " << circleCenter << " radius: " << circleRadius;
 		return true;
 	}
 	else
 	{
+		//qInfo() << "NO: pos: " << hitTest << " center: " << circleCenter << " radius: " << circleRadius;
 		return false;
 	}
 }
@@ -259,15 +268,25 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 			// http://math.stackexchange.com/questions/198764/how-to-know-if-a-point-is-inside-a-circle
 			for (auto p : this->points)
 			{
-				if (_is_collision(*p, primaryRadius, event->pos()))
+				if (_is_collision(*p, primaryRadius * 3.0, event->pos()))
 				{
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;
 					this->dragPoint = p;
 					this->relativeDistance = dragStartPosition - *p;
-					qInfo() << "CLICK: " << event->pos() << " CIRCLE: " << *p;
-					break;
+					//qInfo() << "CLICK: " << event->pos() << " CIRCLE: " << *p;
+					return;
 				}
+			}
+
+			if (_is_collision(*lighting, primaryRadius * 3.0, event->pos()))
+			{
+				this->dragStartPosition = event->pos();
+				this->isDragging = true;
+				this->dragPoint = lighting;
+				this->relativeDistance = dragStartPosition - *lighting;
+				qInfo() << "CLICK: " << event->pos() << " LIGHTING: " << *lighting;
+				return;
 			}
 		}
 	}
@@ -287,8 +306,8 @@ void CirclePalette::mouseMoveEvent(QMouseEvent *event)
 {
 	if (isDragging)
 	{
-		qInfo() << event->pos();
-		qInfo() << this->relativeDistance;
+		//qInfo() << event->pos();
+		//qInfo() << this->relativeDistance;
 		*this->dragPoint = (event->pos() - this->relativeDistance);
 		this->drawnElements->repaint();
 	}
@@ -297,7 +316,7 @@ void CirclePalette::mouseMoveEvent(QMouseEvent *event)
 void CirclePalette::create_gamut_line()
 {
 	int radius = colorWheel->width() / 2;
-	radius = radius * 0.80; //not using whole radius
+	radius = (float)radius * 0.80; //not using whole radius
 	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
 	auto ang60 = qDegreesToRadians(60.0);
 

@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->ui->rdoMixString5->click();
 	
 	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
+
+	this->ui->backgroundSlider->setSliderPosition(100);
 }
 
 MainWindow::~MainWindow()

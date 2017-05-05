@@ -17,6 +17,8 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include <QFontDatabase>
+#include <QSizePolicy>
 #include "circlepalette.h"
 #include "visualpalette.h"
 #include "clickablelabel.h"
@@ -25,6 +27,7 @@
 #define APP_HEIGHT 800
 #define APP_FRAMETOP 10
 #define BORDER_SIZE 15
+#define TOOLBAR_TEXT_HEIGHT 635
 
 QT_BEGIN_NAMESPACE
 
@@ -33,23 +36,31 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     CirclePalette *colorWheel;
-    QGroupBox *groupBoxWheel;
-    QRadioButton *rdoFineWheel;
-    QRadioButton *rdoCourseWheel;
-    QGroupBox *groupBoxGamutShape;
-    QRadioButton *rdoGamutShapeLine;
-    QRadioButton *rdoGamutShapeTriangle;
-    QRadioButton *rdoGamutShapeSquare;
-    QGroupBox *groupBoxMixString;
-    QRadioButton *rdoMixString1;
-    QRadioButton *rdoMixString3;
-    QRadioButton *rdoMixString4;
-    QRadioButton *rdoMixString5;
-    QGroupBox *groupBoxBackgroundSlider;
+    QLabel *lblResolution;
+    //QGroupBox *groupBoxResolution;
+    ClickableLabel *rdoFineWheel;
+    ClickableLabel *rdoCourseWheel;
+    QLabel *lblGamutShape;
+    //QGroupBox *groupBoxGamutShape;
+    ClickableLabel *rdoGamutShapeLine;
+    ClickableLabel *rdoGamutShapeTriangle;
+    ClickableLabel *rdoGamutShapeSquare;
+    QLabel *lblMixString;
+    //QGroupBox *groupBoxMixString;
+    ClickableLabel *rdoMixString1;
+    ClickableLabel *rdoMixString3;
+    ClickableLabel *rdoMixString5;
+    QLabel *lblBackground;
     QSlider *backgroundSlider;
+    QLabel *lblLightIntensity;
+    QLabel *lblLightPct;
+    QLabel *lblDarkPct;
     QSlider *lightSlider;
     QSlider *darkSlider;
+    QLabel *lblLightColor;
+    QLabel *lblBrightnessPct;
     QSlider *brightnessSlider;
+    QLabel *lblPowerPct;
     QSlider *powerSlider;
     ClickableLabel *btnClipboard;
     QWidget *backgroundArea;
@@ -78,6 +89,10 @@ public:
     QLabel *line6;
     QLabel *line7;
 
+    QString maroonedOnMars;
+    QString arialN;
+    QString arialB;
+
     void positionDividingLine(QLabel *line, const QRect &position)
     {
 	    line->setGeometry(position);
@@ -87,6 +102,35 @@ public:
 
     void setupUi(QMainWindow *MainWindow)
     {
+	maroonedOnMars = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/MaroonedOnMarsBB.ttf")).at(0);
+	arialN = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/ARIALN.TTF")).at(0);
+	arialB = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/ARIALNB.TTF")).at(0);
+
+	QFont fontTitle;
+	fontTitle.setFamily(this->maroonedOnMars);
+	fontTitle.setPointSize(19);
+	fontTitle.setLetterSpacing(QFont::AbsoluteSpacing, 1.0);
+
+	QFont fontSelection;
+	fontSelection.setFamily(this->arialN);
+	fontSelection.setBold(false);
+	fontSelection.setWeight(75);
+
+	QFont fontSubTitle;
+	fontSubTitle.setFamily(this->arialB);
+	fontSubTitle.setBold(false);
+	fontSubTitle.setWeight(75);
+	fontSubTitle.setPointSize(9);
+
+	QFont fontDetail;
+	fontDetail.setFamily(this->maroonedOnMars);
+	fontDetail.setPointSize(15);
+
+	/*QIcon iconCourse;
+	iconCourse.addPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Button_Course_Off.png")), QIcon::Normal, QIcon::Off);
+	iconCourse.addPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Button_Course_On.png")), QIcon::Normal, QIcon::On);
+	*/
+
 	if (MainWindow->objectName().isEmpty())
 	    MainWindow->setObjectName(QStringLiteral("MainWindow"));
 
@@ -105,109 +149,168 @@ public:
 	visualPalette = new VisualPalette(centralWidget);
 	visualPalette->setObjectName(QStringLiteral("visualPalette"));
 	visualPalette->setGeometry(QRect(643, 74, 540, 390));
-	groupBoxWheel = new QGroupBox(centralWidget);
-	groupBoxWheel->setObjectName(QStringLiteral("groupBoxWheel"));
-	groupBoxWheel->setGeometry(QRect(190, 580, 101, 111));
-	QFont font;
-	font.setFamily(QStringLiteral("MuseJazz"));
-	font.setBold(true);
-	font.setWeight(75);
-	groupBoxWheel->setFont(font);
-	groupBoxWheel->setStyleSheet(QLatin1String("QGroupBox { \n"
+	lblResolution = new QLabel(centralWidget);
+	lblResolution->setObjectName(QStringLiteral("lblResolution"));
+	lblResolution->setGeometry(QRect(202, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblResolution->setFont(fontTitle);
+	lblResolution->setAlignment(Qt::AlignLeft);
+	lblResolution->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	/*groupBoxResolution = new QGroupBox(centralWidget);
+	groupBoxResolution->setObjectName(QStringLiteral("groupBoxResolution"));
+	groupBoxResolution->setGeometry(QRect(202, 660, 100, 100));
+	groupBoxResolution->setAlignment(Qt::AlignLeft);
+	groupBoxResolution->setStyleSheet(QLatin1String("QGroupBox { \n"
 "	border: 0px solid gray; \n"
 " } \n"
 "\n"
 "QGroupBox::title {\n"
-"	font-weight: bold;\n"
+"	color: #808073;\n"
 "}"));
-	groupBoxWheel->setAlignment(Qt::AlignCenter);
-	rdoFineWheel = new QRadioButton(groupBoxWheel);
+	groupBoxResolution->setAlignment(Qt::AlignCenter);*/
+	rdoFineWheel = new ClickableLabel(centralWidget);
 	rdoFineWheel->setObjectName(QStringLiteral("rdoFineWheel"));
-	rdoFineWheel->setGeometry(QRect(10, 30, 104, 25));
-	rdoCourseWheel = new QRadioButton(groupBoxWheel);
+	rdoFineWheel->setGeometry(QRect(202, 660, 104, 25));
+	//rdoCourseWheel->setIcon(iconFine);
+	rdoCourseWheel = new ClickableLabel(centralWidget);
 	rdoCourseWheel->setObjectName(QStringLiteral("rdoCourseWheel"));
-	rdoCourseWheel->setGeometry(QRect(10, 50, 104, 25));
-	groupBoxGamutShape = new QGroupBox(centralWidget);
+	rdoCourseWheel->setGeometry(QRect(202, 690, 104, 50));
+	//rdoCourseWheel->setIcon(iconCourse);
+	lblGamutShape = new QLabel(centralWidget);
+	lblGamutShape->setObjectName(QStringLiteral("lblGamutShape"));
+	lblGamutShape->setGeometry(QRect(350, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblGamutShape->setFont(fontTitle);
+	lblGamutShape->setAlignment(Qt::AlignLeft);
+	lblGamutShape->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	/*groupBoxGamutShape = new QGroupBox(centralWidget);
 	groupBoxGamutShape->setObjectName(QStringLiteral("groupBoxGamutShape"));
-	groupBoxGamutShape->setGeometry(QRect(330, 580, 151, 151));
-	groupBoxGamutShape->setFont(font);
+	groupBoxGamutShape->setGeometry(QRect(330, 675, 151, 151));
+	groupBoxGamutShape->setFont(fontTitle);
 	groupBoxGamutShape->setStyleSheet(QLatin1String("QGroupBox { \n"
 "	border: 0px solid gray; \n"
 " } \n"
 "\n"
 "QGroupBox::title {\n"
-"	font-weight: bold;\n"
+"	color: #808073;\n"
 "}"));
-	groupBoxGamutShape->setAlignment(Qt::AlignCenter);
-	rdoGamutShapeLine = new QRadioButton(groupBoxGamutShape);
+	groupBoxGamutShape->setAlignment(Qt::AlignCenter);*/
+	rdoGamutShapeLine = new ClickableLabel(centralWidget);
 	rdoGamutShapeLine->setObjectName(QStringLiteral("rdoGamutShapeLine"));
-	rdoGamutShapeLine->setGeometry(QRect(10, 30, 104, 25));
-	rdoGamutShapeTriangle = new QRadioButton(groupBoxGamutShape);
+	rdoGamutShapeLine->setGeometry(QRect(330, 675, 104, 38));
+	rdoGamutShapeTriangle = new ClickableLabel(centralWidget);
 	rdoGamutShapeTriangle->setObjectName(QStringLiteral("rdoGamutShapeTriangle"));
-	rdoGamutShapeTriangle->setGeometry(QRect(10, 50, 104, 25));
-	rdoGamutShapeSquare = new QRadioButton(groupBoxGamutShape);
+	rdoGamutShapeTriangle->setGeometry(QRect(330, 700, 104, 38));
+	rdoGamutShapeSquare = new ClickableLabel(centralWidget);
 	rdoGamutShapeSquare->setObjectName(QStringLiteral("rdoGamutShapeSquare"));
-	rdoGamutShapeSquare->setGeometry(QRect(10, 70, 104, 25));
-	groupBoxMixString = new QGroupBox(centralWidget);
-	groupBoxMixString->setObjectName(QStringLiteral("groupBoxMixString"));
-	groupBoxMixString->setGeometry(QRect(500, 580, 101, 111));
-	groupBoxMixString->setFont(font);
-	groupBoxMixString->setStyleSheet(QLatin1String("QGroupBox { \n"
+	rdoGamutShapeSquare->setGeometry(QRect(330, 725, 104, 38));
+	lblMixString = new QLabel(centralWidget);
+	lblMixString->setObjectName(QStringLiteral("lblMixString"));
+	lblMixString->setGeometry(QRect(500, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblMixString->setFont(fontTitle);
+	lblMixString->setAlignment(Qt::AlignLeft);
+	lblMixString->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	//groupBoxMixString = new QGroupBox(centralWidget);
+	//groupBoxMixString->setObjectName(QStringLiteral("groupBoxMixString"));
+	//groupBoxMixString->setGeometry(QRect(500, 670, 101, 111));
+	//groupBoxMixString->setGeometry(QRect(0, 0, 500, 500));
+	//groupBoxMixString->setFont(fontTitle);
+	/*groupBoxMixString->setStyleSheet(QLatin1String("QGroupBox { \n"
 "	border: 0px solid gray; \n"
 " } \n"
 "\n"
 "QGroupBox::title {\n"
-"	font-weight: bold;\n"
+"	color: #808073;\n"
 "}"));
-	groupBoxMixString->setAlignment(Qt::AlignCenter);
-	rdoMixString1 = new QRadioButton(groupBoxMixString);
+	groupBoxMixString->setAlignment(Qt::AlignCenter);*/
+	rdoMixString1 = new ClickableLabel(centralWidget);
 	rdoMixString1->setObjectName(QStringLiteral("rdoMixString1"));
-	rdoMixString1->setGeometry(QRect(10, 30, 104, 25));
-	rdoMixString3 = new QRadioButton(groupBoxMixString);
+	rdoMixString1->setGeometry(QRect(510, 670, 32, 32));
+	rdoMixString3 = new ClickableLabel(centralWidget);
 	rdoMixString3->setObjectName(QStringLiteral("rdoMixString3"));
-	rdoMixString3->setGeometry(QRect(50, 30, 104, 25));
-	rdoMixString4 = new QRadioButton(groupBoxMixString);
-	rdoMixString4->setObjectName(QStringLiteral("rdoMixString4"));
-	rdoMixString4->setGeometry(QRect(10, 70, 104, 25));
-	rdoMixString5 = new QRadioButton(groupBoxMixString);
+	rdoMixString3->setGeometry(QRect(550, 670, 32, 32));
+	rdoMixString5 = new ClickableLabel(centralWidget);
 	rdoMixString5->setObjectName(QStringLiteral("rdoMixString5"));
-	rdoMixString5->setGeometry(QRect(50, 70, 104, 25));
-	groupBoxBackgroundSlider = new QGroupBox(centralWidget);
-	groupBoxBackgroundSlider->setObjectName(QStringLiteral("groupBoxBackgroundSlider"));
-	groupBoxBackgroundSlider->setGeometry(QRect(620, 580, 221, 111));
-	groupBoxBackgroundSlider->setFont(font);
-	groupBoxBackgroundSlider->setStyleSheet(QLatin1String("QGroupBox { \n"
-"	border: 0px solid gray; \n"
-" } \n"
-"\n"
-"QGroupBox::title {\n"
-"	font-weight: bold;\n"
-"}"));
-	groupBoxBackgroundSlider->setAlignment(Qt::AlignCenter);
-	backgroundSlider = new QSlider(groupBoxBackgroundSlider);
+	rdoMixString5->setGeometry(QRect(550, 700, 32, 32));
+
+	lblBackground = new QLabel(centralWidget);
+	lblBackground->setObjectName(QStringLiteral("lblBackground"));
+	lblBackground->setGeometry(QRect(960, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblBackground->setFont(fontTitle);
+	lblBackground->setAlignment(Qt::AlignLeft);
+	lblBackground->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	backgroundSlider = new QSlider(centralWidget);
 	backgroundSlider->setObjectName(QStringLiteral("backgroundSlider"));
-	backgroundSlider->setGeometry(QRect(10, 40, 160, 20));
+	backgroundSlider->setGeometry(QRect(960, TOOLBAR_TEXT_HEIGHT + 42, 100, 25));
 	backgroundSlider->setOrientation(Qt::Horizontal);
+	backgroundSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/DarknessSliderBG.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:24px; width: 24px;}");
 
-	lightSlider = new QSlider(groupBoxBackgroundSlider);
+	lblLightIntensity = new QLabel(centralWidget);
+	lblLightIntensity->setObjectName(QStringLiteral("lblLightIntensity"));
+	lblLightIntensity->setGeometry(QRect(650, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblLightIntensity->setFont(fontTitle);
+	lblLightIntensity->setAlignment(Qt::AlignLeft);
+	lblLightIntensity->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	lightSlider = new QSlider(centralWidget);
 	lightSlider->setObjectName(QStringLiteral("lightSlider"));
-	lightSlider->setGeometry(QRect(10, 60, 160, 20));
+	lightSlider->setGeometry(QRect(644, TOOLBAR_TEXT_HEIGHT + 42, 100, 25));
 	lightSlider->setOrientation(Qt::Horizontal);
+	lightSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/DarknessSliderBG.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:24px; width: 24px;}");
 
-	darkSlider = new QSlider(groupBoxBackgroundSlider);
+	darkSlider = new QSlider(centralWidget);
 	darkSlider->setObjectName(QStringLiteral("darkSlider"));
-	darkSlider->setGeometry(QRect(10, 80, 160, 20));
+	darkSlider->setGeometry(QRect(644, 718, 100, 25));
 	darkSlider->setOrientation(Qt::Horizontal);
+	darkSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/DarknessSliderBG.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:24px; width: 24px;}");
 
-	brightnessSlider = new QSlider(groupBoxBackgroundSlider);
+	lblLightColor = new QLabel(centralWidget);
+	lblLightColor->setObjectName(QStringLiteral("lblLightColor"));
+	lblLightColor->setGeometry(QRect(805, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblLightColor->setFont(fontTitle);
+	lblLightColor->setAlignment(Qt::AlignLeft);
+	lblLightColor->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	brightnessSlider = new QSlider(centralWidget);
 	brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
-	brightnessSlider->setGeometry(QRect(10, 100, 160, 20));
+	brightnessSlider->setGeometry(QRect(796, TOOLBAR_TEXT_HEIGHT + 42, 100, 25));
 	brightnessSlider->setOrientation(Qt::Horizontal);
+	brightnessSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/DarknessSliderBG.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle_Brightness.png); height:24px; width: 24px;}");
 
-	powerSlider = new QSlider(groupBoxBackgroundSlider);
+	powerSlider = new QSlider(centralWidget);
 	powerSlider->setObjectName(QStringLiteral("powerSlider"));
-	powerSlider->setGeometry(QRect(10, 120, 160, 20));
+	powerSlider->setGeometry(QRect(796, 717, 100, 25));
 	powerSlider->setOrientation(Qt::Horizontal);
+	powerSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/DarknessSliderBG.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:24px; width: 24px;}");
+
+	lblLightPct = new QLabel(centralWidget);
+	lblLightPct->setObjectName(QStringLiteral("lblLightPct"));
+	lblLightPct->setGeometry(QRect(644, TOOLBAR_TEXT_HEIGHT + 30, 1, 1));
+	lblLightPct->setFont(fontSubTitle);
+	lblLightPct->setAlignment(Qt::AlignLeft);
+	lblLightPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+
+	lblDarkPct = new QLabel(centralWidget);
+	lblDarkPct->setObjectName(QStringLiteral("lblDarkPct"));
+	lblDarkPct->setGeometry(QRect(644, 717 - 15, 1, 1));
+	lblDarkPct->setFont(fontSubTitle);
+	lblDarkPct->setAlignment(Qt::AlignLeft);
+	lblDarkPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+
+	lblBrightnessPct = new QLabel(centralWidget);
+	lblBrightnessPct->setObjectName(QStringLiteral("lblBrightnessPct"));
+	lblBrightnessPct->setGeometry(QRect(796, TOOLBAR_TEXT_HEIGHT + 30, 1, 1));
+	lblBrightnessPct->setFont(fontSubTitle);
+	lblBrightnessPct->setAlignment(Qt::AlignLeft);
+	lblBrightnessPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+
+	lblPowerPct = new QLabel(centralWidget);
+	lblPowerPct->setObjectName(QStringLiteral("lblPowerPct"));
+	lblPowerPct->setGeometry(QRect(796, 717 - 15, 1, 1));
+	lblPowerPct->setFont(fontSubTitle);
+	lblPowerPct->setAlignment(Qt::AlignLeft);
+	lblPowerPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 
 	btnClipboard = new ClickableLabel(centralWidget);
 	btnClipboard->setObjectName(QStringLiteral("btnClipboard"));
@@ -255,19 +358,20 @@ public:
 	btnSaveJPG->setScaledContents(true);
 	lblCurrentColor = new QLabel(centralWidget);
 	lblCurrentColor->setObjectName(QStringLiteral("lblCurrentColor"));
-	lblCurrentColor->setGeometry(QRect(20, 569, 161, 41));
-	lblCurrentColor->setFont(font);
-	lblCurrentColor->setAlignment(Qt::AlignCenter);
+	lblCurrentColor->setGeometry(QRect(36, TOOLBAR_TEXT_HEIGHT, 1, 1));
+	lblCurrentColor->setFont(fontTitle);
+	lblCurrentColor->setAlignment(Qt::AlignLeft);
+	lblCurrentColor->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 	currentColorSwatch = new QLabel(centralWidget);
 	currentColorSwatch->setObjectName(QStringLiteral("currentColorSwatch"));
-	currentColorSwatch->setGeometry(QRect(20, 600, 161, 141));
-	currentColorSwatch->setFont(font);
-	currentColorSwatch->setAlignment(Qt::AlignCenter);	
+	currentColorSwatch->setGeometry(QRect(61, 669, 60, 60));
+	currentColorSwatch->setAlignment(Qt::AlignCenter);
 	currentColorSwatchCaption = new QLabel(centralWidget);
 	currentColorSwatchCaption->setObjectName(QStringLiteral("currentColorSwatchCaption"));
-	currentColorSwatchCaption->setGeometry(QRect(20, 700, 161, 41));
-	currentColorSwatchCaption->setFont(font);
+	currentColorSwatchCaption->setGeometry(QRect(0, 743, 178, 15));
+	currentColorSwatchCaption->setFont(fontDetail);
 	currentColorSwatchCaption->setAlignment(Qt::AlignCenter);
+	currentColorSwatchCaption->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 	cornerBottomLeft = new QLabel(centralWidget);
 	cornerBottomLeft->setObjectName(QStringLiteral("label_9"));
 	cornerBottomLeft->setGeometry(QRect(0, APP_HEIGHT - 52, 52, 52));
@@ -287,6 +391,13 @@ public:
 	toolbarBackground->setGeometry(QRect(15, 619, APP_WIDTH - 15 - 15, 165));
 	toolbarBackground->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/OptionBG.png")));
 	toolbarBackground->setScaledContents(true);
+
+	/*rdoMixString1->setFont(fontDetail);
+	rdoMixString1->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	rdoMixString3->setFont(fontDetail);
+	rdoMixString3->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
+	rdoMixString5->setFont(fontDetail);
+	rdoMixString5->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));*/
 
 	line1 = new QLabel(centralWidget);
 	line1->setObjectName(QStringLiteral("line1"));
@@ -326,16 +437,31 @@ public:
 	cornerTopLeft->lower();
 	cornerTopRight->lower();
 	colorWheel->raise();
-	groupBoxWheel->raise();
-	groupBoxGamutShape->raise();
-	groupBoxMixString->raise();
-	groupBoxBackgroundSlider->raise();
+	//groupBoxResolution->raise();
+	//groupBoxGamutShape->raise();
+	//groupBoxMixString->raise();
 	btnClipboard->raise();
 	lblCurrentColor->raise();
 	btnSaveJPG->raise();
 	toolbarBackground->lower();
 	toolbarBackground->stackUnder(borderLeft);
 	backgroundArea->lower();
+
+	rdoMixString1->raise();
+	rdoMixString3->raise();
+	rdoMixString5->raise();
+
+	rdoGamutShapeLine->raise();
+	rdoGamutShapeTriangle->raise();
+	rdoGamutShapeSquare->raise();
+
+	rdoCourseWheel->raise();
+	rdoFineWheel->raise();
+
+	/*toolbarBackground->hide();
+	backgroundArea->hide();
+	colorWheel->hide();
+	visualPalette->hide();*/
 
 	retranslateUi(MainWindow);
 
@@ -345,31 +471,51 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
 	MainWindow->setWindowTitle(QApplication::translate("PrestoPalette", "PrestoPalette", 0));
-	groupBoxWheel->setTitle(QApplication::translate("MainWindow", "WHEEL", 0));
+	lblResolution->setText(QApplication::translate("MainWindow", "RESOLUTION", 0));
+	lblResolution->adjustSize();
 	rdoFineWheel->setText(QApplication::translate("MainWindow", "Fi&ne", 0));
-	rdoCourseWheel->setText(QApplication::translate("MainWindow", "Course", 0));
-	groupBoxGamutShape->setTitle(QApplication::translate("MainWindow", "GAMUT SHAPE", 0));
+	lblGamutShape->setText(QApplication::translate("MainWindow", "GAMUT SHAPE", 0));
+	lblGamutShape->adjustSize();
 	rdoGamutShapeLine->setText(QApplication::translate("MainWindow", "&2 Point", 0));
 	rdoGamutShapeTriangle->setText(QApplication::translate("MainWindow", "T&riad", 0));
 	rdoGamutShapeSquare->setText(QApplication::translate("MainWindow", "&Quad", 0));
-	groupBoxMixString->setTitle(QApplication::translate("MainWindow", "MIX STRING", 0));
-	rdoMixString1->setText(QApplication::translate("MainWindow", "&1", 0));
-	rdoMixString3->setText(QApplication::translate("MainWindow", "&3", 0));
-	rdoMixString4->setText(QApplication::translate("MainWindow", "&4", 0));
-	rdoMixString5->setText(QApplication::translate("MainWindow", "&5", 0));
-	groupBoxBackgroundSlider->setTitle(QApplication::translate("MainWindow", "BACKGROUND", 0));
+	lblMixString->setText(QApplication::translate("MainWindow", "MIX STRING", 0));
+	lblMixString->adjustSize();
+	//rdoMixString1->setText(QApplication::translate("MainWindow", "&1", 0));
+	//rdoMixString3->setText(QApplication::translate("MainWindow", "&3", 0));
+	//rdoMixString5->setText(QApplication::translate("MainWindow", "&5", 0));
 	btnClipboard->setText(QString());
 	cornerTopRight->setText(QString());
 	cornerTopLeft->setText(QString());
 	borderTop->setText(QString());
 	borderRight->setText(QString());
 	borderLeft->setText(QString());
-	//swatchSample->setText(QString());
 	btnSaveJPG->setText(QString());
 	lblCurrentColor->setText(QApplication::translate("MainWindow", "CURRENT COLOR", 0));
+	lblCurrentColor->adjustSize();
 	cornerBottomLeft->setText(QString());
 	cornerBottomRight->setText(QString());
 	borderBottom->setText(QString());
+
+	rdoMixString1->setText(QString());
+	rdoMixString3->setText(QString());
+	rdoMixString5->setText(QString());
+
+	rdoGamutShapeLine->setText(QString());
+	rdoGamutShapeTriangle->setText(QString());
+	rdoGamutShapeSquare->setText(QString());
+
+	rdoCourseWheel->setText(QString());
+	rdoFineWheel->setText(QString());
+
+	lblBackground->setText(QApplication::translate("MainWindow", "BACKGROUND", 0));
+	lblBackground->adjustSize();
+
+	lblLightColor->setText(QApplication::translate("MainWindow", "LIGHTING", 0));
+	lblLightColor->adjustSize();
+
+	lblLightIntensity->setText(QApplication::translate("MainWindow", "STRING VALUES", 0));
+	lblLightIntensity->adjustSize();
     } // retranslateUi
 
 };

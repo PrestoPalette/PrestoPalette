@@ -29,25 +29,35 @@ private:
 	int mixString;
 
 private slots:
-	void on_backgroundSlider_sliderMoved(int position);
-	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
-	void on_rdoGamutShapeLine_clicked(bool checked = false);
-	void on_rdoGamutShapeSquare_clicked(bool checked = false);
 	void on_btnSaveJPG_clicked();
 	void on_btnClipboard_clicked();
+
+	void on_backgroundSlider_sliderMoved(int position);
+
 	void on_colorWheel_selectedColorsChanged();
 	void on_lightSlider_sliderMoved(int position);
 	void on_darkSlider_sliderMoved(int position);
 	void on_brightnessSlider_sliderMoved(int position);
 	void on_powerSlider_sliderMoved(int position);
+
 	void on_colorWheel_hoverColor(const QColor &color);
+
+	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
+	void on_rdoGamutShapeLine_clicked(bool checked = false);
+	void on_rdoGamutShapeSquare_clicked(bool checked = false);
 
 	void on_rdoMixString1_clicked(bool checked = false);
 	void on_rdoMixString3_clicked(bool checked = false);
 	void on_rdoMixString5_clicked(bool checked = false);
 
+	void on_rdoCourseWheel_clicked(bool checked = false);
+	void on_rdoFineWheel_clicked(bool checked = false);
+
 private:
 	//bool eventFilter( QObject* watched, QEvent* event );
+	void refresh_mixString_buttons(void);
+	void refresh_gamutShape_buttons(void);
+	void refresh_wheel_buttons(void);
 
 private:
 	Ui::MainWindow *ui;

@@ -26,5 +26,33 @@
         <file>graphics/TopRightCorner.png</file>
         <file>graphics/Wheel_BG.png</file>
         <file>graphics/PPLogo.png</file>
+        <file>graphics/button_2point_Off.png</file>
+        <file>graphics/Button_2point_Hover.png</file>
+        <file>graphics/Button_2point_Selected.png</file>
+        <file>graphics/Button_Course_Hover.png</file>
+        <file>graphics/Button_Course_Off.png</file>
+        <file>graphics/Button_Course_Selected.png</file>
+        <file>graphics/Button_Fine_Hover.png</file>
+        <file>graphics/Button_Fine_Off.png</file>
+        <file>graphics/Button_Fine_Selected.png</file>
+        <file>graphics/Button_Triad_Hover.png</file>
+        <file>graphics/Button_Triad_Off.png</file>
+        <file>graphics/Button_Triad_Selected.png</file>
+        <file>fonts/ARIALN.TTF</file>
+        <file>fonts/ARIALNB.TTF</file>
+        <file>fonts/MaroonedOnMarsBB.ttf</file>
+        <file>graphics/Button_1_Off.png</file>
+        <file>graphics/Button_1_Selected.png</file>
+        <file>graphics/Button_3_Off.png</file>
+        <file>graphics/Button_3_Selected.png</file>
+        <file>graphics/Button_5_Off.png</file>
+        <file>graphics/Button_5_Selected.png</file>
+        <file>graphics/Button_Off_Off.png</file>
+        <file>graphics/Button_Off_Selected.png</file>
+        <file>graphics/Button_On_Off.png</file>
+        <file>graphics/Button_On_Selected.png</file>
+        <file>graphics/Button_Quad_Off.png</file>
+        <file>graphics/Button_Quad_Selected.png</file>
+        <file>graphics/YWheel_Fine.png</file>
     </qresource>
 </RCC>

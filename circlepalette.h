@@ -13,6 +13,12 @@ enum GlobalGamutShape
 	GamutShapeTriangle,
 	GamutShapeSquare
 };
+
+enum GlobalWheelShape
+{
+	WheelShapeCourse,
+	WheelShapeFine,
+};
 }
 
 class CirclePalette : public QWidget
@@ -25,8 +31,11 @@ public:
 	QLabel *colorWheel;
 	QLabel *backgroundWheel;
 	QVector<QColor> selectedColors;
+	PrestoPalette::GlobalGamutShape gamutShape;
+	PrestoPalette::GlobalWheelShape wheelShape;
 
 	void ChangeGamutShape(PrestoPalette::GlobalGamutShape shape);
+	void ChangeWheelShape(PrestoPalette::GlobalWheelShape shape);
 
 signals:
 	void selectedColorsChanged();
@@ -54,7 +63,6 @@ private:
 	bool isDragging;
 	QPoint *dragPoint;
 	QPoint relativeDistance;
-	PrestoPalette::GlobalGamutShape gamutShape;
 	QPixmap circlePic;
 
 	QPixmap lightingPic;

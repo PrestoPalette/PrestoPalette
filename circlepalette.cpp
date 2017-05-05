@@ -19,6 +19,7 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	primaryRadius = (double)circlePic.width() / 2.0;
 
 	gamutShape = PrestoPalette::GamutShapeNone;
+	wheelShape = PrestoPalette::WheelShapeCourse;
 
 	backgroundWheel = new QLabel(parent);
 	backgroundWheel->setGeometry(QRect(44, 37, 549, 549));
@@ -409,3 +410,20 @@ void CirclePalette::ChangeGamutShape(PrestoPalette::GlobalGamutShape shape)
 	this->drawnElements->repaint();
 }
 
+void CirclePalette::ChangeWheelShape(PrestoPalette::GlobalWheelShape shape)
+{
+	wheelShape = shape;
+
+	switch(wheelShape)
+	{
+	case PrestoPalette::GlobalWheelShape::WheelShapeCourse:
+		colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));
+		break;
+	case PrestoPalette::GlobalWheelShape::WheelShapeFine:
+		colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Fine.png")));
+		break;
+	default:
+		// not sure what to do here
+		break;
+	}
+}

@@ -3,8 +3,8 @@ language: cpp
 dist: trusty
 #dist: precise
 
-sudo: false
-#sudo: required
+#sudo: false
+sudo: required
 
 compiler:
   - gcc

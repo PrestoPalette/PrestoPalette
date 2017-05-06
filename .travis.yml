@@ -33,6 +33,7 @@ before_install:
  - sudo apt-get install qt5-default qttools5-dev-tools
   
 script:
+  - qmake --version
   - mkdir build
   - cd build
   - cmake --version

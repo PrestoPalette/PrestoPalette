@@ -1,8 +1,8 @@
 language: cpp
 
-#dist: trusty
+dist: trusty
 #dist: precise
-dist: xenial
+#dist: xenial
 
 #sudo: false
 sudo: required

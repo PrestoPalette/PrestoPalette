@@ -2,13 +2,14 @@ language: cpp
 
 #dist: trusty
 #dist: precise
+dist: xenial
 
 #sudo: false
 sudo: required
 
 compiler:
   - gcc
-  - clang
+#  - clang
 
 os:
   - linux

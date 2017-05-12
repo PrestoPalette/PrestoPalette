@@ -18,12 +18,14 @@ public:
 	~MainWindow();
 	
 	void refreshPalette();
+	void refresh_lighting_buttons();
 	void SetCurrentColor(const QColor &fillColor);
 	
 private:
 	qreal stringLight;
 	qreal stringDark;
 	bool enableLighting;
+	QColor ambientColor;
 	qreal ambientColorBrightness;
 	qreal power;
 	int mixString;
@@ -34,13 +36,14 @@ private slots:
 
 	void on_backgroundSlider_sliderMoved(int position);
 
-	void on_colorWheel_selectedColorsChanged();
 	void on_lightSlider_sliderMoved(int position);
 	void on_darkSlider_sliderMoved(int position);
 	void on_brightnessSlider_sliderMoved(int position);
 	void on_powerSlider_sliderMoved(int position);
 
+	void on_colorWheel_selectedColorsChanged();
 	void on_colorWheel_hoverColor(const QColor &color);
+	void on_colorWheel_lightingColorChanged(const QColor &color);
 
 	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
 	void on_rdoGamutShapeLine_clicked(bool checked = false);
@@ -52,6 +55,9 @@ private slots:
 
 	void on_rdoCourseWheel_clicked(bool checked = false);
 	void on_rdoFineWheel_clicked(bool checked = false);
+
+	void on_btnLightingOn_clicked(bool checked = false);
+	void on_btnLightingOff_clicked(bool checked = false);
 
 private:
 	//bool eventFilter( QObject* watched, QEvent* event );

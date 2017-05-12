@@ -56,10 +56,6 @@ void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<QColor> *colors
 
 	painter.drawPixmap(p_center, circlePic);
 
-	//painter.setPen(QPen(Qt::blue, 3));
-	//painter.setBrush(Qt::BrushStyle::SolidPattern);
-	//painter.drawEllipse(p, circleRadius, circleRadius);
-
 	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
 	colors->append(color);
 }
@@ -101,7 +97,7 @@ struct tup
 	double angle; // in radians
 };
 
-bool sort_angles (struct tup i, struct tup j) { return (i.angle > j.angle); }
+bool sort_angles (struct tup i, struct tup j) { return (i.angle <= j.angle); }
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
@@ -132,7 +128,20 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
 
 		/* draw the lighting icon */
-		painter.drawPixmap(*lighting, lightingPic);
+		if(enableLighting)
+		{
+			painter.drawPixmap(*lighting, lightingPic);
+
+			QColor lightingColor = colorWheel->pixmap()->toImage().pixelColor(lighting->x(), lighting->y());
+
+			if (this->lightingColor != lightingColor)
+			{
+				this->lightingColor = lightingColor;
+
+				// notify that colors changed
+				emit lightingColorChanged(lightingColor);
+			}
+		}
 
 		std::list<struct tup> intermediaryPoints;
 
@@ -149,14 +158,13 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 			{
 				r.angle = -3.14159265;
 			}
+			else if (p->x() < 0)
+			{
+				r.angle -= M_PI_4;
+			}
 			else
 			{
 				r.angle = atan(p->y() / p->x());
-			}
-
-			if (p->x() < 0)
-			{
-				r.angle -= M_PI_4;
 			}
 
 			r.angle += M_PI;
@@ -280,14 +288,17 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 				}
 			}
 
-			if (_is_collision(*lighting, primaryRadius * 3.0, event->pos()))
+			if (enableLighting)
 			{
-				this->dragStartPosition = event->pos();
-				this->isDragging = true;
-				this->dragPoint = lighting;
-				this->relativeDistance = dragStartPosition - *lighting;
-				qInfo() << "CLICK: " << event->pos() << " LIGHTING: " << *lighting;
-				return;
+				if (_is_collision(*lighting, primaryRadius * 3.0, event->pos()))
+				{
+					this->dragStartPosition = event->pos();
+					this->isDragging = true;
+					this->dragPoint = lighting;
+					this->relativeDistance = dragStartPosition - *lighting;
+					//qInfo() << "CLICK: " << event->pos() << " LIGHTING: " << *lighting;
+					return;
+				}
 			}
 		}
 	}

@@ -86,10 +86,30 @@ void VisualPalette::resetSwatches()
 	}*/
 }
 
+void VisualPalette::_setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness)
+{
+	QColor newColor;
+
+	// alpha blending equation
+	// out = alpha * new + (1 - alpha) * old
+	if (enableLighting)
+	{
+		newColor = QColor(ambientColorAlpha * ambientColor.red() + (1.0f - ambientColorAlpha) * combinedColor.red(), ambientColorAlpha * ambientColor.green() + (1.0f - ambientColorAlpha) * combinedColor.green(), ambientColorAlpha * ambientColor.blue() + (1.0f - ambientColorAlpha) * combinedColor.blue());
+	}
+	else
+	{
+		newColor = combinedColor;
+	}
+
+	newColor = QColor(newColor.red() * componentMultiplier, newColor.green() * componentMultiplier, newColor.blue() * componentMultiplier);
+
+	setColorAt(column, row, newColor);
+}
+
 void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> primaryColors, QVector<QColor> secondaryColors,
 			      QColor neutral, int mixString, qreal stringLight, qreal stringDark,
 			      bool enableLighting, QColor ambientColor, qreal ambientColorBrightness,
-			      qreal power)
+			      qreal ambientColorAlpha)
 {
 	/*
 	 * Sort them clockwise order from hottest with is yellow.
@@ -123,35 +143,46 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 		resetSwatches();
 	}
 
+	float lastLineFactor =  1.0f;
+
 	// set the midline first
 	for (int i = 0; i < totalColors; i++)
 	{
-		setColorAt(i, midLine, combinedColors[i]);
+		_setColor(i, midLine, combinedColors[i], lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
 	}
 
+	// first and last lines
 	if (mixString > 1)
 	{
-		for (int i = 0; i < totalColors; i++)
+		if (mixString == 5)
 		{
-			setColorAt(i, 0, QColor(combinedColors[i].red() * stringLight, combinedColors[i].green() * stringLight, combinedColors[i].green() * stringLight));
+			lastLineFactor = 0.7f;
 		}
 
 		for (int i = 0; i < totalColors; i++)
 		{
-			setColorAt(i, mixString-1, QColor(combinedColors[i].red() * stringDark, combinedColors[i].green() * stringDark, combinedColors[i].green() * stringDark));
+			_setColor(i, 0, combinedColors[i], stringLight * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
+		}
+
+		for (int i = 0; i < totalColors; i++)
+		{
+			_setColor(i, mixString - 1, combinedColors[i], stringDark * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
 		}
 	}
 
+	// 2nd and 4th lines
 	if (mixString == 5)
 	{
+		lastLineFactor = 0.8f;
+
 		for (int i = 0; i < totalColors; i++)
 		{
-			setColorAt(i, 1, QColor(combinedColors[i].red() * stringLight, combinedColors[i].green() * stringLight, combinedColors[i].green() * stringLight));
+			_setColor(i, 1, combinedColors[i], stringLight * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
 		}
 
 		for (int i = 0; i < totalColors; i++)
 		{
-			setColorAt(i, 3, QColor(combinedColors[i].red() * stringDark, combinedColors[i].green() * stringDark, combinedColors[i].green() * stringDark));
+			_setColor(i, 3, combinedColors[i], stringDark * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
 		}
 	}
 }

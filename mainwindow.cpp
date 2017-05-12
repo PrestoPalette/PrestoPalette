@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->mixString = 5;
 	this->ui->rdoMixString5->clicked();
+
+	this->ui->btnLightingOn->clicked();
 	
 	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
 
@@ -48,6 +50,40 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+
+void MainWindow::refresh_lighting_buttons()
+{
+	if (enableLighting)
+	{
+		this->ui->btnLightingOn->setPixmap(QPixmap(":/main/graphics/Button_On_Selected.png"));
+		this->ui->btnLightingOff->setPixmap(QPixmap(":/main/graphics/Button_Off_Off.png"));
+	}
+	else
+	{
+		this->ui->btnLightingOn->setPixmap(QPixmap(":/main/graphics/Button_On_Off.png"));
+		this->ui->btnLightingOff->setPixmap(QPixmap(":/main/graphics/Button_Off_Selected.png"));
+	}
+
+	this->ui->colorWheel->repaint();
+
+	refreshPalette();
+}
+
+void MainWindow::on_btnLightingOn_clicked(bool checked)
+{
+	this->enableLighting = true;
+	this->ui->colorWheel->enableLighting = true;
+
+	refresh_lighting_buttons();
+}
+
+void MainWindow::on_btnLightingOff_clicked(bool checked)
+{
+	this->enableLighting = false;
+	this->ui->colorWheel->enableLighting = false;
+
+	refresh_lighting_buttons();
 }
 
 void MainWindow::on_backgroundSlider_sliderMoved(int position)
@@ -259,14 +295,14 @@ void MainWindow::on_btnClipboard_clicked()
 void MainWindow::refreshPalette()
 {
 	this->ui->visualPalette->Formulate(this->ui->colorWheel->selectedColors,
-					   this->ui->colorWheel->selectedColors, // don't need this
 					   QVector<QColor>(), // don't need this
-					   QColor(128, 128, 128),
+					   QVector<QColor>(), // don't need this
+					   QColor(), // don't need this
 					   this->mixString,
 					   this->stringLight,
 					   this->stringDark,
 					   this->enableLighting,
-					   QColor(232, 128, 23),
+					   this->ambientColor,
 					   this->ambientColorBrightness,
 					   this->power);
 }
@@ -281,31 +317,14 @@ void MainWindow::on_colorWheel_hoverColor(const QColor &color)
 	SetCurrentColor(color);
 }
 
-/*
-bool MainWindow::eventFilter(QObject* watched, QEvent* event)
+void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
 {
-		qInfo() << "et" << event->type();
-*/
-	/*
-	if (watched == ui->colorWheel && event->type() == QEvent::MouseButtonPress)
-	{
-		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
-		//might want to check the buttons here
-		const QPoint p = me->pos(); //...or ->globalPos();
+	// TODO -- change the slider color
 
-		QImage img = ui->colorWheel->pixmap()->toImage();
-		//QRgb rgb = img.pixel(p.x(), p.y());
-		QColor color = img.pixelColor(p.x(), p.y());
+	this->ambientColor = color;
 
-		QString rgbText = QString::number(color.red()) + ", " + QString::number(color.green()) + ", " + QString::number(color.blue());
-		QString hexText = "#" + QString::number(color.red(), 16) + QString::number(color.green(), 16) + QString::number(color.blue(), 16);
-
-		ui->lblColorName->setText(rgbText + '\n' + hexText);
-	}
-	*/
-/*
-	return false;
-}*/
+	refreshPalette();
+}
 
 void MainWindow::SetCurrentColor(const QColor &color)
 {

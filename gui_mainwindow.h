@@ -81,6 +81,9 @@ public:
     QLabel *borderBottom;
     QLabel *toolbarBackground;
 
+    ClickableLabel *btnLightingOn;
+    ClickableLabel *btnLightingOff;
+
     QLabel *line1;
     QLabel *line2;
     QLabel *line3;
@@ -398,6 +401,18 @@ public:
 	rdoMixString3->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 	rdoMixString5->setFont(fontDetail);
 	rdoMixString5->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));*/
+
+	btnLightingOn = new ClickableLabel(centralWidget);
+	btnLightingOn->setObjectName(QStringLiteral("btnLightingOn"));
+	btnLightingOn->setGeometry(QRect(805, 737, 50, 25));
+	btnLightingOn->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Button_On_Off.png")));
+	btnLightingOn->setScaledContents(true);
+
+	btnLightingOff = new ClickableLabel(centralWidget);
+	btnLightingOff->setObjectName(QStringLiteral("btnLightingOff"));
+	btnLightingOff->setGeometry(QRect(835, 737, 50, 25));
+	btnLightingOff->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Button_Off_Off.png")));
+	btnLightingOff->setScaledContents(true);
 
 	line1 = new QLabel(centralWidget);
 	line1->setObjectName(QStringLiteral("line1"));

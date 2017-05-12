@@ -26,6 +26,7 @@ private:
 	int lastMixString;
 
 	void resetSwatches();
+	void _setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness);
 
 signals:
 

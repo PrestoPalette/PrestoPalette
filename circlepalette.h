@@ -31,8 +31,11 @@ public:
 	QLabel *colorWheel;
 	QLabel *backgroundWheel;
 	QVector<QColor> selectedColors;
+	QColor lightingColor;
 	PrestoPalette::GlobalGamutShape gamutShape;
 	PrestoPalette::GlobalWheelShape wheelShape;
+
+	bool enableLighting;
 
 	void ChangeGamutShape(PrestoPalette::GlobalGamutShape shape);
 	void ChangeWheelShape(PrestoPalette::GlobalWheelShape shape);
@@ -40,6 +43,7 @@ public:
 signals:
 	void selectedColorsChanged();
 	void hoverColor(const QColor &color);
+	void lightingColorChanged(const QColor &color);
 
 private slots:
 

@@ -211,32 +211,32 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 
 		if (gamutShape == PrestoPalette::GamutShapeLine)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeTriangle)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[1], *sortedPoints[2], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[2], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[2], *sortedPoints[0], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[2], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[0], secondaryRadius);
 			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeSquare)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[0], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[1], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[1], *sortedPoints[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[2], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[2], *sortedPoints[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *sortedPoints[3], primaryRadius);
-			_draw_line_imp(painter, &colors, colorWheel, *sortedPoints[0], *sortedPoints[2], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[3], secondaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[2], secondaryRadius);
 
 			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
 		}

@@ -187,16 +187,8 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	}
 	else
 	{
-		midLine = 1;
+		midLine = 0;
 	}
-
-	/*if ((this->lastMixString != mixString) || (this->lastTotalColors != totalColors))
-	{
-		this->lastMixString = mixString;
-		this->lastTotalColors = totalColors;
-
-		resetSwatches();
-	}*/
 
 	this->lastMixString = mixString;
 	this->lastTotalColors = totalColors;

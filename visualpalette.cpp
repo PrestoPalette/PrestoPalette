@@ -36,12 +36,6 @@ void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
 
 void VisualPalette::resetSwatches()
 {
-	// remove existing widgets
-	/*for(auto s : swatches)
-	{
-		layout->removeWidget(s);
-	}*/
-
 	QLayoutItem *child;
 	while ((child = layout->takeAt(0)) != 0)
 	{
@@ -190,9 +184,13 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 		midLine = 0;
 	}
 
-	this->lastMixString = mixString;
-	this->lastTotalColors = totalColors;
-	resetSwatches();
+	// only call reset if necessary, otherwise, there will be flicker
+	if ((this->lastMixString != mixString) || (this->lastTotalColors != totalColors))
+	{
+		this->lastMixString = mixString;
+		this->lastTotalColors = totalColors;
+		resetSwatches();
+	}
 
 	// set the midline first
 	for (int i = 0; i < totalColors; i++)

@@ -38,8 +38,6 @@
         <file>graphics/Button_Triad_Hover.png</file>
         <file>graphics/Button_Triad_Off.png</file>
         <file>graphics/Button_Triad_Selected.png</file>
-        <file>fonts/ARIALN.TTF</file>
-        <file>fonts/ARIALNB.TTF</file>
         <file>fonts/MaroonedOnMarsBB.ttf</file>
         <file>graphics/Button_1_Off.png</file>
         <file>graphics/Button_1_Selected.png</file>
@@ -54,5 +52,11 @@
         <file>graphics/Button_Quad_Off.png</file>
         <file>graphics/Button_Quad_Selected.png</file>
         <file>graphics/YWheel_Fine.png</file>
+        <file>fonts/calibrib.ttf</file>
+        <file>graphics/ClipboardIcon_Down.png</file>
+        <file>graphics/JPGIcon_Down.png</file>
+        <file>graphics/BackgroundSliderBG.png</file>
+        <file>graphics/AlphaSliderBG.png</file>
+        <file>graphics/AlphaSliderOverlay.png</file>
     </qresource>
 </RCC>

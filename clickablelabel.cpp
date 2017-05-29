@@ -3,6 +3,7 @@
 ClickableLabel::ClickableLabel(QWidget* parent)
     : QLabel(parent)
 {
+	setMouseTracking(true);
 }
 
 ClickableLabel::~ClickableLabel()
@@ -11,5 +12,11 @@ ClickableLabel::~ClickableLabel()
 
 void ClickableLabel::mouseReleaseEvent(QMouseEvent* event)
 {
-    emit clicked();
+	emit clicked();
 }
+
+void ClickableLabel::mousePressEvent(QMouseEvent* event)
+{
+	emit pressed();
+}
+

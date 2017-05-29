@@ -37,9 +37,17 @@ void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
 void VisualPalette::resetSwatches()
 {
 	// remove existing widgets
-	for(auto s : swatches)
+	/*for(auto s : swatches)
 	{
 		layout->removeWidget(s);
+	}*/
+
+	QLayoutItem *child;
+	while ((child = layout->takeAt(0)) != 0)
+	{
+		QWidget* widget = child->widget();
+		layout->removeWidget(widget);
+		delete widget;
 	}
 
 	swatches.clear();
@@ -56,11 +64,11 @@ void VisualPalette::resetSwatches()
 			auto swatch = new QLabel(this);
 
 			/* with spaces between cells */
-			swatch->setStyleSheet("\
+			/*swatch->setStyleSheet("\
 			QLabel {\
 			border: 0; \
 			margin: 0px 0px 0px 0px; \
-			}");
+			}");*/
 
 			/* with no space at all between cells */
 			/*
@@ -76,32 +84,73 @@ void VisualPalette::resetSwatches()
 			layout->setSpacing(0);
 		}
 	}
-
-	/*for (int y = 0; y < col_height; y++)
-	{
-		for (int x = 0; x < row_width; x++)
-		{
-			//setColorAt(x, y, Qt::gray);
-		}
-	}*/
 }
 
-void VisualPalette::_setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness)
+template<class T>
+const T& clamp(const T& x, const T& lower, const T& upper) {
+    return std::max(lower, std::min(x, upper));
+}
+
+void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qreal light_darkMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &in_ambientColor, qreal ambientColorBrightness, bool interpolate, bool go_dark)
 {
 	QColor newColor;
+	QColor ambientColor = in_ambientColor;
+	qreal r, g, b, light_r, light_g, light_b, litOriginal_r, litOriginal_g, litOriginal_b;
 
-	// alpha blending equation
-	// out = alpha * new + (1 - alpha) * old
+	r = (float)unmodifiedColor.red();
+	g = (float)unmodifiedColor.green();
+	b = (float)unmodifiedColor.blue();
+
+	/* first light it */
 	if (enableLighting)
 	{
-		newColor = QColor(ambientColorAlpha * ambientColor.red() + (1.0f - ambientColorAlpha) * combinedColor.red(), ambientColorAlpha * ambientColor.green() + (1.0f - ambientColorAlpha) * combinedColor.green(), ambientColorAlpha * ambientColor.blue() + (1.0f - ambientColorAlpha) * combinedColor.blue());
+		light_r = ((255.0 - (float)ambientColor.red()) * ambientColorBrightness) + (float)ambientColor.red();
+		light_g = ((255.0 - (float)ambientColor.green()) * ambientColorBrightness) + (float)ambientColor.green();
+		light_b = ((255.0 - (float)ambientColor.blue()) * ambientColorBrightness) + (float)ambientColor.blue();
+
+		// alpha blending equation
+		// out = alpha * new + (1 - alpha) * old
+		r = ambientColorAlpha * light_r + (1.0f - ambientColorAlpha) * r;
+		g = ambientColorAlpha * light_g + (1.0f - ambientColorAlpha) * g;
+		b = ambientColorAlpha * light_b + (1.0f - ambientColorAlpha) * b;
+	}
+
+	litOriginal_r = r;
+	litOriginal_g = g;
+	litOriginal_b = b;
+
+	if (go_dark ==false)
+	{
+		r = ((255.0 - r) * light_darkMultiplier) + r;
+		g = ((255.0 - g) * light_darkMultiplier) + g;
+		b = ((255.0 - b) * light_darkMultiplier) + b;
 	}
 	else
 	{
-		newColor = combinedColor;
+		r = r * light_darkMultiplier;
+		g = g * light_darkMultiplier;
+		b = b * light_darkMultiplier;
 	}
 
-	newColor = QColor(newColor.red() * componentMultiplier, newColor.green() * componentMultiplier, newColor.blue() * componentMultiplier);
+	if (interpolate)
+	{
+		//(1 - t) * v0 + t * v1;
+		// which direction?
+		if(litOriginal_r < r)
+		{
+			r = (1.0 - 0.5f) * litOriginal_r + 0.5f * r;
+			g = (1.0 - 0.5f) * litOriginal_g + 0.5f * g;
+			b = (1.0 - 0.5f) * litOriginal_b + 0.5f * b;
+		}
+		else
+		{
+			r = (1.0 - 0.5f) * r + 0.5f * litOriginal_r;
+			g = (1.0 - 0.5f) * g + 0.5f * litOriginal_g;
+			b = (1.0 - 0.5f) * b + 0.5f * litOriginal_b;
+		}
+	}
+
+	newColor = QColor(clamp(r, 0.0, 255.0), clamp(g, 0.0, 255.0), clamp(b, 0.0, 255.0));
 
 	setColorAt(column, row, newColor);
 }
@@ -117,6 +166,12 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	 */
 
 	// TODO -- sort the colors according to john's specification
+
+	// top line moves closer to white
+	// second line linear interpolates between middle and top
+	// third line is un-modified
+	// fourth line is linear interpolated between middle and bottom
+	// bottom line moves closer to black
 
 	int totalColors = combinedColors.length();
 
@@ -135,54 +190,49 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 		midLine = 1;
 	}
 
-	if ((this->lastMixString != mixString) || (this->lastTotalColors != totalColors))
+	/*if ((this->lastMixString != mixString) || (this->lastTotalColors != totalColors))
 	{
 		this->lastMixString = mixString;
 		this->lastTotalColors = totalColors;
 
 		resetSwatches();
-	}
+	}*/
 
-	float lastLineFactor =  1.0f;
+	this->lastMixString = mixString;
+	this->lastTotalColors = totalColors;
+	resetSwatches();
 
 	// set the midline first
 	for (int i = 0; i < totalColors; i++)
 	{
-		_setColor(i, midLine, combinedColors[i], lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
+		_setColor(i, midLine, combinedColors[i], 0.0, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
 	}
 
 	// first and last lines
 	if (mixString > 1)
 	{
-		if (mixString == 5)
+		for (int i = 0; i < totalColors; i++)
 		{
-			lastLineFactor = 0.7f;
+			_setColor(i, 0, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
 		}
 
 		for (int i = 0; i < totalColors; i++)
 		{
-			_setColor(i, 0, combinedColors[i], stringLight * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
-		}
-
-		for (int i = 0; i < totalColors; i++)
-		{
-			_setColor(i, mixString - 1, combinedColors[i], stringDark * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
+			_setColor(i, mixString - 1, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, true);
 		}
 	}
 
 	// 2nd and 4th lines
 	if (mixString == 5)
 	{
-		lastLineFactor = 0.8f;
-
 		for (int i = 0; i < totalColors; i++)
 		{
-			_setColor(i, 1, combinedColors[i], stringLight * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
+			_setColor(i, 1, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, false);
 		}
 
 		for (int i = 0; i < totalColors; i++)
 		{
-			_setColor(i, 3, combinedColors[i], stringDark * lastLineFactor, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness);
+			_setColor(i, 3, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, true);
 		}
 	}
 }

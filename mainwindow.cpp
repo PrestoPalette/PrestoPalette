@@ -19,29 +19,34 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	//this->installEventFilter(this);
+	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
 
+	/***************************
+	 * BEGIN PRESETS
+	 ***************************/
 	// select the triangle by default
 	this->ui->rdoGamutShapeTriangle->clicked();
 
 	// select the course wheel by default
 	this->ui->rdoCourseWheel->clicked();
 
-	this->mixString = 5;
+	this->mixString = 3;
 	this->ui->rdoMixString5->clicked();
 
-	this->ui->btnLightingOn->clicked();
+	this->ui->btnLightingOff->clicked();
 	
-	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
-
 	this->ui->backgroundSlider->setSliderPosition(100);
-	this->ui->powerSlider->setSliderPosition(50);
-	this->ui->brightnessSlider->setSliderPosition(50);
-	this->ui->darkSlider->setSliderPosition(50);
-	this->ui->lightSlider->setSliderPosition(50);
+	this->ui->alphaSlider->setSliderPosition(50);
+	this->ui->brightnessSlider->setSliderPosition(0);
+	this->ui->darkSlider->setSliderPosition(70);
+	this->ui->lightSlider->setSliderPosition(70);
+
+	/***************************
+	 * END PRESETS
+	 ***************************/
 
 	this->on_backgroundSlider_sliderMoved(this->ui->backgroundSlider->value());
-	this->on_powerSlider_sliderMoved(this->ui->powerSlider->value());
+	this->on_alphaSlider_sliderMoved(this->ui->alphaSlider->value());
 	this->on_brightnessSlider_sliderMoved(this->ui->brightnessSlider->value());
 	this->on_darkSlider_sliderMoved(this->ui->darkSlider->value());
 	this->on_lightSlider_sliderMoved(this->ui->lightSlider->value());
@@ -121,7 +126,7 @@ void MainWindow::on_darkSlider_sliderMoved(int position)
 
 void MainWindow::on_brightnessSlider_sliderMoved(int position)
 {
-	qreal v = ((100.0 - (double)position) / 100.0);
+	qreal v = (((double)position) / 100.0);
 
 	this->ambientColorBrightness = v;
 
@@ -131,16 +136,16 @@ void MainWindow::on_brightnessSlider_sliderMoved(int position)
 	ui->lblBrightnessPct->adjustSize();
 }
 
-void MainWindow::on_powerSlider_sliderMoved(int position)
+void MainWindow::on_alphaSlider_sliderMoved(int position)
 {
-	qreal v = ((100.0 - (double)position) / 100.0);
+	qreal v = (((double)position) / 100.0);
 
-	this->power = v;
+	this->alpha = v;
 
 	refreshPalette();
 
-	ui->lblPowerPct->setText(QApplication::translate("MainWindow", "OPACITY", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
-	ui->lblPowerPct->adjustSize();
+	ui->lblAlphaPct->setText(QApplication::translate("MainWindow", "ALPHA", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
+	ui->lblAlphaPct->adjustSize();
 }
 
 void MainWindow::on_rdoCourseWheel_clicked(bool checked)
@@ -274,6 +279,11 @@ void MainWindow::refresh_mixString_buttons(void)
 	this->ui->rdoMixString5->setScaledContents(true);
 }
 
+void MainWindow::on_btnSaveJPG_pressed()
+{
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/JPGIcon_Down.png"));
+}
+
 void MainWindow::on_btnSaveJPG_clicked()
 {
 	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
@@ -285,11 +295,20 @@ void MainWindow::on_btnSaveJPG_clicked()
 						     tr("PNG Files (*.png)"));
 
 	this->ui->visualPalette->grab().save(fileName);
+
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/JPGIcon.png"));
 }
 
 void MainWindow::on_btnClipboard_clicked()
 {
 	QApplication::clipboard()->setPixmap(this->ui->visualPalette->grab());
+
+	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
+}
+
+void MainWindow::on_btnClipboard_pressed()
+{
+	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon_Down.png"));
 }
 
 void MainWindow::refreshPalette()
@@ -304,7 +323,7 @@ void MainWindow::refreshPalette()
 					   this->enableLighting,
 					   this->ambientColor,
 					   this->ambientColorBrightness,
-					   this->power);
+					   this->alpha);
 }
 
 void MainWindow::on_colorWheel_selectedColorsChanged()
@@ -324,6 +343,13 @@ void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
 	this->ambientColor = color;
 
 	refreshPalette();
+
+	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-color: yellow; background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
+					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");*/
+
+	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgba(75, 150, 202, 0), stop:1 rgba(75, 150, 202, 255));}"
+						"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
+*/
 }
 
 void MainWindow::SetCurrentColor(const QColor &color)

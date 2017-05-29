@@ -27,19 +27,22 @@ private:
 	bool enableLighting;
 	QColor ambientColor;
 	qreal ambientColorBrightness;
-	qreal power;
+	qreal alpha;
 	int mixString;
 
 private slots:
 	void on_btnSaveJPG_clicked();
 	void on_btnClipboard_clicked();
 
+	void on_btnSaveJPG_pressed();
+	void on_btnClipboard_pressed();
+
 	void on_backgroundSlider_sliderMoved(int position);
 
 	void on_lightSlider_sliderMoved(int position);
 	void on_darkSlider_sliderMoved(int position);
 	void on_brightnessSlider_sliderMoved(int position);
-	void on_powerSlider_sliderMoved(int position);
+	void on_alphaSlider_sliderMoved(int position);
 
 	void on_colorWheel_selectedColorsChanged();
 	void on_colorWheel_hoverColor(const QColor &color);

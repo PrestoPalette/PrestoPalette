@@ -11,7 +11,9 @@ public:
     ~ClickableLabel();
 signals:
     void clicked();
+    void pressed();
 protected:
+    void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
 };
 

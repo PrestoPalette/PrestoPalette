@@ -62,14 +62,20 @@ void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<QColor> *colors
 
 void CirclePalette::_draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
 {
-	QPen linePen(Qt::red);
-	linePen.setWidth(1);
+	// TODO Trim the lines, so they don't go into the circle
+
+	QPen linePen(Qt::white);
+	linePen.setWidth(3);
 	painter.setPen(linePen);
+
+	//TODO use the radius (9px) of the circles, then compute
+
 	painter.drawLine(p1, p2);
 
 	QPoint midpoint((p1.x() + p2.x()) / 2, (p1.y() + p2.y()) / 2);
 
-	painter.setPen(QPen(Qt::red, 3));
+	/* TODO use the image for these... */
+	painter.setPen(QPen(Qt::white, 3));
 	painter.drawEllipse(midpoint, circleRadius, circleRadius);
 
 	QColor color = colorWheel->pixmap()->toImage().pixelColor(midpoint.x(), midpoint.y());

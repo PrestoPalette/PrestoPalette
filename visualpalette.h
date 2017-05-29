@@ -7,7 +7,7 @@
 #include <QPushButton>
 
 //#define TOTAL_SWATCHES 25
-#define TOTAL_SWATCHES 40
+#define TOTAL_SWATCHES 45
 
 class VisualPalette : public QWidget
 {
@@ -26,7 +26,7 @@ private:
 	int lastMixString;
 
 	void resetSwatches();
-	void _setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness);
+	void _setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness, bool interpolate, bool go_dark);
 
 signals:
 

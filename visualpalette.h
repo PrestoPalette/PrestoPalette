@@ -17,13 +17,13 @@ public:
 	void setColorAt(int row, int column, const QColor &fillColor);
 	void Formulate(QVector<QColor> combinedColors,
 		       QVector<QColor> primaryColors, QVector<QColor> secondaryColors,
-		       QColor neutral, int lastMixString, qreal stringLight, qreal stringDark,
+		       QColor neutral, int paletteWidth, qreal stringLight, qreal stringDark,
 		       bool enableLighting, QColor ambientColor, qreal ambientColorBrightness,
 		       qreal power);
 
 private:
-	int lastTotalColors;
-	int lastMixString;
+	int paletteHeight;
+	int paletteWidth;
 
 	void resetSwatches();
 	void _setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness, bool interpolate, bool go_dark);
@@ -34,7 +34,6 @@ public slots:
 
 private:
 	QGridLayout *layout;
-	std::vector<QLabel*> swatches;
 };
 
 #endif // VISUALPALETTE_H

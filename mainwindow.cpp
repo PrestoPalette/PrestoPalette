@@ -152,12 +152,14 @@ void MainWindow::on_rdoCourseWheel_clicked(bool checked)
 {
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeCourse);
 	refresh_wheel_buttons();
+	refreshPalette();
 }
 
 void MainWindow::on_rdoFineWheel_clicked(bool checked)
 {
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeFine);
 	refresh_wheel_buttons();
+	refreshPalette();
 }
 
 void MainWindow::refresh_wheel_buttons(void)

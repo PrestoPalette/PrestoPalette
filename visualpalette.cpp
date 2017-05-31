@@ -3,13 +3,21 @@
 #include <QDebug>
 #include <QBitmap>
 
+#define DEFAULT_PALETTE_WIDTH 9
+#define DEFAULT_PALETTE_HEIGHT 5
+
+template<class T>
+const T& clamp(const T& x, const T& lower, const T& upper) {
+    return std::max(lower, std::min(x, upper));
+}
+
 VisualPalette::VisualPalette(QWidget *parent) : QWidget(parent)
 {
 	layout = new QGridLayout(this);
 	this->setLayout(layout);
 
-	lastTotalColors = 7;
-	lastMixString = 5;
+	paletteWidth = 7;
+	paletteHeight = 5;
 
 	resetSwatches();
 }
@@ -36,53 +44,43 @@ void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
 
 void VisualPalette::resetSwatches()
 {
-	QLayoutItem *child;
-	while ((child = layout->takeAt(0)) != 0)
+	if (layout->count() == 0)
 	{
-		QWidget* widget = child->widget();
-		layout->removeWidget(widget);
-		delete widget;
-	}
-
-	swatches.clear();
-
-	swatches.reserve(lastTotalColors * lastMixString);
-
-	int row_width = lastTotalColors;
-	int col_height = lastMixString;
-
-	for (int y = 0; y < col_height; y++)
-	{
-		for (int x = 0; x < row_width; x++)
+		for (int y = 0; y < DEFAULT_PALETTE_HEIGHT; y++)
 		{
-			auto swatch = new QLabel(this);
+			for (int x = 0; x < DEFAULT_PALETTE_WIDTH; x++)
+			{
+				auto swatch = new QLabel(this);
 
-			/* with spaces between cells */
-			/*swatch->setStyleSheet("\
-			QLabel {\
-			border: 0; \
-			margin: 0px 0px 0px 0px; \
-			}");*/
+				/* with spaces between cells */
+				/*swatch->setStyleSheet("\
+				QLabel {\
+				border: 0; \
+				margin: 0px 0px 0px 0px; \
+				}");*/
 
-			/* with no space at all between cells */
-			/*
-			swatch->setStyleSheet("\
-			QLabel {\
-			border: 0; \
-			margin: -13px -13px -13px -13px; \
-			}");
-			*/
+				/* with no space at all between cells */
+				/*
+				swatch->setStyleSheet("\
+				QLabel {\
+				border: 0; \
+				margin: -13px -13px -13px -13px; \
+				}");
+				*/
 
-			swatches.push_back(swatch);
-			layout->addWidget(swatch, y, x);
-			layout->setSpacing(0);
+				layout->addWidget(swatch, y, x);
+				layout->setSpacing(0);
+			}
 		}
 	}
-}
 
-template<class T>
-const T& clamp(const T& x, const T& lower, const T& upper) {
-    return std::max(lower, std::min(x, upper));
+	for (int y = 0; y < DEFAULT_PALETTE_HEIGHT; y++)
+	{
+		for (int x = 0; x < DEFAULT_PALETTE_WIDTH; x++)
+		{
+			setColorAt(x, y, QColor(0.0, 0.0, 0.0, 0.0));
+		}
+	}
 }
 
 void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qreal light_darkMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &in_ambientColor, qreal ambientColorBrightness, bool interpolate, bool go_dark)
@@ -150,7 +148,7 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 }
 
 void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> primaryColors, QVector<QColor> secondaryColors,
-			      QColor neutral, int mixString, qreal stringLight, qreal stringDark,
+			      QColor neutral, int paletteHeight, qreal stringLight, qreal stringDark,
 			      bool enableLighting, QColor ambientColor, qreal ambientColorBrightness,
 			      qreal ambientColorAlpha)
 {
@@ -167,15 +165,16 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	// fourth line is linear interpolated between middle and bottom
 	// bottom line moves closer to black
 
-	int totalColors = combinedColors.length();
+	int paletteWidth = combinedColors.length();
 
-	int midLine;
+	int midLine = 2;
 
-	if (mixString == 3)
+	/*
+	if (paletteHeight == 3)
 	{
 		midLine = 1;
 	}
-	else if (mixString == 5)
+	else if (paletteHeight == 5)
 	{
 		midLine = 2;
 	}
@@ -183,46 +182,54 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	{
 		midLine = 0;
 	}
+	*/
 
 	// only call reset if necessary, otherwise, there will be flicker
-	if ((this->lastMixString != mixString) || (this->lastTotalColors != totalColors))
+	/*if ((this->paletteHeight != paletteHeight) || (this->paletteWidth != paletteWidth))
 	{
-		this->lastMixString = mixString;
-		this->lastTotalColors = totalColors;
+		this->paletteHeight = paletteHeight;
+		this->paletteWidth = paletteWidth;
 		resetSwatches();
-	}
+	}*/
+
+	this->paletteHeight = paletteHeight;
+	this->paletteWidth = paletteWidth;
+	resetSwatches();
+
+	auto startingColumn = clamp(((DEFAULT_PALETTE_WIDTH - paletteWidth) / 2.0), 0.0, (double)paletteWidth);
+	auto startingRow = clamp(((DEFAULT_PALETTE_HEIGHT - paletteHeight) / 2.0), 0.0, (double)paletteHeight);
 
 	// set the midline first
-	for (int i = 0; i < totalColors; i++)
+	for (int i = 0; i < paletteWidth; i++)
 	{
-		_setColor(i, midLine, combinedColors[i], 0.0, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
+		_setColor(i + startingColumn, midLine, combinedColors[i], 0.0, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
 	}
 
 	// first and last lines
-	if (mixString > 1)
+	if (paletteHeight > 1)
 	{
-		for (int i = 0; i < totalColors; i++)
+		for (int i = 0; i < paletteWidth; i++)
 		{
-			_setColor(i, 0, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
+			_setColor(i + startingColumn, startingRow, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, false);
 		}
 
-		for (int i = 0; i < totalColors; i++)
+		for (int i = 0; i < paletteWidth; i++)
 		{
-			_setColor(i, mixString - 1, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, true);
+			_setColor(i + startingColumn, midLine + (midLine - startingRow), combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, false, true);
 		}
 	}
 
 	// 2nd and 4th lines
-	if (mixString == 5)
+	if (paletteHeight == 5)
 	{
-		for (int i = 0; i < totalColors; i++)
+		for (int i = 0; i < paletteWidth; i++)
 		{
-			_setColor(i, 1, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, false);
+			_setColor(i + startingColumn, startingRow + 1, combinedColors[i], stringLight, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, false);
 		}
 
-		for (int i = 0; i < totalColors; i++)
+		for (int i = 0; i < paletteWidth; i++)
 		{
-			_setColor(i, 3, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, true);
+			_setColor(i + startingColumn, midLine + 1, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, true);
 		}
 	}
 }

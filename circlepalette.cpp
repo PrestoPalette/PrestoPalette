@@ -11,6 +11,8 @@
 
 #include <algorithm>
 
+#define LIGHTING_ICON_MIDDLE_TO_TOP 7
+
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
 	lightingPic = QPixmap(QString::fromUtf8(":/main/graphics/LightingIcon.png"));
@@ -24,28 +26,26 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	backgroundWheel = new QLabel(parent);
 	backgroundWheel->setGeometry(QRect(44, 37, 549, 549));
 	backgroundWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/Wheel_BG.png")));
-	backgroundWheel->setScaledContents(true);
-
-	QRect wheelPostion = QRect(70, 62, 499, 499);
 
 	colorWheel = new QLabel(parent);
-	colorWheel->setGeometry(wheelPostion);
+	colorWheel->setGeometry(QRect(70, 62, 499, 499));
 	colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));
-	colorWheel->setScaledContents(true);
 	colorWheel->raise();
+	//colorWheel->installEventFilter(this);
+	//colorWheel->setMouseTracking(true);
 
-	int radius = colorWheel->width() / 2;
-	radius = (float)radius * 0.70;
-	lighting = new QPoint(radius * 2.0, 40);
+	lighting = new QPoint(325, 40);
 
 	drawnElements = new QWidget(parent);
-	drawnElements->setGeometry(wheelPostion);
+	drawnElements->setGeometry(colorWheel->geometry());
 	drawnElements->raise();
 	drawnElements->installEventFilter(this);
 
+	//drawnElements->setMouseTracking(true);
+
 	setMouseTracking(true);
 
-	this->installEventFilter(this);
+	installEventFilter(this);
 
 	QMetaObject::connectSlotsByName(this);
 }
@@ -107,17 +107,27 @@ bool sort_angles (struct tup i, struct tup j) { return (i.angle <= j.angle); }
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
-	if (event->type() == QEvent::MouseMove)
+	if (event->type() == QEvent::MouseMove && (watched == this))
 	{
 		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
-		//might want to check the buttons here
-		const QPoint p = me->pos(); //...or ->globalPos();
 
-		if (_is_collision(colorWheel->pos(), colorWheel->width() / 2, p))
+		QPoint p = colorWheel->mapFromGlobal(QCursor::pos());
+		QPoint wheelCenter = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
+		int radius = colorWheel->width() / 2;
+
+		// prevent it from going off the edge of the whole circle palette
+		if (isDragging)
 		{
-			// TODO save off this image at the start -- not in this event
-			QImage img = colorWheel->pixmap()->toImage();
-			QColor color = img.pixelColor(p.x(), p.y());
+			if (_is_collision(wheelCenter, radius - primaryRadius, p) == false)
+			{
+				// end it
+				return true;
+			}
+		}
+
+		if (_is_collision(wheelCenter, radius, p))
+		{
+			QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
 
 			emit hoverColor(color);
 		}
@@ -136,7 +146,9 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		/* draw the lighting icon */
 		if(enableLighting)
 		{
-			painter.drawPixmap(*lighting, lightingPic);
+			painter.drawPixmap(QPoint(lighting->x() - (lightingPic.width() / 2),
+						  lighting->y() - (lightingPic.height() / 2) + LIGHTING_ICON_MIDDLE_TO_TOP),
+						  lightingPic);
 
 			QColor lightingColor = colorWheel->pixmap()->toImage().pixelColor(lighting->x(), lighting->y());
 
@@ -253,24 +265,26 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 	return false;
 }
 
-bool CirclePalette::_is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest)
+bool CirclePalette::_is_collision(const QPoint &circleCenter, int circleRadius, const QPoint &hitTest)
 {
-	QPoint circleCenter = QPoint(circle.x() + circleRadius, circle.y() + circleRadius);
-	int r2 = circleRadius * circleRadius;
-	int d2 = (hitTest.x() - circleCenter.x()) * (hitTest.x() - circleCenter.x())
-			+
-	(hitTest.y() - circleCenter.y()) * (hitTest.y() - circleCenter.y());
+	bool a = (qPow(circleCenter.x() - hitTest.x(), 2.0) + qPow(circleCenter.y() - hitTest.y(), 2.0)) <= qPow(circleRadius, 2.0);
+	qInfo() << a;
+	return a;
 
-	if (d2 <= r2)
+/*	auto right = circleCenter.x() + circleRadius;
+	auto left = circleCenter.x() - circleRadius;
+	auto top = circleCenter.y() - circleRadius;
+	auto bottom = circleCenter.y() + circleRadius;
+
+	if (hitTest.x() < right && hitTest.x() > left)
 	{
-		//qInfo() << "pos: " << hitTest << " center: " << circleCenter << " radius: " << circleRadius;
-		return true;
+		if (hitTest.y() > top && hitTest.y() < bottom)
+		{
+			return true;
+		}
 	}
-	else
-	{
-		//qInfo() << "NO: pos: " << hitTest << " center: " << circleCenter << " radius: " << circleRadius;
-		return false;
-	}
+
+	return false;*/
 }
 
 void CirclePalette::mousePressEvent(QMouseEvent *event)
@@ -279,11 +293,13 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 	{
 		if (this->isDragging == false)
 		{
+			QPoint mousePos = colorWheel->mapFromGlobal(QCursor::pos());
+
 			// check for collisions with the points
 			// http://math.stackexchange.com/questions/198764/how-to-know-if-a-point-is-inside-a-circle
 			for (auto p : this->points)
 			{
-				if (_is_collision(*p, primaryRadius * 3.0, event->pos()))
+				if (_is_collision(*p, primaryRadius, mousePos))
 				{
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;
@@ -296,7 +312,7 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 
 			if (enableLighting)
 			{
-				if (_is_collision(*lighting, primaryRadius * 3.0, event->pos()))
+				if (_is_collision(*lighting, primaryRadius, mousePos))
 				{
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;
@@ -308,6 +324,9 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 			}
 		}
 	}
+
+	/* important, so the event filter catches it */
+	//event->ignore();
 }
 
 void CirclePalette::mouseReleaseEvent(QMouseEvent *event)
@@ -318,17 +337,21 @@ void CirclePalette::mouseReleaseEvent(QMouseEvent *event)
 		this->dragStartPosition = QPoint();
 		this->dragPoint = NULL;
 	}
+
+	/* important, so the event filter catches it */
+	//event->ignore();
 }
 
 void CirclePalette::mouseMoveEvent(QMouseEvent *event)
 {
 	if (isDragging)
 	{
-		//qInfo() << event->pos();
-		//qInfo() << this->relativeDistance;
 		*this->dragPoint = (event->pos() - this->relativeDistance);
 		this->drawnElements->repaint();
 	}
+
+	/* important, so the event filter catches it */
+	event->ignore();
 }
 
 void CirclePalette::create_gamut_line()
@@ -336,10 +359,10 @@ void CirclePalette::create_gamut_line()
 	int radius = colorWheel->width() / 2;
 	radius = (float)radius * 0.80; //not using whole radius
 	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
-	auto ang60 = qDegreesToRadians(60.0);
+	auto angle = qDegreesToRadians(30.0);
 
-	auto pFirst = new QPoint(qCos(ang60) * radius, qSin(ang60) * radius);
-	auto pSecond = new QPoint(*pFirst + QPoint(radius, radius));
+	auto pFirst = new QPoint(center.x() - (qCos(angle) * radius), center.y() - (qSin(angle) * radius));
+	auto pSecond = new QPoint(center.x() + (qCos(angle) * radius), center.y() + (qSin(angle) * radius));
 
 	points.push_back(pFirst);
 	points.push_back(pSecond);
@@ -349,20 +372,13 @@ void CirclePalette::create_gamut_triangle()
 {
 	int radius = colorWheel->width() / 2;
 	radius = radius * 0.80; //not using whole radius
-	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
-	auto ang60 = qDegreesToRadians(60.0);
+	auto center = QPoint(colorWheel->width() / 2, colorWheel->width() / 2);
+	auto angle = qDegreesToRadians(30.0);
 
 	/* add three points to list */
-
-	/* bottom */
 	auto pBottom = new QPoint(center + QPoint(0, radius));
-	auto pTopLeft = new QPoint(qCos(ang60) * radius, qSin(ang60) * radius);
-
-	auto line = QLineF(pTopLeft->x(), pTopLeft->y(), pBottom->x(), pBottom->y());
-
-	auto l = line.length();
-
-	auto pTopRight = new QPoint(pTopLeft->x() + l, pTopLeft->y());
+	auto pTopLeft = new QPoint((-qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
+	auto pTopRight = new QPoint((qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
 
 	points.push_back(pBottom);
 	points.push_back(pTopLeft);
@@ -372,14 +388,14 @@ void CirclePalette::create_gamut_triangle()
 void CirclePalette::create_gamut_square()
 {
 	int radius = colorWheel->width() / 2;
-	radius = radius * 0.80; //not using whole radius
+	radius = radius * 0.60; //not using whole radius
 	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
-	auto ang60 = qDegreesToRadians(60.0);
+	auto angle = qDegreesToRadians(45.0);
 
-	auto pFirst = new QPoint(qCos(ang60) * radius, qSin(ang60) * radius);
-	auto pSecond = new QPoint(*pFirst + QPoint(radius, 0));
-	auto pThird = new QPoint(*pFirst + QPoint(0, radius));
-	auto pFourth = new QPoint(*pFirst + QPoint(radius, radius));
+	auto pFirst = new QPoint((qCos(angle) * radius) + center.x(), (qSin(angle) * radius) + center.y());
+	auto pSecond = new QPoint((-qCos(angle) * radius)+ center.x(), (qSin(angle) * radius) + center.y());
+	auto pThird = new QPoint((qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
+	auto pFourth = new QPoint((-qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
 
 	points.push_back(pFirst);
 	points.push_back(pSecond);

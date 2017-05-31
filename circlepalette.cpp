@@ -136,6 +136,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 	if (watched == drawnElements && event->type() == QEvent::Paint)
 	{
 		QPainter painter(drawnElements);
+		painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
 		QVector<QColor> colors;
 

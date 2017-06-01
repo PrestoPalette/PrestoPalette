@@ -50,17 +50,21 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	QMetaObject::connectSlotsByName(this);
 }
 
-void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius)
+void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius, bool isCentroid)
 {
 	QPoint p_center(p.x() - circleRadius, p.y() - circleRadius);
 
 	painter.drawPixmap(p_center, circlePic);
 
 	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
-	colors->append(color);
+	ColorPoint cp;
+	cp.color = color;
+	cp.point = p;
+	cp.is_centroid = isCentroid;
+	colors->append(cp);
 }
 
-void CirclePalette::_draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
+void CirclePalette::_draw_line_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
 {
 	// TODO Trim the lines, so they don't go into the circle
 
@@ -79,31 +83,36 @@ void CirclePalette::_draw_line_imp(QPainter &painter, QVector<QColor> *colors, Q
 	painter.drawEllipse(midpoint, circleRadius, circleRadius);
 
 	QColor color = colorWheel->pixmap()->toImage().pixelColor(midpoint.x(), midpoint.y());
-	colors->append(color);
+	ColorPoint cp;
+	cp.color = color;
+	cp.point = midpoint;
+	colors->append(cp);
 }
 
-void CirclePalette::_draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius)
+void CirclePalette::_draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius)
 {
 	QPoint centroid;
 
-	for (auto p : points)
+	for (QPoint *p : this->points)
 	{
 		centroid += *p;
 	}
-	centroid /= points.size();
+	centroid /= this->points.size();
 
 	// shift over the centroid (because the above is using top-left)
 	centroid = QPoint(centroid.x() - circleRadius, centroid.y() - circleRadius);
-	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius);
+	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius, true);
 }
 
-struct tup
+bool sort_angles (ColorPoint i, ColorPoint j)
 {
-	QPoint *point;
-	double angle; // in radians
-};
+	if (j.is_centroid)
+	{
+		return -1;
+	}
 
-bool sort_angles (struct tup i, struct tup j) { return (i.angle <= j.angle); }
+	return (i.angle >= j.angle);
+}
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 {
@@ -138,9 +147,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		QPainter painter(drawnElements);
 		painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
-		QVector<QColor> colors;
-
-		std::vector<QPoint*> sortedPoints;
+		QVector<ColorPoint> colors;
 
 		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
 
@@ -162,101 +169,86 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 			}
 		}
 
-		std::list<struct tup> intermediaryPoints;
-
-		for (auto p : this->points)
-		{
-			auto t = QPoint(p->x(), p->y());
-			t = t - center;
-
-			p->setX(t.x());
-			p->setY(t.y());
-
-			struct tup r;
-			if (p->x() == 0)
-			{
-				r.angle = -3.14159265;
-			}
-			else if (p->x() < 0)
-			{
-				r.angle -= M_PI_4;
-			}
-			else
-			{
-				r.angle = atan(p->y() / p->x());
-			}
-
-			r.angle += M_PI;
-
-			// go back a bit for the sections being not aligned to top
-			// this is 1/2 a section
-			r.angle += 15.0 * M_PI / 180.0;
-
-			// rotate backwards by pi/2 radians
-			//r.angle -= M_PI_2;
-
-			r.point = p;
-			intermediaryPoints.push_back(r);
-
-		};
-
-		//std::sort(intermediaryPoints.begin(), intermediaryPoints.end(), sort_angles);
-		intermediaryPoints.sort(sort_angles);
-
-		// rotate by 1
-		//intermediaryPoints.push_back(*intermediaryPoints.begin());
-		//intermediaryPoints.pop_front();
-
-		int index = 0;
-		for (auto i : intermediaryPoints)
-		{
-			//qInfo() << "hi " << index << *i.point << " angle " << i.angle;
-			index++;
-
-			auto t = QPoint(i.point->x(), i.point->y());
-			t = t + center;
-
-			i.point->setX(t.x());
-			i.point->setY(t.y());
-
-			sortedPoints.push_back(i.point);
-		};
-
 		if (gamutShape == PrestoPalette::GamutShapeLine)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius, false);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeTriangle)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[2], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[0], secondaryRadius);
-			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
+
+			_draw_centroid(painter, &colors, colorWheel, centroidRadius);
 		}
 
 		if (gamutShape == PrestoPalette::GamutShapeSquare)
 		{
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[3], secondaryRadius);
-			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius);
+			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[2], secondaryRadius);
 
-			_draw_centroid(painter, &colors, colorWheel, sortedPoints, centroidRadius);
+			_draw_centroid(painter, &colors, colorWheel, centroidRadius);
 		}
 
-		if (this->selectedColors != colors)
+		// populate the angles for each point
+		for (auto p : colors)
 		{
-			this->selectedColors = colors;
+			auto t = QPoint(p.point.x(), p.point.y());
+
+			// TODO make sure center is true
+			t = t - center;
+
+			if (t.x() == 0)
+			{
+				p.angle = -3.14159265;
+			}
+			else if (t.x() < 0)
+			{
+				p.angle -= M_PI_4;
+			}
+			else
+			{
+				p.angle = atan(t.y() / t.x());
+			}
+
+			p.angle += M_PI;
+
+			// go back a bit for the sections being not aligned to top
+			// this is 1/2 a section
+			p.angle += 15.0 * M_PI / 180.0;
+
+			// rotate backwards by pi/2 radians
+			//p.angle -= M_PI_2;
+
+		};
+
+		qSort(colors.begin(), colors.end(), sort_angles);
+
+		// rotate by 1
+		//intermediaryPoints.push_back(*intermediaryPoints.begin());
+		//intermediaryPocolorsints.pop_front();
+
+		QVector<QColor> sortedColors;
+		for (auto i:colors)
+		{
+			sortedColors.append(i.color);
+		}
+
+		if (this->selectedColors != sortedColors)
+		{
+			this->selectedColors = sortedColors;
 
 			// notify that colors changed
 			emit selectedColorsChanged();

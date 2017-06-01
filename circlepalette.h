@@ -21,6 +21,15 @@ enum GlobalWheelShape
 };
 }
 
+class ColorPoint
+{
+public:
+	QColor color;
+	QPoint point;
+	qreal angle; // in radians
+	bool is_centroid;
+};
+
 class CirclePalette : public QWidget
 {
 	Q_OBJECT
@@ -76,9 +85,9 @@ private:
 	void create_gamut_square();
 	void destroy_gamut();
 
-	void _draw_primary_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius);
-	void _draw_line_imp(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius);
-	void _draw_centroid(QPainter &painter, QVector<QColor> *colors, QLabel *colorWheel, std::vector<QPoint*> &points, int circleRadius);
+	void _draw_primary_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius, bool isCentroid);
+	void _draw_line_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius);
+	void _draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius);
 	bool _is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest);
 };
 

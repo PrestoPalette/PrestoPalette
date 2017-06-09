@@ -49,6 +49,8 @@ public:
 	void ChangeGamutShape(PrestoPalette::GlobalGamutShape shape);
 	void ChangeWheelShape(PrestoPalette::GlobalWheelShape shape);
 
+	QPoint CalculateCentroid(int circleRadius);
+
 signals:
 	void selectedColorsChanged();
 	void hoverColor(const QColor &color);
@@ -71,6 +73,7 @@ private:
 	std::vector<QPoint*> points;
 	std::vector<QLabel*> lines;
 	QPoint *lighting;
+	QPoint centroid;
 
 	QPoint dragStartPosition;
 	bool isDragging;
@@ -85,10 +88,20 @@ private:
 	void create_gamut_square();
 	void destroy_gamut();
 
+	QPointF FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2);
 	void _draw_primary_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius, bool isCentroid);
 	void _draw_line_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius);
 	void _draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius);
 	bool _is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest);
+
+public:
+	struct Less {
+	       Less(CirclePalette& c) : circlePalette(c) {}
+	       bool operator () ( const ColorPoint & i1, const ColorPoint & i2 ) {return circlePalette.sort_angles(i1, i2);}
+	       CirclePalette& circlePalette;
+	   };
+
+	bool sort_angles(const ColorPoint i, const ColorPoint j);
 };
 
 #endif // CIRCLEPALETTE_H

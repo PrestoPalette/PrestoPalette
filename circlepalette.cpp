@@ -13,6 +13,10 @@
 
 #define LIGHTING_ICON_MIDDLE_TO_TOP 7
 
+QPoint operator *(const QPoint& x, const QPointF& y) {
+    return QPoint((qreal)x.x() * y.x(), (qreal)x.y() * y.y());
+}
+
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
 	lightingPic = QPixmap(QString::fromUtf8(":/main/graphics/LightingIcon.png"));
@@ -50,6 +54,16 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	QMetaObject::connectSlotsByName(this);
 }
 
+QPointF CirclePalette::FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2)
+{
+	QLine line(p1, p2);
+	QVector2D slope(line.dx(), line.dy());
+	slope.normalize();
+	qreal angle = slope.y() / slope.length();
+	return QPointF(qCos(angle), qSin(angle));
+
+}
+
 void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius, bool isCentroid)
 {
 	QPoint p_center(p.x() - circleRadius, p.y() - circleRadius);
@@ -72,7 +86,9 @@ void CirclePalette::_draw_line_imp(QPainter &painter, QVector<ColorPoint> *color
 	linePen.setWidth(3);
 	painter.setPen(linePen);
 
-	//TODO use the radius (9px) of the circles, then compute
+	//trim the lines by adjusting the points
+	//qInfo() << "p1: " << p1 << " intersection: " << FindIntersectionWithCircle(p1, p2);
+	//painter.drawLine(p1 * FindIntersectionWithCircle(p1, p2), p2 * FindIntersectionWithCircle(p2, p1));
 
 	painter.drawLine(p1, p2);
 
@@ -89,10 +105,9 @@ void CirclePalette::_draw_line_imp(QPainter &painter, QVector<ColorPoint> *color
 	colors->append(cp);
 }
 
-void CirclePalette::_draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius)
+QPoint CirclePalette::CalculateCentroid(int circleRadius)
 {
-	QPoint centroid;
-
+	centroid = QPoint();
 	for (QPoint *p : this->points)
 	{
 		centroid += *p;
@@ -101,10 +116,54 @@ void CirclePalette::_draw_centroid(QPainter &painter, QVector<ColorPoint> *color
 
 	// shift over the centroid (because the above is using top-left)
 	centroid = QPoint(centroid.x() - circleRadius, centroid.y() - circleRadius);
+
+	return centroid;
+}
+
+void CirclePalette::_draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius)
+{
+	QPoint centroid = CalculateCentroid(circleRadius);
 	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius, true);
 }
 
-bool sort_angles (ColorPoint i, ColorPoint j)
+bool CirclePalette::sort_angles(const ColorPoint i, const ColorPoint j)
+{
+	if (j.is_centroid)
+	{
+		return -1;
+	}
+
+	QPoint a, b;
+	a = i.point;
+	b = j.point;
+
+	QPoint center = centroid;
+
+    if (a.x() - center.x() >= 0 && b.x() - center.x() < 0)
+	return true;
+    if (a.x() - center.x() < 0 && b.x() - center.x() >= 0)
+	return false;
+    if (a.x() - center.x() == 0 && b.x() - center.x() == 0) {
+	if (a.y() - center.y() >= 0 || b.y() - center.y() >= 0)
+	    return a.y() > b.y();
+	return b.y() > a.y();
+    }
+
+    // compute the cross product of vectors (center -> a) x (center -> b)
+    int det = (a.x() - center.x()) * (b.y() - center.y()) - (b.x() - center.x()) * (a.y() - center.y());
+    if (det < 0)
+	return true;
+    if (det > 0)
+	return false;
+
+    // points a and b are on the same line from the center
+    // check which point is closer to the center
+    int d1 = (a.x() - center.x()) * (a.x() - center.x()) + (a.y() - center.y()) * (a.y() - center.y());
+    int d2 = (b.x() - center.x()) * (b.x() - center.x()) + (b.y() - center.y()) * (b.y() - center.y());
+    return d1 > d2;
+}
+
+bool sort_angles1 (ColorPoint i, ColorPoint j)
 {
 	if (j.is_centroid)
 	{
@@ -193,11 +252,11 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 			_draw_primary_imp(painter, &colors, colorWheel, *this->points[0], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[1], secondaryRadius);
 			_draw_primary_imp(painter, &colors, colorWheel, *this->points[1], primaryRadius, false);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[3], secondaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[1], *this->points[2], secondaryRadius);
 			_draw_primary_imp(painter, &colors, colorWheel, *this->points[2], primaryRadius, false);
 			_draw_line_imp(painter, &colors, colorWheel, *this->points[2], *this->points[3], secondaryRadius);
 			_draw_primary_imp(painter, &colors, colorWheel, *this->points[3], primaryRadius, false);
-			_draw_line_imp(painter, &colors, colorWheel, *this->points[0], *this->points[2], secondaryRadius);
+			_draw_line_imp(painter, &colors, colorWheel, *this->points[3], *this->points[0], secondaryRadius);
 
 			_draw_centroid(painter, &colors, colorWheel, centroidRadius);
 		}
@@ -234,7 +293,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 
 		};
 
-		qSort(colors.begin(), colors.end(), sort_angles);
+		std::sort(colors.begin(), colors.end(), Less(*this));
 
 		// rotate by 1
 		//intermediaryPoints.push_back(*intermediaryPoints.begin());
@@ -354,8 +413,10 @@ void CirclePalette::create_gamut_line()
 	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
 	auto angle = qDegreesToRadians(30.0);
 
-	auto pFirst = new QPoint(center.x() - (qCos(angle) * radius), center.y() - (qSin(angle) * radius));
-	auto pSecond = new QPoint(center.x() + (qCos(angle) * radius), center.y() + (qSin(angle) * radius));
+	//auto pFirst = new QPoint(center.x() - (qCos(angle) * radius), center.y() - (qSin(angle) * radius));
+	//auto pSecond = new QPoint(center.x() + (qCos(angle) * radius), center.y() + (qSin(angle) * radius));
+	QPoint *pFirst = new QPoint(411 - this->geometry().left(), 172 - this->geometry().top());
+	QPoint *pSecond = new QPoint(120 - this->geometry().left(), 407 - this->geometry().top());
 
 	points.push_back(pFirst);
 	points.push_back(pSecond);
@@ -369,9 +430,12 @@ void CirclePalette::create_gamut_triangle()
 	auto angle = qDegreesToRadians(30.0);
 
 	/* add three points to list */
-	auto pBottom = new QPoint(center + QPoint(0, radius));
-	auto pTopLeft = new QPoint((-qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
-	auto pTopRight = new QPoint((qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
+	//auto pBottom = new QPoint(center + QPoint(0, radius));
+	//auto pTopLeft = new QPoint((-qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
+	//auto pTopRight = new QPoint((qCos(angle) * radius) + center.x(), center.y() - (qSin(angle) * radius));
+	QPoint *pBottom = new QPoint(269 - this->geometry().left(), 519 - this->geometry().top());
+	QPoint *pTopLeft = new QPoint(423 - this->geometry().left(), 253 - this->geometry().top());
+	QPoint *pTopRight = new QPoint(295 - this->geometry().left(), 184 - this->geometry().top());
 
 	points.push_back(pBottom);
 	points.push_back(pTopLeft);
@@ -385,10 +449,14 @@ void CirclePalette::create_gamut_square()
 	auto center = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
 	auto angle = qDegreesToRadians(45.0);
 
-	auto pFirst = new QPoint((qCos(angle) * radius) + center.x(), (qSin(angle) * radius) + center.y());
-	auto pSecond = new QPoint((-qCos(angle) * radius)+ center.x(), (qSin(angle) * radius) + center.y());
-	auto pThird = new QPoint((qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
-	auto pFourth = new QPoint((-qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
+	//auto pFirst = new QPoint((qCos(angle) * radius) + center.x(), (qSin(angle) * radius) + center.y());
+	//auto pSecond = new QPoint((-qCos(angle) * radius)+ center.x(), (qSin(angle) * radius) + center.y());
+	//auto pThird = new QPoint((qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
+	//auto pFourth = new QPoint((-qCos(angle) * radius)+ center.x(), (-qSin(angle) * radius) + center.y());
+	QPoint *pFirst = new QPoint(122 - this->geometry().left(), 411 - this->geometry().top());
+	QPoint *pSecond = new QPoint(188 - this->geometry().left(), 287 - this->geometry().top());
+	QPoint *pThird = new QPoint(362 - this->geometry().left(), 220 - this->geometry().top());
+	QPoint *pFourth = new QPoint(495 - this->geometry().left(), 419 - this->geometry().top());
 
 	points.push_back(pFirst);
 	points.push_back(pSecond);

@@ -70,12 +70,12 @@ void CirclePalette::_draw_primary_imp(QPainter &painter, QVector<ColorPoint> *co
 
 	painter.drawPixmap(p_center, circlePic);
 
-	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
+	/*QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
 	ColorPoint cp;
 	cp.color = color;
 	cp.point = p;
 	cp.is_centroid = isCentroid;
-	colors->append(cp);
+	colors->append(cp);*/
 }
 
 void CirclePalette::_draw_line_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius)
@@ -98,14 +98,14 @@ void CirclePalette::_draw_line_imp(QPainter &painter, QVector<ColorPoint> *color
 	painter.setPen(QPen(Qt::white, 3));
 	painter.drawEllipse(midpoint, circleRadius, circleRadius);
 
-	QColor color = colorWheel->pixmap()->toImage().pixelColor(midpoint.x(), midpoint.y());
+	/*QColor color = colorWheel->pixmap()->toImage().pixelColor(midpoint.x(), midpoint.y());
 	ColorPoint cp;
 	cp.color = color;
 	cp.point = midpoint;
-	colors->append(cp);
+	colors->append(cp);*/
 }
 
-QPoint CirclePalette::CalculateCentroid(int circleRadius)
+void CirclePalette::CalculateCentroid(int circleRadius)
 {
 	centroid = QPoint();
 	for (QPoint *p : this->points)
@@ -116,13 +116,11 @@ QPoint CirclePalette::CalculateCentroid(int circleRadius)
 
 	// shift over the centroid (because the above is using top-left)
 	centroid = QPoint(centroid.x() - circleRadius, centroid.y() - circleRadius);
-
-	return centroid;
 }
 
 void CirclePalette::_draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius)
 {
-	QPoint centroid = CalculateCentroid(circleRadius);
+	CalculateCentroid(circleRadius);
 	_draw_primary_imp(painter, colors, colorWheel, centroid, circleRadius, true);
 }
 
@@ -165,12 +163,43 @@ bool CirclePalette::sort_angles(const ColorPoint i, const ColorPoint j)
 
 bool sort_angles1 (ColorPoint i, ColorPoint j)
 {
-	if (j.is_centroid)
+	/*if (j.is_centroid)
 	{
 		return -1;
-	}
+	}*/
 
-	return (i.angle >= j.angle);
+	return (i.angle <= j.angle);
+}
+
+ColorPoint CirclePalette::getColorAt(const QPoint &p)
+{
+	QColor color = colorWheel->pixmap()->toImage().pixelColor(p.x(), p.y());
+	ColorPoint cp;
+	cp.color = color;
+	cp.point = p;
+	//cp.is_centroid = isCentroid;
+
+	return cp;
+}
+
+ColorPoint CirclePalette::getMidPointColor(QPoint p1, QPoint p2)
+{
+	return getColorAt(QPoint((p1.x() + p2.x()) / 2, (p1.y() + p2.y()) / 2));
+}
+
+float PointPairToBearingDegrees(QPoint startingPoint, QPoint point)
+{
+	QPoint endingPoint;
+	//endingPoint.setX((cos(qDegreesToRadians(-90.0)) * (float)point.x()) + (-sin(qDegreesToRadians(-90.0)) * (float)point.y()));
+	//endingPoint.setY((sin(qDegreesToRadians(-90.0)) * (float)point.x()) + (cos(qDegreesToRadians(-90.0)) * (float)point.y()));
+
+	endingPoint = point;
+
+    QPoint originPoint = QPoint(endingPoint.x() - startingPoint.x(), endingPoint.y() - startingPoint.y()); // get origin point to origin by subtracting end from start
+    float bearingRadians = atan2f(originPoint.y(), originPoint.x()); // get bearing in radians
+    float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
+    bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
+    return qDegreesToRadians(bearingDegrees);
 }
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
@@ -261,53 +290,111 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 			_draw_centroid(painter, &colors, colorWheel, centroidRadius);
 		}
 
+		// make sure that this is empty
+		colors.clear();
+
+		qInfo() << "start";
+
 		// populate the angles for each point
-		for (auto p : colors)
+		for (auto n : points)
 		{
-			auto t = QPoint(p.point.x(), p.point.y());
+			ColorPoint p;
+
+			/*auto t = QPoint(n->x(), n->y());
+
 
 			// TODO make sure center is true
 			t = t - center;
+			t.setY(-t.y()); // invert y so up is positive
 
 			if (t.x() == 0)
 			{
-				p.angle = -3.14159265;
+				if (t.y() == 0)
+				{
+					p.angle = 0;
+				}
+				else if (t.y() > 0)
+					p.angle = qDegreesToRadians(90.0);
+				else
+					p.angle = qDegreesToRadians(270.0);
 			}
-			else if (t.x() < 0)
+			else if (t.y() == 0)
 			{
-				p.angle -= M_PI_4;
+				if (t.x() < 0)
+				{
+					p.angle = qDegreesToRadians(180.0);
+				}
+				else
+				{
+					p.angle = 0.0f;
+				}
 			}
 			else
 			{
-				p.angle = atan(t.y() / t.x());
-			}
+				p.angle = atan((double)t.y() / (double)t.x());
+			}*/
 
-			p.angle += M_PI;
+			p.angle = PointPairToBearingDegrees(center, QPoint(n->x(), n->y()));
 
-			// go back a bit for the sections being not aligned to top
-			// this is 1/2 a section
-			p.angle += 15.0 * M_PI / 180.0;
+			//qInfo() << QPoint(n->x(), n->y()) << " " << t << " " << center << " " << qRadiansToDegrees(p.angle);
+			qInfo() << QPoint(n->x(), n->y()) << " " << " " << center << " " << qRadiansToDegrees(p.angle);
+
+			p.point = QPoint(n->x(), n->y());
 
 			// rotate backwards by pi/2 radians
 			//p.angle -= M_PI_2;
 
+			colors.append(p);
 		};
 
-		std::sort(colors.begin(), colors.end(), Less(*this));
+		qInfo() << "end";
 
-		// rotate by 1
-		//intermediaryPoints.push_back(*intermediaryPoints.begin());
-		//intermediaryPocolorsints.pop_front();
+		//std::sort(colors.begin(), colors.end(), Less(*this));
+		std::sort(colors.begin(), colors.end(), sort_angles1);
 
-		QVector<QColor> sortedColors;
-		for (auto i:colors)
+		QVector<ColorPoint> sortedColors;
+		if (gamutShape == PrestoPalette::GamutShapeLine)
 		{
-			sortedColors.append(i.color);
+			sortedColors.append(getColorAt(colors[0].point));
+			sortedColors.append(getColorAt(colors[1].point));
+			sortedColors.append(getMidPointColor(colors[0].point, colors[1].point));
 		}
 
-		if (this->selectedColors != sortedColors)
+		if (gamutShape == PrestoPalette::GamutShapeTriangle)
 		{
-			this->selectedColors = sortedColors;
+			sortedColors.append(getColorAt(colors[0].point));
+			sortedColors.append(getMidPointColor(colors[0].point, colors[1].point));
+			sortedColors.append(getColorAt(colors[1].point));
+			sortedColors.append(getMidPointColor(colors[1].point, colors[2].point));
+			sortedColors.append(getColorAt(colors[2].point));
+			sortedColors.append(getMidPointColor(colors[2].point, colors[0].point));
+
+			sortedColors.append(getColorAt(this->centroid));
+		}
+
+		if (gamutShape == PrestoPalette::GamutShapeSquare)
+		{
+			sortedColors.append(getColorAt(colors[0].point));
+			sortedColors.append(getMidPointColor(colors[0].point, colors[1].point));
+			sortedColors.append(getColorAt(colors[1].point));
+			sortedColors.append(getMidPointColor(colors[1].point, colors[2].point));
+			sortedColors.append(getColorAt(colors[2].point));
+			sortedColors.append(getMidPointColor(colors[2].point, colors[3].point));
+			sortedColors.append(getColorAt(colors[3].point));
+			sortedColors.append(getMidPointColor(colors[3].point, colors[0].point));
+
+			sortedColors.append(getColorAt(this->centroid));
+		}
+
+		QVector<QColor> newColors;
+		for(auto cc : sortedColors)
+		{
+			newColors.append(cc.color);
+		}
+
+		if (this->selectedColors != newColors)
+		{
+			this->selectedColors = newColors;
 
 			// notify that colors changed
 			emit selectedColorsChanged();
@@ -320,7 +407,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 bool CirclePalette::_is_collision(const QPoint &circleCenter, int circleRadius, const QPoint &hitTest)
 {
 	bool a = (qPow(circleCenter.x() - hitTest.x(), 2.0) + qPow(circleCenter.y() - hitTest.y(), 2.0)) <= qPow(circleRadius, 2.0);
-	qInfo() << a;
+	//qInfo() << a;
 	return a;
 
 /*	auto right = circleCenter.x() + circleRadius;

@@ -49,7 +49,7 @@ public:
 	void ChangeGamutShape(PrestoPalette::GlobalGamutShape shape);
 	void ChangeWheelShape(PrestoPalette::GlobalWheelShape shape);
 
-	QPoint CalculateCentroid(int circleRadius);
+	void CalculateCentroid(int circleRadius);
 
 signals:
 	void selectedColorsChanged();
@@ -102,6 +102,8 @@ public:
 	   };
 
 	bool sort_angles(const ColorPoint i, const ColorPoint j);
+	ColorPoint getColorAt(const QPoint &p);
+	ColorPoint getMidPointColor(QPoint p1, QPoint p2);
 };
 
 #endif // CIRCLEPALETTE_H

@@ -3,12 +3,14 @@
 #include <QDebug>
 #include <QBitmap>
 
-#define DEFAULT_PALETTE_WIDTH 9
-#define DEFAULT_PALETTE_HEIGHT 5
+#define DEFAULT_PALETTE_WIDTH 9.0
+#define DEFAULT_PALETTE_HEIGHT 5.0
 
 template<class T>
 const T& clamp(const T& x, const T& lower, const T& upper) {
-    return std::max(lower, std::min(x, upper));
+	if (x < lower) return lower;
+	if (x > upper) return upper;
+	return x;
 }
 
 VisualPalette::VisualPalette(QWidget *parent) : QWidget(parent)
@@ -196,8 +198,8 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	this->paletteWidth = paletteWidth;
 	resetSwatches();
 
-	auto startingColumn = clamp(((DEFAULT_PALETTE_WIDTH - paletteWidth) / 2.0), 0.0, (double)paletteWidth);
-	auto startingRow = clamp(((DEFAULT_PALETTE_HEIGHT - paletteHeight) / 2.0), 0.0, (double)paletteHeight);
+	int startingColumn = clamp(((DEFAULT_PALETTE_WIDTH - paletteWidth) / 2.0), 0.0, (double)paletteWidth + 1);
+	int startingRow = clamp(((DEFAULT_PALETTE_HEIGHT - paletteHeight) / 2.0), 0.0, (double)paletteHeight);
 
 	// set the midline first
 	for (int i = 0; i < paletteWidth; i++)

@@ -27,7 +27,15 @@ public:
 	QColor color;
 	QPoint point;
 	qreal angle; // in radians
-	bool is_centroid;
+	bool secondaryOn;
+
+	ColorPoint(QPoint p)
+	{
+		this->point = p;
+		this->angle = 0;
+		this->secondaryOn = true;
+		this->color = QColor();
+	}
 };
 
 class CirclePalette : public QWidget
@@ -67,13 +75,38 @@ private:
 
 private:
 	int primaryRadius = 15;
-	int secondaryRadius = 5;
+	int secondaryRadius = 6;
 	int centroidRadius = 5;
 
-	std::vector<QPoint*> points;
-	std::vector<QLabel*> lines;
+	std::vector<ColorPoint*> pointsLine;
+	std::vector<ColorPoint*> pointsTriangle;
+	std::vector<ColorPoint*> pointsQuad;
+
+	//std::vector<QPoint*> seconardariesLine;
+	//std::vector<QPoint*> seconardariesTriangle;
+	//std::vector<QPoint*> seconardariesQuad;
+
+	/*bool secondaryTriangle1On;
+	bool secondaryTriangle2On;
+	bool secondaryTriangle3On;
+
+	bool secondaryQuad1On;
+	bool secondaryQuad2On;
+	bool secondaryQuad3On;
+	bool secondaryQuad4On;*/
+
+	QPoint centroidTriangle;
+	QPoint centroidQuad;
+
+	//bool centroidLineOn;
+	bool centroidTriangleOn;
+	bool centroidQuadOn;
+
+	std::vector<ColorPoint*> *points;
+	//std::vector<QPoint*> *secondaries;
+
 	QPoint *lighting;
-	QPoint centroid;
+	QPoint *centroid;
 
 	QPoint dragStartPosition;
 	bool isDragging;
@@ -88,10 +121,10 @@ private:
 	void create_gamut_square();
 	void destroy_gamut();
 
-	QPointF FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2);
-	void _draw_primary_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p, int circleRadius, bool isCentroid);
-	void _draw_line_imp(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, const QPoint &p1, const QPoint &p2, int circleRadius);
-	void _draw_centroid(QPainter &painter, QVector<ColorPoint> *colors, QLabel *colorWheel, int circleRadius);
+	QPointF FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2, const qreal radius);
+	void _draw_primary_imp(QPainter &painter, const QPoint &p, int circleRadius, bool isCentroid);
+	void _draw_line_imp(QPainter &painter, const QPoint &p1, const QPoint &p2, int circleRadius, bool secondaryOn);
+	void _draw_centroid(QPainter &painter, int circleRadius, bool secondaryOn);
 	bool _is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest);
 
 public:
@@ -102,8 +135,9 @@ public:
 	   };
 
 	bool sort_angles(const ColorPoint i, const ColorPoint j);
-	ColorPoint getColorAt(const QPoint &p);
-	ColorPoint getMidPointColor(QPoint p1, QPoint p2);
+	QColor getColorAt(const QPoint &p);
+	QColor getMidPointColor(QPoint p1, QPoint p2);
+	QPoint getMidPoint(QPoint &p1, QPoint &p2);
 };
 
 #endif // CIRCLEPALETTE_H

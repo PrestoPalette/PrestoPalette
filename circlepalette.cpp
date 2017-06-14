@@ -187,6 +187,7 @@ ColorPoint CirclePalette::getMidPointColor(QPoint p1, QPoint p2)
 	return getColorAt(QPoint((p1.x() + p2.x()) / 2, (p1.y() + p2.y()) / 2));
 }
 
+// https://stackoverflow.com/questions/1311049/how-to-map-atan2-to-degrees-0-360
 float PointPairToBearingDegrees(QPoint startingPoint, QPoint point)
 {
 	QPoint endingPoint;
@@ -195,11 +196,23 @@ float PointPairToBearingDegrees(QPoint startingPoint, QPoint point)
 
 	endingPoint = point;
 
-    QPoint originPoint = QPoint(endingPoint.x() - startingPoint.x(), endingPoint.y() - startingPoint.y()); // get origin point to origin by subtracting end from start
-    float bearingRadians = atan2f(originPoint.y(), originPoint.x()); // get bearing in radians
-    float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
-    bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
-    return qDegreesToRadians(bearingDegrees);
+	QPoint originPoint = QPoint(endingPoint.x() - startingPoint.x(), endingPoint.y() - startingPoint.y()); // get origin point to origin by subtracting end from start
+
+	/*qInfo() << "before " << originPoint;
+	qreal mag = qSqrt((originPoint.x()*originPoint.x()) + (originPoint.y() * originPoint.y()));
+	qreal x = ((qreal)originPoint.x() / mag);
+	qreal y = ((qreal)originPoint.y() / mag);
+	qInfo() << "after " << x << "," << y;*/
+
+	//float bearingRadians = atan2f(y, x); // get bearing in radians
+	float bearingRadians = atan2f(originPoint.y(), originPoint.x()); // get bearing in radians
+	float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
+
+	// this is for PrestoPalette
+	bearingDegrees += 105.0; // to shift over to the yellow (90 degrees plus 360/24)
+
+	bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
+	return qDegreesToRadians(bearingDegrees);
 }
 
 bool CirclePalette::eventFilter(QObject* watched, QEvent* event)

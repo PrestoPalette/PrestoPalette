@@ -2,6 +2,9 @@
 #include <math.h>
 #include <QDebug>
 #include <QBitmap>
+#include <QtMath>
+#include <QEvent>
+#include <QMouseEvent>
 
 #define DEFAULT_PALETTE_WIDTH 9.0
 #define DEFAULT_PALETTE_HEIGHT 5.0
@@ -22,6 +25,9 @@ VisualPalette::VisualPalette(QWidget *parent) : QWidget(parent)
 	paletteHeight = 5;
 
 	resetSwatches();
+
+	setMouseTracking(true);
+	installEventFilter(this);
 }
 
 void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
@@ -234,4 +240,35 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 			_setColor(i + startingColumn, midLine + 1, combinedColors[i], 1.0f - stringDark, ambientColorAlpha, enableLighting, ambientColor, ambientColorBrightness, true, true);
 		}
 	}
+}
+
+bool VisualPalette::eventFilter(QObject* watched, QEvent* event)
+{
+	// TODO Fix me!  This is the hover over the palette
+	if (event->type() == QEvent::MouseMove && (watched == this))
+	{
+		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
+
+		QPoint p = this->mapFromGlobal(QCursor::pos());
+		int swatchWidth = this->width() / DEFAULT_PALETTE_WIDTH;
+		int swatchHeight = this->height() / DEFAULT_PALETTE_HEIGHT;
+
+		int row, column;
+		row = p.y() / swatchHeight;
+		column = p.x() / swatchWidth;
+
+		QLabel *swatch;
+		auto cell = this->layout->itemAtPosition(row, column);
+		if (cell == NULL)
+		{
+			return false;
+		}
+
+		swatch = (QLabel *)(cell->widget());
+
+		QColor color = swatch->pixmap()->toImage().pixelColor(50, 50);
+		emit hoverColor(color);
+	}
+
+	return false;
 }

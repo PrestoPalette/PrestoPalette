@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSoundEffect>
 
 #include "gui_mainwindow.h"
 
@@ -29,6 +30,7 @@ private:
 	qreal ambientColorBrightness;
 	qreal alpha;
 	int mixString;
+	QSoundEffect controlClick;
 
 private slots:
 	void on_btnSaveJPG_clicked();
@@ -47,6 +49,8 @@ private slots:
 	void on_colorWheel_selectedColorsChanged();
 	void on_colorWheel_hoverColor(const QColor &color);
 	void on_colorWheel_lightingColorChanged(const QColor &color);
+
+	void on_visualPalette_hoverColor(const QColor &color);
 
 	void on_rdoGamutShapeTriangle_clicked(bool checked = false);
 	void on_rdoGamutShapeLine_clicked(bool checked = false);

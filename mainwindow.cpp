@@ -10,6 +10,7 @@
 #include <QStandardPaths>
 #include <QClipboard>
 #include <QBitmap>
+#include <QSoundEffect>
 
 const qreal circleWidth = 14.0;
 
@@ -24,18 +25,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	/***************************
 	 * BEGIN PRESETS
 	 ***************************/
-	// select the triangle by default
-	this->ui->rdoGamutShapeTriangle->clicked();
-
-	// select the course wheel by default
+	this->ui->rdoGamutShapeSquare->clicked();
 	this->ui->rdoCourseWheel->clicked();
-
-	this->mixString = 3;
-	this->ui->rdoMixString5->clicked();
-
+	this->ui->rdoMixString1->clicked();
 	this->ui->btnLightingOff->clicked();
-	
-	this->ui->backgroundSlider->setSliderPosition(100);
+	this->ui->backgroundSlider->setSliderPosition(92);
 	this->ui->alphaSlider->setSliderPosition(50);
 	this->ui->brightnessSlider->setSliderPosition(0);
 	this->ui->darkSlider->setSliderPosition(70);
@@ -50,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->on_brightnessSlider_sliderMoved(this->ui->brightnessSlider->value());
 	this->on_darkSlider_sliderMoved(this->ui->darkSlider->value());
 	this->on_lightSlider_sliderMoved(this->ui->lightSlider->value());
+
+	this->controlClick.setSource(QUrl::fromLocalFile(":/main/audio/Select.wav"));
+	this->controlClick.setVolume(0.25f);
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +76,7 @@ void MainWindow::on_btnLightingOn_clicked(bool checked)
 {
 	this->enableLighting = true;
 	this->ui->colorWheel->enableLighting = true;
+	controlClick.play();
 
 	refresh_lighting_buttons();
 }
@@ -87,6 +85,7 @@ void MainWindow::on_btnLightingOff_clicked(bool checked)
 {
 	this->enableLighting = false;
 	this->ui->colorWheel->enableLighting = false;
+	controlClick.play();
 
 	refresh_lighting_buttons();
 }
@@ -153,6 +152,8 @@ void MainWindow::on_rdoCourseWheel_clicked(bool checked)
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeCourse);
 	refresh_wheel_buttons();
 	refreshPalette();
+
+	controlClick.play();
 }
 
 void MainWindow::on_rdoFineWheel_clicked(bool checked)
@@ -160,6 +161,8 @@ void MainWindow::on_rdoFineWheel_clicked(bool checked)
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeFine);
 	refresh_wheel_buttons();
 	refreshPalette();
+
+	controlClick.play();
 }
 
 void MainWindow::refresh_wheel_buttons(void)
@@ -187,18 +190,21 @@ void MainWindow::on_rdoGamutShapeLine_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeLine);
 	refresh_gamutShape_buttons();
+	controlClick.play();
 }
 
 void MainWindow::on_rdoGamutShapeTriangle_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeTriangle);
 	refresh_gamutShape_buttons();
+	controlClick.play();
 }
 
 void MainWindow::on_rdoGamutShapeSquare_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeSquare);
 	refresh_gamutShape_buttons();
+	controlClick.play();
 }
 
 void MainWindow::refresh_gamutShape_buttons(void)
@@ -235,6 +241,7 @@ void MainWindow::on_rdoMixString1_clicked(bool checked)
 	this->mixString = 1;
 	refreshPalette();
 	refresh_mixString_buttons();
+	controlClick.play();
 }
 
 void MainWindow::on_rdoMixString3_clicked(bool checked)
@@ -242,6 +249,7 @@ void MainWindow::on_rdoMixString3_clicked(bool checked)
 	this->mixString = 3;
 	refreshPalette();
 	refresh_mixString_buttons();
+	controlClick.play();
 }
 
 void MainWindow::on_rdoMixString5_clicked(bool checked)
@@ -249,7 +257,7 @@ void MainWindow::on_rdoMixString5_clicked(bool checked)
 	this->mixString = 5;
 	refreshPalette();
 	refresh_mixString_buttons();
-}
+	controlClick.play();}
 
 void MainWindow::refresh_mixString_buttons(void)
 {
@@ -352,6 +360,11 @@ void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
 	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgba(75, 150, 202, 0), stop:1 rgba(75, 150, 202, 255));}"
 						"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
 */
+}
+
+void MainWindow::on_visualPalette_hoverColor(const QColor &color)
+{
+	SetCurrentColor(color);
 }
 
 void MainWindow::SetCurrentColor(const QColor &color)

@@ -27,8 +27,11 @@ private:
 
 	void resetSwatches();
 	void _setColor(int column, int row, QColor &combinedColor, qreal componentMultiplier, qreal ambientColorAlpha, bool enableLighting, QColor &ambientColor, qreal ambientColorBrightness, bool interpolate, bool go_dark);
+	bool eventFilter(QObject* watched, QEvent* event);
 
+	bool _is_collision(const QPoint &circleCenter, int circleRadius, const QPoint &hitTest);
 signals:
+	void hoverColor(const QColor &color);
 
 public slots:
 

@@ -59,16 +59,14 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	create_gamut_triangle();
 	create_gamut_square();
 
-	/*secondaryTriangle1On = true;
-	secondaryTriangle2On = true;
-	secondaryTriangle3On = true;
-	secondaryQuad1On = true;
-	secondaryQuad2On = true;
-	secondaryQuad3On = true;
-	secondaryQuad4On = true;*/
-	//centroidLineOn = true;
-	centroidTriangleOn = true;
-	centroidQuadOn = true;
+	centroidTriangleOn = false; // centroids are off by default
+	centroidQuadOn = false; // centroids are off by default
+
+	this->controlOffClick.setSource(QUrl::fromLocalFile(":/main/audio/Click_Off_Short.wav"));
+	this->controlOffClick.setVolume(0.25f);
+
+	this->controlOnClick.setSource(QUrl::fromLocalFile(":/main/audio/Click_On_Short.wav"));
+	this->controlOnClick.setVolume(0.25f);
 }
 
 QPointF CirclePalette::FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2, const qreal radius)
@@ -358,15 +356,30 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		if (gamutShape == PrestoPalette::GamutShapeSquare)
 		{
 			sortedColors.append(getColorAt((*points)[0]->point));
-			sortedColors.append(getMidPointColor((*points)[0]->point, (*points)[1]->point));
+			if ((*points)[0]->secondaryOn)
+			{
+				sortedColors.append(getMidPointColor((*points)[0]->point, (*points)[1]->point));
+			}
 			sortedColors.append(getColorAt((*points)[1]->point));
-			sortedColors.append(getMidPointColor((*points)[1]->point, (*points)[2]->point));
+			if ((*points)[1]->secondaryOn)
+			{
+				sortedColors.append(getMidPointColor((*points)[1]->point, (*points)[2]->point));
+			}
 			sortedColors.append(getColorAt((*points)[2]->point));
-			sortedColors.append(getMidPointColor((*points)[2]->point, (*points)[3]->point));
+			if ((*points)[2]->secondaryOn)
+			{
+				sortedColors.append(getMidPointColor((*points)[2]->point, (*points)[3]->point));
+			}
 			sortedColors.append(getColorAt((*points)[3]->point));
-			sortedColors.append(getMidPointColor((*points)[3]->point, (*points)[0]->point));
+			if ((*points)[3]->secondaryOn)
+			{
+				sortedColors.append(getMidPointColor((*points)[3]->point, (*points)[0]->point));
+			}
 
-			sortedColors.append(getColorAt(*this->centroid));
+			if (centroidQuadOn)
+			{
+				sortedColors.append(getColorAt(*this->centroid));
+			}
 		}
 
 		QVector<QColor> newColors;
@@ -434,6 +447,14 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 				if (_is_collision(getMidPoint((this->pointsLine[0])->point, (this->pointsLine[1])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsLine[0])->secondaryOn = !(this->pointsLine[0])->secondaryOn;
+					if ((this->pointsLine[0])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 			}
 
@@ -442,19 +463,51 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 				if (_is_collision(getMidPoint((this->pointsTriangle[0])->point, (this->pointsTriangle[1])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsTriangle[0])->secondaryOn = !(this->pointsTriangle[0])->secondaryOn;
+					if ((this->pointsTriangle[0])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 				if (_is_collision(getMidPoint((this->pointsTriangle[1])->point, (this->pointsTriangle[2])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsTriangle[1])->secondaryOn = !(this->pointsTriangle[1])->secondaryOn;
+					if ((this->pointsTriangle[1])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 				if (_is_collision(getMidPoint((this->pointsTriangle[2])->point, (this->pointsTriangle[0])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsTriangle[2])->secondaryOn = !(this->pointsTriangle[2])->secondaryOn;
+					if ((this->pointsTriangle[2])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 
 				if (_is_collision(this->centroidTriangle, centroidRadius, mousePos))
 				{
 					this->centroidTriangleOn = !this->centroidTriangleOn;
+					if (centroidTriangleOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 			}
 
@@ -463,23 +516,63 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 				if (_is_collision(getMidPoint((this->pointsQuad[0])->point, (this->pointsQuad[1])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsQuad[0])->secondaryOn = !(this->pointsQuad[0])->secondaryOn;
+					if ((this->pointsQuad[0])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 				if (_is_collision(getMidPoint((this->pointsQuad[1])->point, (this->pointsQuad[2])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsQuad[1])->secondaryOn = !(this->pointsQuad[1])->secondaryOn;
+					if ((this->pointsQuad[1])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 				if (_is_collision(getMidPoint((this->pointsQuad[2])->point, (this->pointsQuad[3])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsQuad[2])->secondaryOn = !(this->pointsQuad[2])->secondaryOn;
+					if ((this->pointsQuad[2])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 				if (_is_collision(getMidPoint((this->pointsQuad[3])->point, (this->pointsQuad[0])->point), secondaryRadius, mousePos))
 				{
 					(this->pointsQuad[3])->secondaryOn = !(this->pointsQuad[3])->secondaryOn;
+					if ((this->pointsQuad[3])->secondaryOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 
 				if (_is_collision(this->centroidQuad, centroidRadius, mousePos))
 				{
 					this->centroidQuadOn = !this->centroidQuadOn;
+					if (centroidQuadOn)
+					{
+						this->controlOnClick.play();
+					}
+					else
+					{
+						this->controlOffClick.play();
+					}
 				}
 			}
 		}
@@ -538,10 +631,10 @@ void CirclePalette::create_gamut_triangle()
 
 void CirclePalette::create_gamut_square()
 {
-	ColorPoint *pFirst = new ColorPoint(QPoint(122 - this->geometry().left() - LEFT_SHIFT, 411 - this->geometry().top() - TOP_SHIFT));
-	ColorPoint *pSecond = new ColorPoint(QPoint(188 - this->geometry().left() - LEFT_SHIFT, 287 - this->geometry().top() - TOP_SHIFT));
-	ColorPoint *pThird = new ColorPoint(QPoint(362 - this->geometry().left() - LEFT_SHIFT, 220 - this->geometry().top() - TOP_SHIFT));
-	ColorPoint *pFourth = new ColorPoint(QPoint(495 - this->geometry().left() - LEFT_SHIFT, 419 - this->geometry().top() - TOP_SHIFT));
+	ColorPoint *pFirst = new ColorPoint(QPoint(204 - this->geometry().left(), 40 - this->geometry().top()));
+	ColorPoint *pSecond = new ColorPoint(QPoint(410 - this->geometry().left(), 194 - this->geometry().top()));
+	ColorPoint *pThird = new ColorPoint(QPoint(380 - this->geometry().left(), 318 - this->geometry().top()));
+	ColorPoint *pFourth = new ColorPoint(QPoint(116 - this->geometry().left(), 355 - this->geometry().top()));
 
 	pointsQuad.push_back(pFirst);
 	pointsQuad.push_back(pSecond);

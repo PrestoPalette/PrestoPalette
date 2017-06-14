@@ -58,5 +58,8 @@
         <file>graphics/BackgroundSliderBG.png</file>
         <file>graphics/AlphaSliderBG.png</file>
         <file>graphics/AlphaSliderOverlay.png</file>
+        <file>audio/Click_Off_Short.wav</file>
+        <file>audio/Click_On_Short.wav</file>
+        <file>audio/Select.wav</file>
     </qresource>
 </RCC>

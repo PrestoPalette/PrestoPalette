@@ -15,12 +15,14 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Multimedia REQUIRED)
 
 add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp)
 
 target_link_libraries(prestopalette Qt5::Widgets)
 target_link_libraries(prestopalette Qt5::Core)
 target_link_libraries(prestopalette Qt5::Gui)
+target_link_libraries(prestopalette Qt5::Multimedia)
 
 set_property(TARGET prestopalette PROPERTY CXX_STANDARD 11)
 set_property(TARGET prestopalette PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -64,10 +66,12 @@ IF(MINGW)
 	get_target_property(Qt5_Core_Location Qt5::Core LOCATION)
 	get_target_property(Qt5_Gui_Location Qt5::Gui LOCATION)
 	get_target_property(Qt5_Widgets_Location Qt5::Widgets LOCATION)
+	get_target_property(Qt5_Multimedia_Location Qt5::Multimedia LOCATION)
 
 	INSTALL(FILES ${Qt5_Core_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Gui_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Widgets_Location} DESTINATION . COMPONENT Libraries)
+	INSTALL(FILES ${Qt5_Multimedia_Location} DESTINATION . COMPONENT Libraries)
 ENDIF(MINGW)
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Presto Palette")

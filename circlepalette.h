@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QPoint>
+#include <QSoundEffect>
 
 namespace PrestoPalette
 {
@@ -33,7 +34,7 @@ public:
 	{
 		this->point = p;
 		this->angle = 0;
-		this->secondaryOn = true;
+		this->secondaryOn = false; // secondaries are off by default
 		this->color = QColor();
 	}
 };
@@ -51,6 +52,8 @@ public:
 	QColor lightingColor;
 	PrestoPalette::GlobalGamutShape gamutShape;
 	PrestoPalette::GlobalWheelShape wheelShape;
+	QSoundEffect controlOffClick;
+	QSoundEffect controlOnClick;
 
 	bool enableLighting;
 
@@ -68,7 +71,7 @@ private slots:
 
 
 private:
-	bool eventFilter( QObject* watched, QEvent* event );
+	bool eventFilter(QObject* watched, QEvent* event);
 	void mousePressEvent(QMouseEvent *event) override;
 	void mouseReleaseEvent(QMouseEvent *event) override;
 	void mouseMoveEvent(QMouseEvent *event) override;

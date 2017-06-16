@@ -60,6 +60,8 @@ void VisualPalette::resetSwatches()
 			{
 				auto swatch = new QLabel(this);
 
+				swatch->setMouseTracking(true);
+
 				/* with spaces between cells */
 				/*swatch->setStyleSheet("\
 				QLabel {\
@@ -245,7 +247,7 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 bool VisualPalette::eventFilter(QObject* watched, QEvent* event)
 {
 	// TODO Fix me!  This is the hover over the palette
-	if (event->type() == QEvent::MouseMove && (watched == this))
+	if (event->type() == QEvent::MouseMove)
 	{
 		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
 

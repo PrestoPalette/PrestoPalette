@@ -18,7 +18,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5Network REQUIRED)
 
-add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp)
+add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
 
 target_link_libraries(prestopalette Qt5::Widgets)
 target_link_libraries(prestopalette Qt5::Core)

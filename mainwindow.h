@@ -47,6 +47,10 @@ private slots:
 	void on_btnLoad_hoverEnter(QHoverEvent* e);
 	void on_btnLoad_hoverLeave(QHoverEvent* e);
 
+	void on_btnAbout_clicked();
+	void on_btnAbout_hoverEnter(QHoverEvent* e);
+	void on_btnAbout_hoverLeave(QHoverEvent* e);
+
 	void on_backgroundSlider_sliderMoved(int position);
 
 	void on_lightSlider_sliderMoved(int position);

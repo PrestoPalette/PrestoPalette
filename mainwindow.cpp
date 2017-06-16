@@ -1,6 +1,3 @@
-#include "mainwindow.h"
-#include "gui_mainwindow.h"
-
 #include <QMouseEvent>
 #include <QMessageBox>
 #include <QtDebug>
@@ -11,6 +8,10 @@
 #include <QClipboard>
 #include <QBitmap>
 #include <QSoundEffect>
+
+#include "mainwindow.h"
+#include "gui_mainwindow.h"
+#include "aboutdialog.h"
 
 const qreal circleWidth = 14.0;
 
@@ -319,6 +320,16 @@ void MainWindow::on_btnLoad_hoverLeave(QHoverEvent* e)
 	this->ui->btnLoad->setPixmap(QPixmap(":/main/graphics/LoadIcon.png"));
 }
 
+void MainWindow::on_btnAbout_hoverEnter(QHoverEvent* e)
+{
+	this->ui->btnAbout->setPixmap(QPixmap(":/main/graphics/AboutIcon_Hover.png"));
+}
+
+void MainWindow::on_btnAbout_hoverLeave(QHoverEvent* e)
+{
+	this->ui->btnAbout->setPixmap(QPixmap(":/main/graphics/AboutIcon.png"));
+}
+
 void MainWindow::on_btnSaveJPG_clicked()
 {
 	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
@@ -365,6 +376,12 @@ void MainWindow::on_btnLoad_clicked()
 
 	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));*/
 
+}
+
+void MainWindow::on_btnAbout_clicked()
+{
+	auto about = new AboutDialog(this);
+	about->exec();
 }
 
 void MainWindow::on_btnClipboard_clicked()

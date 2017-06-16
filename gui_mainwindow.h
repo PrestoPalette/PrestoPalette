@@ -81,6 +81,8 @@ public:
     ClickableLabel *btnSave;
     ClickableLabel *btnLoad;
 
+    ClickableLabel *btnAbout;
+
     QLabel *cornerBottomLeft;
     QLabel *cornerBottomRight;
     QLabel *borderBottom;
@@ -414,12 +416,11 @@ public:
 	btnLoad->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/LoadIcon.png")));
 	btnLoad->setScaledContents(true);
 
-	/*rdoMixString1->setFont(fontDetail);
-	rdoMixString1->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
-	rdoMixString3->setFont(fontDetail);
-	rdoMixString3->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
-	rdoMixString5->setFont(fontDetail);
-	rdoMixString5->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));*/
+	btnAbout = new ClickableLabel(centralWidget);
+	btnAbout->setObjectName(QStringLiteral("btnAbout"));
+	btnAbout->setGeometry(QRect(24, 24, 36, 32));
+	btnAbout->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/AboutIcon.png")));
+	btnAbout->setScaledContents(true);
 
 	btnLightingOn = new ClickableLabel(centralWidget);
 	btnLightingOn->setObjectName(QStringLiteral("btnLightingOn"));
@@ -479,6 +480,7 @@ public:
 	btnSaveJPG->raise();
 	btnSave->raise();
 	btnLoad->raise();
+	btnAbout->raise();
 	toolbarBackground->lower();
 	toolbarBackground->stackUnder(borderLeft);
 	backgroundArea->lower();
@@ -529,6 +531,7 @@ public:
 	btnSaveJPG->setText(QString());
 	btnSave->setText(QString());
 	btnLoad->setText(QString());
+	btnAbout->setText(QString());
 	lblCurrentColor->setText(QApplication::translate("MainWindow", "CURRENT COLOR", 0));
 	lblCurrentColor->adjustSize();
 	cornerBottomLeft->setText(QString());

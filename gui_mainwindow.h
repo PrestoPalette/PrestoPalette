@@ -78,6 +78,9 @@ public:
     QLabel *currentColorSwatch;
     QLabel *currentColorSwatchCaption;
 
+    ClickableLabel *btnSave;
+    ClickableLabel *btnLoad;
+
     QLabel *cornerBottomLeft;
     QLabel *cornerBottomRight;
     QLabel *borderBottom;
@@ -321,7 +324,7 @@ public:
 
 	btnClipboard = new ClickableLabel(centralWidget);
 	btnClipboard->setObjectName(QStringLiteral("btnClipboard"));
-	btnClipboard->setGeometry(QRect(1103, 679, 41, 55));
+	btnClipboard->setGeometry(QRect(1112, 722, 33, 44));
 	btnClipboard->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/ClipboardIcon.png")));
 	btnClipboard->setScaledContents(true);
 	backgroundArea = new QWidget(centralWidget);
@@ -360,8 +363,8 @@ public:
 	borderLeft->setScaledContents(true);
 	btnSaveJPG = new ClickableLabel(centralWidget);
 	btnSaveJPG->setObjectName(QStringLiteral("btnSaveJPG"));
-	btnSaveJPG->setGeometry(QRect(1171, 682, 41, 52));
-	btnSaveJPG->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/JPGIcon.png")));
+	btnSaveJPG->setGeometry(QRect(1172, 723, 33, 42));
+	btnSaveJPG->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/PNGIcon.png")));
 	btnSaveJPG->setScaledContents(true);
 	lblCurrentColor = new QLabel(centralWidget);
 	lblCurrentColor->setObjectName(QStringLiteral("lblCurrentColor"));
@@ -380,11 +383,11 @@ public:
 	currentColorSwatchCaption->setAlignment(Qt::AlignCenter);
 	currentColorSwatchCaption->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 	cornerBottomLeft = new QLabel(centralWidget);
-	cornerBottomLeft->setObjectName(QStringLiteral("label_9"));
+	cornerBottomLeft->setObjectName(QStringLiteral("cornerBottomLeft"));
 	cornerBottomLeft->setGeometry(QRect(0, APP_HEIGHT - 52, 52, 52));
 	cornerBottomLeft->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/BottomLeftCorner.png")));
 	cornerBottomRight = new QLabel(centralWidget);
-	cornerBottomRight->setObjectName(QStringLiteral("label_8"));
+	cornerBottomRight->setObjectName(QStringLiteral("cornerBottomRight"));
 	cornerBottomRight->setGeometry(QRect(APP_WIDTH - 52, APP_HEIGHT - 52, 52, 52));
 	cornerBottomRight->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/BottomRightCorner.png")));
 	borderBottom = new QLabel(centralWidget);
@@ -398,6 +401,18 @@ public:
 	toolbarBackground->setGeometry(QRect(15, 619, APP_WIDTH - 15 - 15, 165));
 	toolbarBackground->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/OptionBG.png")));
 	toolbarBackground->setScaledContents(true);
+
+	btnSave = new ClickableLabel(centralWidget);
+	btnSave->setObjectName(QStringLiteral("btnSave"));
+	btnSave->setGeometry(QRect(1106, 660, 43, 46));
+	btnSave->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/SaveIcon.png")));
+	btnSave->setScaledContents(true);
+
+	btnLoad = new ClickableLabel(centralWidget);
+	btnLoad->setObjectName(QStringLiteral("btnLoad"));
+	btnLoad->setGeometry(QRect(1166, 660, 43, 46));
+	btnLoad->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/LoadIcon.png")));
+	btnLoad->setScaledContents(true);
 
 	/*rdoMixString1->setFont(fontDetail);
 	rdoMixString1->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
@@ -462,6 +477,8 @@ public:
 	btnClipboard->raise();
 	lblCurrentColor->raise();
 	btnSaveJPG->raise();
+	btnSave->raise();
+	btnLoad->raise();
 	toolbarBackground->lower();
 	toolbarBackground->stackUnder(borderLeft);
 	backgroundArea->lower();
@@ -510,6 +527,8 @@ public:
 	borderRight->setText(QString());
 	borderLeft->setText(QString());
 	btnSaveJPG->setText(QString());
+	btnSave->setText(QString());
+	btnLoad->setText(QString());
 	lblCurrentColor->setText(QApplication::translate("MainWindow", "CURRENT COLOR", 0));
 	lblCurrentColor->adjustSize();
 	cornerBottomLeft->setText(QString());

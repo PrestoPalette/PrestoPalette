@@ -2,6 +2,8 @@
 
 pushd `pwd`
 
+./fix_graphics.sh
+
 cd ..
 rm -rf build
 mkdir build

@@ -17,12 +17,10 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
-	
-	void refreshPalette();
-	void refresh_lighting_buttons();
-	void SetCurrentColor(const QColor &fillColor);
-	
+
 private:
+	Ui::MainWindow *ui;
+
 	qreal stringLight;
 	qreal stringDark;
 	bool enableLighting;
@@ -34,10 +32,20 @@ private:
 
 private slots:
 	void on_btnSaveJPG_clicked();
-	void on_btnClipboard_clicked();
+	void on_btnSaveJPG_hoverEnter(QHoverEvent* e);
+	void on_btnSaveJPG_hoverLeave(QHoverEvent* e);
 
-	void on_btnSaveJPG_pressed();
-	void on_btnClipboard_pressed();
+	void on_btnClipboard_clicked();
+	void on_btnClipboard_hoverEnter(QHoverEvent* e);
+	void on_btnClipboard_hoverLeave(QHoverEvent* e);
+
+	void on_btnSave_clicked();
+	void on_btnSave_hoverEnter(QHoverEvent* e);
+	void on_btnSave_hoverLeave(QHoverEvent* e);
+
+	void on_btnLoad_clicked();
+	void on_btnLoad_hoverEnter(QHoverEvent* e);
+	void on_btnLoad_hoverLeave(QHoverEvent* e);
 
 	void on_backgroundSlider_sliderMoved(int position);
 
@@ -67,13 +75,13 @@ private slots:
 	void on_btnLightingOff_clicked(bool checked = false);
 
 private:
-	//bool eventFilter( QObject* watched, QEvent* event );
+	void SetCurrentColor(const QColor &fillColor);
+
+	void refresh_lighting_buttons();
 	void refresh_mixString_buttons(void);
 	void refresh_gamutShape_buttons(void);
 	void refresh_wheel_buttons(void);
-
-private:
-	Ui::MainWindow *ui;
+	void refresh_palette();
 };
 
 #endif // MAINWINDOW_H

@@ -53,8 +53,6 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 
 	installEventFilter(this);
 
-	QMetaObject::connectSlotsByName(this);
-
 	create_gamut_line();
 	create_gamut_triangle();
 	create_gamut_square();

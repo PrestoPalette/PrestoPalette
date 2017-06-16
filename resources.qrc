@@ -9,7 +9,6 @@
         <file>graphics/CurrentColorSwatch.png</file>
         <file>graphics/DarknessSliderBG.png</file>
         <file>graphics/Divider.png</file>
-        <file>graphics/JPGIcon.png</file>
         <file>graphics/LeftBorder.png</file>
         <file>graphics/LightingIcon.png</file>
         <file>graphics/LightnessSliderBG.png</file>
@@ -53,13 +52,22 @@
         <file>graphics/Button_Quad_Selected.png</file>
         <file>graphics/YWheel_Fine.png</file>
         <file>fonts/calibrib.ttf</file>
-        <file>graphics/ClipboardIcon_Down.png</file>
-        <file>graphics/JPGIcon_Down.png</file>
         <file>graphics/BackgroundSliderBG.png</file>
         <file>graphics/AlphaSliderBG.png</file>
         <file>graphics/AlphaSliderOverlay.png</file>
         <file>audio/Click_Off_Short.wav</file>
         <file>audio/Click_On_Short.wav</file>
         <file>audio/Select.wav</file>
+        <file>graphics/AboutIcon.png</file>
+        <file>graphics/AboutIcon_Hover.png</file>
+        <file>graphics/ClipboardIcon_Hover.png</file>
+        <file>graphics/Close.png</file>
+        <file>graphics/Close_Hover.png</file>
+        <file>graphics/PNGIcon.png</file>
+        <file>graphics/PNGIcon_Hover.png</file>
+        <file>graphics/SaveIcon.png</file>
+        <file>graphics/SaveIcon_Hover.png</file>
+        <file>graphics/LoadIcon.png</file>
+        <file>graphics/LoadIcon_Hover.png</file>
     </qresource>
 </RCC>

@@ -16,6 +16,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
+find_package(Qt5Network REQUIRED)
 
 add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp)
 
@@ -67,11 +68,13 @@ IF(MINGW)
 	get_target_property(Qt5_Gui_Location Qt5::Gui LOCATION)
 	get_target_property(Qt5_Widgets_Location Qt5::Widgets LOCATION)
 	get_target_property(Qt5_Multimedia_Location Qt5::Multimedia LOCATION)
+	get_target_property(Qt5_Network_Location Qt5::Network LOCATION)
 
 	INSTALL(FILES ${Qt5_Core_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Gui_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Widgets_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Multimedia_Location} DESTINATION . COMPONENT Libraries)
+	INSTALL(FILES ${Qt5_Network_Location} DESTINATION . COMPONENT Libraries)
 ENDIF(MINGW)
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Presto Palette")

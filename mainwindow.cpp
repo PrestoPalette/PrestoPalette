@@ -69,7 +69,7 @@ void MainWindow::refresh_lighting_buttons()
 
 	this->ui->colorWheel->repaint();
 
-	refreshPalette();
+	refresh_palette();
 }
 
 void MainWindow::on_btnLightingOn_clicked(bool checked)
@@ -105,7 +105,7 @@ void MainWindow::on_lightSlider_sliderMoved(int position)
 
 	this->stringLight = v;
 
-	refreshPalette();
+	refresh_palette();
 
 	ui->lblLightPct->setText(QApplication::translate("MainWindow", "LIGHT", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
 	ui->lblLightPct->adjustSize();
@@ -117,7 +117,7 @@ void MainWindow::on_darkSlider_sliderMoved(int position)
 
 	this->stringDark = v;
 
-	refreshPalette();
+	refresh_palette();
 
 	ui->lblDarkPct->setText(QApplication::translate("MainWindow", "DARK", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
 	ui->lblDarkPct->adjustSize();
@@ -129,7 +129,7 @@ void MainWindow::on_brightnessSlider_sliderMoved(int position)
 
 	this->ambientColorBrightness = v;
 
-	refreshPalette();
+	refresh_palette();
 
 	ui->lblBrightnessPct->setText(QApplication::translate("MainWindow", "BRIGHTNESS", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
 	ui->lblBrightnessPct->adjustSize();
@@ -141,7 +141,7 @@ void MainWindow::on_alphaSlider_sliderMoved(int position)
 
 	this->alpha = v;
 
-	refreshPalette();
+	refresh_palette();
 
 	ui->lblAlphaPct->setText(QApplication::translate("MainWindow", "ALPHA", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
 	ui->lblAlphaPct->adjustSize();
@@ -151,7 +151,7 @@ void MainWindow::on_rdoCourseWheel_clicked(bool checked)
 {
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeCourse);
 	refresh_wheel_buttons();
-	refreshPalette();
+	refresh_palette();
 
 	controlClick.play();
 }
@@ -160,7 +160,7 @@ void MainWindow::on_rdoFineWheel_clicked(bool checked)
 {
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeFine);
 	refresh_wheel_buttons();
-	refreshPalette();
+	refresh_palette();
 
 	controlClick.play();
 }
@@ -239,7 +239,7 @@ void MainWindow::refresh_gamutShape_buttons(void)
 void MainWindow::on_rdoMixString1_clicked(bool checked)
 {
 	this->mixString = 1;
-	refreshPalette();
+	refresh_palette();
 	refresh_mixString_buttons();
 	controlClick.play();
 }
@@ -247,7 +247,7 @@ void MainWindow::on_rdoMixString1_clicked(bool checked)
 void MainWindow::on_rdoMixString3_clicked(bool checked)
 {
 	this->mixString = 3;
-	refreshPalette();
+	refresh_palette();
 	refresh_mixString_buttons();
 	controlClick.play();
 }
@@ -255,7 +255,7 @@ void MainWindow::on_rdoMixString3_clicked(bool checked)
 void MainWindow::on_rdoMixString5_clicked(bool checked)
 {
 	this->mixString = 5;
-	refreshPalette();
+	refresh_palette();
 	refresh_mixString_buttons();
 	controlClick.play();}
 
@@ -289,9 +289,34 @@ void MainWindow::refresh_mixString_buttons(void)
 	this->ui->rdoMixString5->setScaledContents(true);
 }
 
-void MainWindow::on_btnSaveJPG_pressed()
+void MainWindow::on_btnSaveJPG_hoverEnter(QHoverEvent* e)
 {
-	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/JPGIcon_Down.png"));
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon_Hover.png"));
+}
+
+void MainWindow::on_btnSaveJPG_hoverLeave(QHoverEvent* e)
+{
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));
+}
+
+void MainWindow::on_btnSave_hoverEnter(QHoverEvent* e)
+{
+	this->ui->btnSave->setPixmap(QPixmap(":/main/graphics/SaveIcon_Hover.png"));
+}
+
+void MainWindow::on_btnSave_hoverLeave(QHoverEvent* e)
+{
+	this->ui->btnSave->setPixmap(QPixmap(":/main/graphics/SaveIcon.png"));
+}
+
+void MainWindow::on_btnLoad_hoverEnter(QHoverEvent* e)
+{
+	this->ui->btnLoad->setPixmap(QPixmap(":/main/graphics/LoadIcon_Hover.png"));
+}
+
+void MainWindow::on_btnLoad_hoverLeave(QHoverEvent* e)
+{
+	this->ui->btnLoad->setPixmap(QPixmap(":/main/graphics/LoadIcon.png"));
 }
 
 void MainWindow::on_btnSaveJPG_clicked()
@@ -306,7 +331,40 @@ void MainWindow::on_btnSaveJPG_clicked()
 
 	this->ui->visualPalette->grab().save(fileName);
 
-	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/JPGIcon.png"));
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));
+}
+
+void MainWindow::on_btnSave_clicked()
+{
+	/*
+	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+	auto docDir = QDir(docPath);
+	auto fullPath = docDir.filePath("palette.png");
+	auto fileName = QFileDialog::getSaveFileName(this,
+						     tr("Save Palette"),
+						     fullPath,
+						     tr("PNG Files (*.png)"));
+
+	this->ui->visualPalette->grab().save(fileName);
+
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));
+	*/
+}
+
+void MainWindow::on_btnLoad_clicked()
+{
+	/*auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+	auto docDir = QDir(docPath);
+	auto fullPath = docDir.filePath("palette.png");
+	auto fileName = QFileDialog::getSaveFileName(this,
+						     tr("Save Palette"),
+						     fullPath,
+						     tr("PNG Files (*.png)"));
+
+	this->ui->visualPalette->grab().save(fileName);
+
+	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));*/
+
 }
 
 void MainWindow::on_btnClipboard_clicked()
@@ -316,12 +374,17 @@ void MainWindow::on_btnClipboard_clicked()
 	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
 }
 
-void MainWindow::on_btnClipboard_pressed()
+void MainWindow::on_btnClipboard_hoverEnter(QHoverEvent* e)
 {
-	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon_Down.png"));
+	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon_Hover.png"));
 }
 
-void MainWindow::refreshPalette()
+void MainWindow::on_btnClipboard_hoverLeave(QHoverEvent* e)
+{
+	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
+}
+
+void MainWindow::refresh_palette()
 {
 	this->ui->visualPalette->Formulate(this->ui->colorWheel->selectedColors,
 					   QVector<QColor>(), // don't need this
@@ -338,7 +401,7 @@ void MainWindow::refreshPalette()
 
 void MainWindow::on_colorWheel_selectedColorsChanged()
 {
-	refreshPalette();
+	refresh_palette();
 }
 
 void MainWindow::on_colorWheel_hoverColor(const QColor &color)
@@ -352,7 +415,7 @@ void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
 
 	this->ambientColor = color;
 
-	refreshPalette();
+	refresh_palette();
 
 	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-color: yellow; background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
 					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");*/

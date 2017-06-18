@@ -43,10 +43,11 @@ before_install:
  
 script:
   - export QT_SELECT=qt5
+  - cmake --version
   - qmake --version
+  - pkg-config --modversion Qt5Core
   - mkdir build
   - cd build
-  - cmake --version
   - cmake -trace --warn-uninitialized --warn-unused_vars -Wdev -G "Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX=../install $FLAGS
   - make && ctest && make install && cpack -G "TGZ"
 

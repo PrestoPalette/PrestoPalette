@@ -34,6 +34,8 @@ before_install:
  - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev
 # - sudo apt-get install qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
 # - sudo apt-get install qt5-default qttools5-dev-tools
+ - sudo apt-get -qy install qtcreator
+ - sudo apt-get -qy install qt5-default
  - sudo apt-get -qy install python3-pip python3-dev 
  - sudo apt-get -qy install build-essential git cmake libxml2 libxslt1.1 libxml2-dev libxslt1-dev
  - sudo apt-get -qy install qt5-default qtbase5-dev
@@ -42,7 +44,7 @@ before_install:
  - sudo apt-get -qy install \libqt5concurrent5 libqt5core5a libqt5dbus5 libqt5designer5 libqt5designercomponents5 libqt5feedback5 libqt5gui5 libqt5help5 libqt5multimedia5 libqt5network5 libqt5opengl5 libqt5opengl5-dev libqt5organizer5 libqt5positioning5 libqt5printsupport5 libqt5qml5 libqt5quick5 \libqt5script5 libqt5scripttools5 libqt5sql5 libqt5sql5-sqlite libqt5svg5 libqt5test5 libqt5webkit5 libqt5widgets5 libqt5xml5 libqt5xmlpatterns5 libqt5xmlpatterns5-dev
  
 script:
-  - export QT_SELECT=qt5
+  - export QT_SELECT=qt58
   - cmake --version
   - qmake --version
   - pkg-config --modversion Qt5Core

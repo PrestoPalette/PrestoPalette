@@ -23,7 +23,7 @@ before_install:
  
 install:
 # - sudo apt-get -qy install qt58base qt58svg qt58xmlpatterns
- - sudo apt-get -qy install qtmultimedia5-dev
+# - sudo apt-get -qy install qtmultimedia5-dev
  - source /opt/qt58/bin/qt58-env.sh
  
 # - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev

@@ -1,10 +1,7 @@
 language: cpp
 
 dist: trusty
-#dist: precise
-#dist: xenial
 
-#sudo: false
 sudo: required
 
 compiler:
@@ -26,6 +23,7 @@ before_install:
  
 install:
  - sudo apt-get -qy install qt58base qt58svg qt58xmlpatterns
+ - sudo apt-get -qy install qttools5-dev-tools qtmultimedia5-dev
  - source /opt/qt58/bin/qt58-env.sh
  
 # - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev
@@ -42,9 +40,6 @@ install:
  
 script:
   - /opt/qt58/bin/qmake PREFIX=/usr
-#  - cmake --version
-#  - qmake --version
-#  - pkg-config --modversion Qt5Core
   - mkdir build
   - cd build
   - cmake -trace --warn-uninitialized --warn-unused_vars -Wdev -G "Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX=../install $FLAGS
@@ -55,11 +50,3 @@ addons:
     packages:
     - cmake
     - cmake-data
-    #- qt5-default
-    #- qt5-qmake
-    #- gcc-6
-    #sources:
-    #- ubuntu-toolchain-r-test
-    #sources:
-    #- kalakris-cmake
-    #- george-edison55-precise-backports

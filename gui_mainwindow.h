@@ -19,6 +19,7 @@
 #include <QtWidgets/QWidget>
 #include <QFontDatabase>
 #include <QSizePolicy>
+#include <QScreen>
 #include "circlepalette.h"
 #include "visualpalette.h"
 #include "clickablelabel.h"
@@ -111,21 +112,34 @@ public:
 
     void setupUi(QMainWindow *MainWindow)
     {
+	MainWindow->setWindowIcon(QIcon(":/favicon.ico"));
+
 	maroonedOnMars = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/MaroonedOnMarsBB.ttf")).at(0);
 	calibri = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/calibrib.ttf")).at(0);
 
+	qreal screenDPI  = QApplication::primaryScreen()->physicalDotsPerInch();
+
+	#ifdef WINDOWS
+	qreal RENDER_DPI = 96;
+	#else
+	qreal RENDER_DPI = 72;
+	#endif
+
 	QFont fontTitle;
 	fontTitle.setFamily(this->maroonedOnMars);
-	fontTitle.setPointSize(19);
-	fontTitle.setLetterSpacing(QFont::AbsoluteSpacing, 1.0);
+	fontTitle.setPixelSize((int)((qreal)14 * screenDPI / RENDER_DPI));
+	//fontTitle.setPointSize(19);
+	//fontTitle.setLetterSpacing(QFont::AbsoluteSpacing, 1.0);
 
 	QFont fontSubTitle;
 	fontSubTitle.setFamily(this->calibri);
-	fontSubTitle.setPointSize(9);
+	fontSubTitle.setPixelSize((int)((qreal)7 * screenDPI / RENDER_DPI));
+	//fontSubTitle.setPointSize(9);
 
 	QFont fontDetail;
 	fontDetail.setFamily(this->maroonedOnMars);
-	fontDetail.setPointSize(15);
+	fontDetail.setPixelSize((int)((qreal)10 * screenDPI / RENDER_DPI));
+	//fontDetail.setPointSize(15);
 
 	if (MainWindow->objectName().isEmpty())
 	    MainWindow->setObjectName(QStringLiteral("MainWindow"));
@@ -202,7 +216,7 @@ public:
 	lblMixString->setObjectName(QStringLiteral("lblMixString"));
 	lblMixString->setGeometry(QRect(500, TOOLBAR_TEXT_HEIGHT, 1, 1));
 	lblMixString->setFont(fontTitle);
-	lblMixString->setAlignment(Qt::AlignLeft);
+	lblMixString->setAlignment(Qt::AlignHCenter);
 	lblMixString->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 	//groupBoxMixString = new QGroupBox(centralWidget);
 	//groupBoxMixString->setObjectName(QStringLiteral("groupBoxMixString"));
@@ -298,28 +312,28 @@ public:
 
 	lblLightPct = new QLabel(centralWidget);
 	lblLightPct->setObjectName(QStringLiteral("lblLightPct"));
-	lblLightPct->setGeometry(QRect(653, 664, 1, 1));
+	lblLightPct->setGeometry(QRect(653, 662, 1, 1));
 	lblLightPct->setFont(fontSubTitle);
 	lblLightPct->setAlignment(Qt::AlignLeft);
 	lblLightPct->setStyleSheet(QLatin1String("QLabel { margin-top:0px; padding-top:0px; color : #808073;}"));
 
 	lblDarkPct = new QLabel(centralWidget);
 	lblDarkPct->setObjectName(QStringLiteral("lblDarkPct"));
-	lblDarkPct->setGeometry(QRect(653, 704, 1, 1));
+	lblDarkPct->setGeometry(QRect(653, 702, 1, 1));
 	lblDarkPct->setFont(fontSubTitle);
 	lblDarkPct->setAlignment(Qt::AlignLeft);
 	lblDarkPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 
 	lblBrightnessPct = new QLabel(centralWidget);
 	lblBrightnessPct->setObjectName(QStringLiteral("lblBrightnessPct"));
-	lblBrightnessPct->setGeometry(QRect(807, 664, 1, 1));
+	lblBrightnessPct->setGeometry(QRect(807, 662, 1, 1));
 	lblBrightnessPct->setFont(fontSubTitle);
 	lblBrightnessPct->setAlignment(Qt::AlignLeft);
 	lblBrightnessPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));
 
 	lblAlphaPct = new QLabel(centralWidget);
 	lblAlphaPct->setObjectName(QStringLiteral("lblAlphaPct"));
-	lblAlphaPct->setGeometry(QRect(807, 704, 1, 1));
+	lblAlphaPct->setGeometry(QRect(807, 702, 1, 1));
 	lblAlphaPct->setFont(fontSubTitle);
 	lblAlphaPct->setAlignment(Qt::AlignLeft);
 	lblAlphaPct->setStyleSheet(QLatin1String("QLabel { color : #808073;}"));

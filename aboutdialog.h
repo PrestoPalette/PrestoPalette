@@ -17,6 +17,11 @@ public:
 
 private:
 	Ui::AboutDialog *ui;
+
+private slots:
+	void on_closeButton_hoverLeave(QHoverEvent* e);
+	void on_closeButton_hoverEnter(QHoverEvent* e);
+	void on_closeButton_clicked();
 };
 
 #endif // ABOUTDIALOG_H

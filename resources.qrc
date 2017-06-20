@@ -69,5 +69,24 @@
         <file>graphics/SaveIcon_Hover.png</file>
         <file>graphics/LoadIcon.png</file>
         <file>graphics/LoadIcon_Hover.png</file>
+        <file>favicon.ico</file>
+        <file>graphics/PopUp_Bottom.png</file>
+        <file>graphics/ARIALN.TTF</file>
+        <file>graphics/ARIALNB.TTF</file>
+        <file>graphics/calibrib.ttf</file>
+        <file>graphics/Click_Off_Short.wav</file>
+        <file>graphics/Click_On_Short.wav</file>
+        <file>graphics/favicon.ico</file>
+        <file>graphics/MaroonedOnMarsBB.ttf</file>
+        <file>graphics/PopUp_BottomLeft.png</file>
+        <file>graphics/PopUp_BottomRight.png</file>
+        <file>graphics/PopUp_Center.png</file>
+        <file>graphics/PopUp_Left.png</file>
+        <file>graphics/PopUp_Right.png</file>
+        <file>graphics/PopUp_Top.png</file>
+        <file>graphics/PopUp_TopLeft.png</file>
+        <file>graphics/PopUp_TopRight.png</file>
+        <file>graphics/QtIcon.png</file>
+        <file>graphics/Select.wav</file>
     </qresource>
 </RCC>

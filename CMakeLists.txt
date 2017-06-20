@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.1.0)
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "12")
-SET(VERSION_PATCH "0")
+SET(VERSION_MINOR "1")
+SET(VERSION_PATCH "19")
 
-project(prestopalette VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+project(PrestoPalette VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 enable_testing()
 
@@ -22,17 +22,17 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5Network REQUIRED)
 
-add_executable(prestopalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+add_executable(PrestoPalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
 
-target_link_libraries(prestopalette Qt5::Widgets)
-target_link_libraries(prestopalette Qt5::Core)
-target_link_libraries(prestopalette Qt5::Gui)
-target_link_libraries(prestopalette Qt5::Multimedia)
+target_link_libraries(PrestoPalette Qt5::Widgets)
+target_link_libraries(PrestoPalette Qt5::Core)
+target_link_libraries(PrestoPalette Qt5::Gui)
+target_link_libraries(PrestoPalette Qt5::Multimedia)
 
-set_property(TARGET prestopalette PROPERTY CXX_STANDARD 11)
-set_property(TARGET prestopalette PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET PrestoPalette PROPERTY CXX_STANDARD 11)
+set_property(TARGET PrestoPalette PROPERTY CXX_STANDARD_REQUIRED ON)
 
-INSTALL(TARGETS prestopalette
+INSTALL(TARGETS PrestoPalette
 		BUNDLE DESTINATION .
 		RUNTIME DESTINATION .
 		LIBRARY DESTINATION lib
@@ -65,6 +65,7 @@ IF(MINGW)
 	force_find_library("libEGL.dll")
 
 	file(COPY ${CMAKE_FIND_ROOT_PATH}/lib/qt5/plugins/platforms/ DESTINATION ${CMAKE_BINARY_DIR}/bin/platforms/)
+	file(COPY ${CMAKE_FIND_ROOT_PATH}/lib/qt5/plugins/audio/ DESTINATION ${CMAKE_BINARY_DIR}/bin/audio/)
 
 	install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION . FILES_MATCHING PATTERN "*.dll" )
 
@@ -85,7 +86,7 @@ ENDIF(MINGW)
 # https://github.com/mgalloy/cpack-cheatsheets/blob/master/cpack-variables.rst
 
 SET(CPACK_PACKAGE_NAME "PrestoPalette")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Presto Palette")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An artist's tool for creating harmonious color palettes")
 SET(CPACK_PACKAGE_VENDOR "John Cbonis and Darryl T. Agostinelli")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
@@ -94,15 +95,16 @@ SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 
-SET(CPACK_PACKAGE_INSTALL_DIRECTORY "PrestoPalette")
+SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
 
 #NSIS
-SET(CPACK_NSIS_MODIFY_PATH ON)
 SET(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-#CPACK_NSIS_MUI_ICON install icon here ${CMAKE_CURRENT_SOURCE_DIR}/something.ico
-#CPACK_NSIS_MUI_UNIICON uninstall icon here ${CMAKE_CURRENT_SOURCE_DIR}/something_else.ico
-#CPACK_NSIS_INSTALLED_ICON_NAME install the installer here
-SET(CPACK_NSIS_DISPLAY_NAME "PrestoPalette")
+SET(CPACK_NSIS_MUI_ICON ${CMAKE_CURRENT_SOURCE_DIR}/favicon.ico)
+SET(CPACK_NSIS_MUI_UNIICON ${CMAKE_CURRENT_SOURCE_DIR}/favicon.ico)
+SET(CPACK_NSIS_INSTALLED_ICON_NAME ${CPACK_PACKAGE_NAME}.exe)
+SET(CPACK_NSIS_MENU_LINKS ${CPACK_PACKAGE_NAME}.exe;${CPACK_PACKAGE_NAME})
+SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")
 SET(CPACK_NSIS_HELP_LINK "http://www.prestopalette.com")
+SET(CPACK_NSIS_COMPONENT_INSTALL OFF)
 
 INCLUDE(CPack)

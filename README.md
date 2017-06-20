@@ -6,7 +6,9 @@
 
 Building
 --------
+
 **Cross-Compile for Windows from Linux using MinGW**
+
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
@@ -17,6 +19,7 @@ ls *.exe
 ```
 
 **Build Release RPM (Fedora / RedHat / CentOS)**
+
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
@@ -28,6 +31,7 @@ sudo rpm -i PrestoPalette*.rpm
 ```
 
 **Debug Build for Development (Linux)**
+
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
@@ -38,6 +42,7 @@ cd ../build
 ```
 
 **Building with CMake Manually**
+
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
@@ -48,7 +53,9 @@ make && make install
 ```
 
 **Mac OSX**
+
 This is untested, however the steps should be the same as Linux.  Be sure to have at least version 3.0 of cmake installed
+
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette

@@ -7,6 +7,16 @@
 Building
 --------
 
+**(Easiest) Use QT Creator**
+
+```
+1. git clone https://github.com/PrestoPalette/PrestoPalette
+2. Launch QT Creator
+3. Open the PrestoPalette directory with QT Creator
+4. Build and Run 
+```
+NOTE: PrestoPalette is a CMake QT project.
+
 **Cross-Compile for Windows from Linux using MinGW**
 
 ```

@@ -51,12 +51,11 @@ private slots:
 	void on_btnAbout_hoverEnter(QHoverEvent* e);
 	void on_btnAbout_hoverLeave(QHoverEvent* e);
 
-	void on_backgroundSlider_sliderMoved(int position);
-
-	void on_lightSlider_sliderMoved(int position);
-	void on_darkSlider_sliderMoved(int position);
-	void on_brightnessSlider_sliderMoved(int position);
-	void on_alphaSlider_sliderMoved(int position);
+	void on_backgroundSlider_valueChanged(int position);
+	void on_lightSlider_valueChanged(int position);
+	void on_darkSlider_valueChanged(int position);
+	void on_brightnessSlider_valueChanged(int position);
+	void on_alphaSlider_valueChanged(int position);
 
 	void on_colorWheel_selectedColorsChanged();
 	void on_colorWheel_hoverColor(const QColor &color);
@@ -86,7 +85,6 @@ private:
 	void refresh_gamutShape_buttons(void);
 	void refresh_wheel_buttons(void);
 	void refresh_palette();
-	void refresh_sliders();
 };
 
 #endif // MAINWINDOW_H

@@ -43,8 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	 * END PRESETS
 	 ***************************/
 
-	refresh_sliders();
-
 	this->controlClick.setSource(QUrl::fromLocalFile(":/main/audio/Select.wav"));
 	this->controlClick.setVolume(0.25f);
 }
@@ -74,15 +72,6 @@ void MainWindow::refresh_lighting_buttons()
 	refresh_palette();
 }
 
-void MainWindow::refresh_sliders()
-{
-	this->on_backgroundSlider_sliderMoved(this->ui->backgroundSlider->value());
-	this->on_alphaSlider_sliderMoved(this->ui->alphaSlider->value());
-	this->on_brightnessSlider_sliderMoved(this->ui->brightnessSlider->value());
-	this->on_darkSlider_sliderMoved(this->ui->darkSlider->value());
-	this->on_lightSlider_sliderMoved(this->ui->lightSlider->value());
-}
-
 void MainWindow::on_btnLightingOn_clicked(bool checked)
 {
 	this->enableLighting = true;
@@ -99,7 +88,7 @@ void MainWindow::on_btnLightingOff_clicked(bool checked)
 	refresh_lighting_buttons();
 }
 
-void MainWindow::on_backgroundSlider_sliderMoved(int position)
+void MainWindow::on_backgroundSlider_valueChanged(int position)
 {
 	int rgb = ((100.0 - (double)position) / 100.0) * 255.0;
 	QPalette Pal(palette());
@@ -108,7 +97,7 @@ void MainWindow::on_backgroundSlider_sliderMoved(int position)
 	ui->backgroundArea->setPalette(Pal);
 }
 
-void MainWindow::on_lightSlider_sliderMoved(int position)
+void MainWindow::on_lightSlider_valueChanged(int position)
 {
 	qreal v = (((double)position) / 100.0);
 
@@ -120,7 +109,7 @@ void MainWindow::on_lightSlider_sliderMoved(int position)
 	ui->lblLightPct->adjustSize();
 }
 
-void MainWindow::on_darkSlider_sliderMoved(int position)
+void MainWindow::on_darkSlider_valueChanged(int position)
 {
 	qreal v = (((double)position) / 100.0);
 
@@ -132,7 +121,7 @@ void MainWindow::on_darkSlider_sliderMoved(int position)
 	ui->lblDarkPct->adjustSize();
 }
 
-void MainWindow::on_brightnessSlider_sliderMoved(int position)
+void MainWindow::on_brightnessSlider_valueChanged(int position)
 {
 	qreal v = (((double)position) / 100.0);
 
@@ -144,7 +133,7 @@ void MainWindow::on_brightnessSlider_sliderMoved(int position)
 	ui->lblBrightnessPct->adjustSize();
 }
 
-void MainWindow::on_alphaSlider_sliderMoved(int position)
+void MainWindow::on_alphaSlider_valueChanged(int position)
 {
 	qreal v = (((double)position) / 100.0);
 
@@ -424,7 +413,6 @@ void MainWindow::on_btnLoad_clicked()
 
 	this->ui->colorWheel->LoadState(saveState);
 
-	refresh_sliders();
 	refresh_lighting_buttons();
 	refresh_mixString_buttons();
 	refresh_gamutShape_buttons();

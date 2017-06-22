@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.0)
 
 SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "1")
-SET(VERSION_PATCH "19")
+SET(VERSION_PATCH "21")
 
 project(PrestoPalette VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
@@ -16,13 +16,31 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+SET(CPACK_PACKAGE_NAME "PrestoPalette")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An artist's tool for creating harmonious color palettes")
+SET(CPACK_PACKAGE_VENDOR "John Cbonis and Darryl T. Agostinelli")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+
+SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
+
+SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
+
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/application.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/application.rc" @ONLY IMMEDIATE)
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5Network REQUIRED)
 
-add_executable(PrestoPalette WIN32 main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+IF(MINGW)
+	add_executable(PrestoPalette WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+ELSE()
+	add_executable(PrestoPalette main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+ENDIF(MINGW)
 
 target_link_libraries(PrestoPalette Qt5::Widgets)
 target_link_libraries(PrestoPalette Qt5::Core)
@@ -85,22 +103,10 @@ ENDIF(MINGW)
 # CPack Variable Cheetsheet
 # https://github.com/mgalloy/cpack-cheatsheets/blob/master/cpack-variables.rst
 
-SET(CPACK_PACKAGE_NAME "PrestoPalette")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An artist's tool for creating harmonious color palettes")
-SET(CPACK_PACKAGE_VENDOR "John Cbonis and Darryl T. Agostinelli")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-
-SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
-SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
-SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
-
-SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
-
 #NSIS
 SET(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-SET(CPACK_NSIS_MUI_ICON ${CMAKE_CURRENT_SOURCE_DIR}/favicon.ico)
-SET(CPACK_NSIS_MUI_UNIICON ${CMAKE_CURRENT_SOURCE_DIR}/favicon.ico)
+SET(CPACK_NSIS_MUI_ICON ${CMAKE_CURRENT_SOURCE_DIR}/graphics/favicon.ico)
+SET(CPACK_NSIS_MUI_UNIICON ${CMAKE_CURRENT_SOURCE_DIR}/graphics/favicon.ico)
 SET(CPACK_NSIS_INSTALLED_ICON_NAME ${CPACK_PACKAGE_NAME}.exe)
 SET(CPACK_NSIS_MENU_LINKS ${CPACK_PACKAGE_NAME}.exe;${CPACK_PACKAGE_NAME})
 SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")

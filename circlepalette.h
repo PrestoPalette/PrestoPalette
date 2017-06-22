@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QPoint>
 #include <QSoundEffect>
+#include <QJsonObject>
 
 namespace PrestoPalette
 {
@@ -12,13 +13,15 @@ enum GlobalGamutShape
 	GamutShapeNone,
 	GamutShapeLine,
 	GamutShapeTriangle,
-	GamutShapeSquare
+	GamutShapeSquare,
+	GamutShapeLast
 };
 
 enum GlobalWheelShape
 {
-	WheelShapeCourse,
+	WheelShapeCoarse,
 	WheelShapeFine,
+	WheelShapeLast
 };
 }
 
@@ -36,6 +39,20 @@ public:
 		this->angle = 0;
 		this->secondaryOn = false; // secondaries are off by default
 		this->color = QColor();
+	}
+
+	void SaveState(QJsonObject &saveState)
+	{
+		saveState["secondary"] = this->secondaryOn;
+		saveState["x"] = this->point.x();
+		saveState["y"] = this->point.y();
+	}
+
+	void LoadState(QJsonObject &loadState)
+	{
+		this->secondaryOn = loadState["secondary"].toBool();
+		this->point.setX(loadState["x"].toInt());
+		this->point.setY(loadState["y"].toInt());
 	}
 };
 
@@ -61,6 +78,8 @@ public:
 	void ChangeWheelShape(PrestoPalette::GlobalWheelShape shape);
 
 	void CalculateCentroid(int circleRadius);
+	void SaveState(QJsonObject &saveState);
+	void LoadState(QJsonObject &loadState);
 
 signals:
 	void selectedColorsChanged();
@@ -85,28 +104,13 @@ private:
 	std::vector<ColorPoint*> pointsTriangle;
 	std::vector<ColorPoint*> pointsQuad;
 
-	//std::vector<QPoint*> seconardariesLine;
-	//std::vector<QPoint*> seconardariesTriangle;
-	//std::vector<QPoint*> seconardariesQuad;
-
-	/*bool secondaryTriangle1On;
-	bool secondaryTriangle2On;
-	bool secondaryTriangle3On;
-
-	bool secondaryQuad1On;
-	bool secondaryQuad2On;
-	bool secondaryQuad3On;
-	bool secondaryQuad4On;*/
-
 	QPoint centroidTriangle;
 	QPoint centroidQuad;
 
-	//bool centroidLineOn;
 	bool centroidTriangleOn;
 	bool centroidQuadOn;
 
 	std::vector<ColorPoint*> *points;
-	//std::vector<QPoint*> *secondaries;
 
 	QPoint *lighting;
 	QPoint *centroid;

@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'aboutdialog.ui'
-**
-** Created by: Qt User Interface Compiler version 5.7.1
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_ABOUTDIALOG_H
 #define UI_ABOUTDIALOG_H
 
@@ -65,23 +57,23 @@ public:
 
 	QFont fontSubTitle;
 	fontSubTitle.setFamily(this->calibri);
-	fontSubTitle.setPixelSize((int)((qreal)10 * screenDPI / RENDER_DPI));
-	//fontSubTitle.setPointSize(15);
+	//fontSubTitle.setPixelSize((int)((qreal)10 * screenDPI / RENDER_DPI));
+	fontSubTitle.setPointSize(15);
 
 	QFont fontWebLink;
 	fontWebLink.setFamily(this->calibri);
-	fontWebLink.setPixelSize((int)((qreal)14 * screenDPI / RENDER_DPI));
-	//fontWebLink.setPointSize(18);
+	//fontWebLink.setPixelSize((int)((qreal)14 * screenDPI / RENDER_DPI));
+	fontWebLink.setPointSize(18);
 
 	QFont fontLicenseText;
 	fontLicenseText.setFamily(this->calibri);
-	fontLicenseText.setPixelSize((int)((qreal)8.0 * screenDPI / RENDER_DPI));
-	//fontLicenseText.setPointSizeF(11.0f);
+	//fontLicenseText.setPixelSize((int)((qreal)8.0 * screenDPI / RENDER_DPI));
+	fontLicenseText.setPointSizeF(11.0f);
 
 	QFont fontBuiltWith;
 	fontBuiltWith.setFamily(this->calibri);
-	fontBuiltWith.setPixelSize((int)((qreal)9.0 * screenDPI / RENDER_DPI));
-	//fontBuiltWith.setPointSizeF(12.0f);
+	//fontBuiltWith.setPixelSize((int)((qreal)9.0 * screenDPI / RENDER_DPI));
+	fontBuiltWith.setPointSizeF(12.0f);
 
         if (AboutDialog->objectName().isEmpty())
             AboutDialog->setObjectName(QStringLiteral("AboutDialog"));
@@ -154,14 +146,14 @@ public:
 	copyrightText = new QLabel(AboutDialog);
 	copyrightText->setObjectName(QStringLiteral("copyrightText"));
 	copyrightText->setGeometry(QRect(105, 145, 539, 79));
-	copyrightText->setText("©2017 by John Cboins and Darryl T. Agostinelli. All Rights Reserved.");
+	copyrightText->setText("© 2017 by John Cboins and Darryl T. Agostinelli. All Rights Reserved.");
 	copyrightText->setFont(fontSubTitle);
 	copyrightText->setStyleSheet(QLatin1String("QLabel { color : #C3C3C3;}"));
 	copyrightText->adjustSize();
 
 	webLink = new QLabel(AboutDialog);
 	webLink->setObjectName(QStringLiteral("webLink"));
-	webLink->setGeometry(QRect(235, 196, 258, 79));
+	webLink->setGeometry(QRect(235, 190, 258, 79));
 	webLink->setText("www.prestopalette.com");
 	webLink->setFont(fontWebLink);
 	webLink->setStyleSheet(QLatin1String("QLabel { color : #E9E995;}"));

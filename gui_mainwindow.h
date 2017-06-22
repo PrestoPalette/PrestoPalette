@@ -40,7 +40,7 @@ public:
     QLabel *lblResolution;
     //QGroupBox *groupBoxResolution;
     ClickableLabel *rdoFineWheel;
-    ClickableLabel *rdoCourseWheel;
+    ClickableLabel *rdoCoarseWheel;
     QLabel *lblGamutShape;
     //QGroupBox *groupBoxGamutShape;
     ClickableLabel *rdoGamutShapeLine;
@@ -127,19 +127,19 @@ public:
 
 	QFont fontTitle;
 	fontTitle.setFamily(this->maroonedOnMars);
-	fontTitle.setPixelSize((int)((qreal)14 * screenDPI / RENDER_DPI));
-	//fontTitle.setPointSize(19);
+	//fontTitle.setPixelSize((int)((qreal)14 * screenDPI / RENDER_DPI));
+	fontTitle.setPointSize(19);
 	//fontTitle.setLetterSpacing(QFont::AbsoluteSpacing, 1.0);
 
 	QFont fontSubTitle;
 	fontSubTitle.setFamily(this->calibri);
-	fontSubTitle.setPixelSize((int)((qreal)7 * screenDPI / RENDER_DPI));
-	//fontSubTitle.setPointSize(9);
+	//fontSubTitle.setPixelSize((int)((qreal)7 * screenDPI / RENDER_DPI));
+	fontSubTitle.setPointSize(9);
 
 	QFont fontDetail;
 	fontDetail.setFamily(this->maroonedOnMars);
-	fontDetail.setPixelSize((int)((qreal)10 * screenDPI / RENDER_DPI));
-	//fontDetail.setPointSize(15);
+	//fontDetail.setPixelSize((int)((qreal)10 * screenDPI / RENDER_DPI));
+	fontDetail.setPointSize(15);
 
 	if (MainWindow->objectName().isEmpty())
 	    MainWindow->setObjectName(QStringLiteral("MainWindow"));
@@ -180,11 +180,9 @@ public:
 	rdoFineWheel = new ClickableLabel(centralWidget);
 	rdoFineWheel->setObjectName(QStringLiteral("rdoFineWheel"));
 	rdoFineWheel->setGeometry(QRect(203, 692, 76, 38));
-	//rdoCourseWheel->setIcon(iconFine);
-	rdoCourseWheel = new ClickableLabel(centralWidget);
-	rdoCourseWheel->setObjectName(QStringLiteral("rdoCourseWheel"));
-	rdoCourseWheel->setGeometry(QRect(203, 660, 76, 38));
-	//rdoCourseWheel->setIcon(iconCourse);
+	rdoCoarseWheel = new ClickableLabel(centralWidget);
+	rdoCoarseWheel->setObjectName(QStringLiteral("rdoCoarseWheel"));
+	rdoCoarseWheel->setGeometry(QRect(203, 660, 76, 38));
 	lblGamutShape = new QLabel(centralWidget);
 	lblGamutShape->setObjectName(QStringLiteral("lblGamutShape"));
 	lblGamutShape->setGeometry(QRect(350, TOOLBAR_TEXT_HEIGHT, 1, 1));
@@ -507,7 +505,7 @@ public:
 	rdoGamutShapeTriangle->raise();
 	rdoGamutShapeSquare->raise();
 
-	rdoCourseWheel->raise();
+	rdoCoarseWheel->raise();
 	rdoFineWheel->raise();
 
 	/*toolbarBackground->hide();
@@ -522,7 +520,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-	MainWindow->setWindowTitle(QApplication::translate("PrestoPalette", "PrestoPalette", 0));
+	MainWindow->setWindowTitle(QApplication::translate("PrestoPalette (BETA)", "PrestoPalette (BETA)", 0));
 	lblResolution->setText(QApplication::translate("MainWindow", "RESOLUTION", 0));
 	lblResolution->adjustSize();
 	rdoFineWheel->setText(QApplication::translate("MainWindow", "Fi&ne", 0));
@@ -560,7 +558,7 @@ public:
 	rdoGamutShapeTriangle->setText(QString());
 	rdoGamutShapeSquare->setText(QString());
 
-	rdoCourseWheel->setText(QString());
+	rdoCoarseWheel->setText(QString());
 	rdoFineWheel->setText(QString());
 
 	lblBackground->setText(QApplication::translate("MainWindow", "BACKGROUND", 0));

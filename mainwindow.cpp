@@ -8,6 +8,9 @@
 #include <QClipboard>
 #include <QBitmap>
 #include <QSoundEffect>
+#include <QInputDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "mainwindow.h"
 #include "gui_mainwindow.h"
@@ -27,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	 * BEGIN PRESETS
 	 ***************************/
 	this->ui->rdoGamutShapeSquare->clicked();
-	this->ui->rdoCourseWheel->clicked();
+	this->ui->rdoCoarseWheel->clicked();
 	this->ui->rdoMixString1->clicked();
 	this->ui->btnLightingOff->clicked();
 	this->ui->backgroundSlider->setSliderPosition(92);
@@ -40,11 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	 * END PRESETS
 	 ***************************/
 
-	this->on_backgroundSlider_sliderMoved(this->ui->backgroundSlider->value());
-	this->on_alphaSlider_sliderMoved(this->ui->alphaSlider->value());
-	this->on_brightnessSlider_sliderMoved(this->ui->brightnessSlider->value());
-	this->on_darkSlider_sliderMoved(this->ui->darkSlider->value());
-	this->on_lightSlider_sliderMoved(this->ui->lightSlider->value());
+	refresh_sliders();
 
 	this->controlClick.setSource(QUrl::fromLocalFile(":/main/audio/Select.wav"));
 	this->controlClick.setVolume(0.25f);
@@ -57,6 +56,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::refresh_lighting_buttons()
 {
+	this->ui->colorWheel->enableLighting = this->enableLighting;
+
 	if (enableLighting)
 	{
 		this->ui->btnLightingOn->setPixmap(QPixmap(":/main/graphics/Button_On_Selected.png"));
@@ -73,10 +74,18 @@ void MainWindow::refresh_lighting_buttons()
 	refresh_palette();
 }
 
+void MainWindow::refresh_sliders()
+{
+	this->on_backgroundSlider_sliderMoved(this->ui->backgroundSlider->value());
+	this->on_alphaSlider_sliderMoved(this->ui->alphaSlider->value());
+	this->on_brightnessSlider_sliderMoved(this->ui->brightnessSlider->value());
+	this->on_darkSlider_sliderMoved(this->ui->darkSlider->value());
+	this->on_lightSlider_sliderMoved(this->ui->lightSlider->value());
+}
+
 void MainWindow::on_btnLightingOn_clicked(bool checked)
 {
 	this->enableLighting = true;
-	this->ui->colorWheel->enableLighting = true;
 	controlClick.play();
 
 	refresh_lighting_buttons();
@@ -85,7 +94,6 @@ void MainWindow::on_btnLightingOn_clicked(bool checked)
 void MainWindow::on_btnLightingOff_clicked(bool checked)
 {
 	this->enableLighting = false;
-	this->ui->colorWheel->enableLighting = false;
 	controlClick.play();
 
 	refresh_lighting_buttons();
@@ -148,34 +156,30 @@ void MainWindow::on_alphaSlider_sliderMoved(int position)
 	ui->lblAlphaPct->adjustSize();
 }
 
-void MainWindow::on_rdoCourseWheel_clicked(bool checked)
+void MainWindow::on_rdoCoarseWheel_clicked(bool checked)
 {
-	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeCourse);
-	refresh_wheel_buttons();
-	refresh_palette();
-
+	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeCoarse);
 	controlClick.play();
+	refresh_wheel_buttons();
 }
 
 void MainWindow::on_rdoFineWheel_clicked(bool checked)
 {
 	ui->colorWheel->ChangeWheelShape(PrestoPalette::WheelShapeFine);
-	refresh_wheel_buttons();
-	refresh_palette();
-
 	controlClick.play();
+	refresh_wheel_buttons();
 }
 
 void MainWindow::refresh_wheel_buttons(void)
 {
 	switch(this->ui->colorWheel->wheelShape)
 	{
-	case PrestoPalette::GlobalWheelShape::WheelShapeCourse:
-		this->ui->rdoCourseWheel->setPixmap(QPixmap(":/main/graphics/Button_Course_Selected.png"));
+	case PrestoPalette::GlobalWheelShape::WheelShapeCoarse:
+		this->ui->rdoCoarseWheel->setPixmap(QPixmap(":/main/graphics/Button_Course_Selected.png"));
 		this->ui->rdoFineWheel->setPixmap(QPixmap(":/main/graphics/Button_Fine_Off.png"));
 		break;
 	case PrestoPalette::GlobalWheelShape::WheelShapeFine:
-		this->ui->rdoCourseWheel->setPixmap(QPixmap(":/main/graphics/Button_Course_Off.png"));
+		this->ui->rdoCoarseWheel->setPixmap(QPixmap(":/main/graphics/Button_Course_Off.png"));
 		this->ui->rdoFineWheel->setPixmap(QPixmap(":/main/graphics/Button_Fine_Selected.png"));
 		break;
 	default:
@@ -183,29 +187,31 @@ void MainWindow::refresh_wheel_buttons(void)
 		break;
 	}
 
-	this->ui->rdoCourseWheel->setScaledContents(true);
+	this->ui->rdoCoarseWheel->setScaledContents(true);
 	this->ui->rdoFineWheel->setScaledContents(true);
+
+	refresh_palette();
 }
 
 void MainWindow::on_rdoGamutShapeLine_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeLine);
-	refresh_gamutShape_buttons();
 	controlClick.play();
+	refresh_gamutShape_buttons();
 }
 
 void MainWindow::on_rdoGamutShapeTriangle_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeTriangle);
-	refresh_gamutShape_buttons();
 	controlClick.play();
+	refresh_gamutShape_buttons();
 }
 
 void MainWindow::on_rdoGamutShapeSquare_clicked(bool checked)
 {
 	ui->colorWheel->ChangeGamutShape(PrestoPalette::GamutShapeSquare);
-	refresh_gamutShape_buttons();
 	controlClick.play();
+	refresh_gamutShape_buttons();
 }
 
 void MainWindow::refresh_gamutShape_buttons(void)
@@ -248,17 +254,16 @@ void MainWindow::on_rdoMixString1_clicked(bool checked)
 void MainWindow::on_rdoMixString3_clicked(bool checked)
 {
 	this->mixString = 3;
-	refresh_palette();
-	refresh_mixString_buttons();
 	controlClick.play();
+	refresh_mixString_buttons();
 }
 
 void MainWindow::on_rdoMixString5_clicked(bool checked)
 {
 	this->mixString = 5;
-	refresh_palette();
+	controlClick.play();
 	refresh_mixString_buttons();
-	controlClick.play();}
+}
 
 void MainWindow::refresh_mixString_buttons(void)
 {
@@ -288,6 +293,8 @@ void MainWindow::refresh_mixString_buttons(void)
 	this->ui->rdoMixString1->setScaledContents(true);
 	this->ui->rdoMixString3->setScaledContents(true);
 	this->ui->rdoMixString5->setScaledContents(true);
+
+	refresh_palette();
 }
 
 void MainWindow::on_btnSaveJPG_hoverEnter(QHoverEvent* e)
@@ -347,35 +354,82 @@ void MainWindow::on_btnSaveJPG_clicked()
 
 void MainWindow::on_btnSave_clicked()
 {
-	/*
 	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
 	auto docDir = QDir(docPath);
-	auto fullPath = docDir.filePath("palette.png");
+	auto fullPath = docDir.filePath("palette.json");
 	auto fileName = QFileDialog::getSaveFileName(this,
 						     tr("Save Palette"),
 						     fullPath,
-						     tr("PNG Files (*.png)"));
+						     tr("JSON Files (*.json)"));
 
-	this->ui->visualPalette->grab().save(fileName);
+	QFile saveFile(fileName);
+	if (!saveFile.open(QIODevice::WriteOnly))
+	{
+		qWarning("Couldn't open file for writing.");
+		return;
+	}
 
-	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));
-	*/
+	QJsonObject saveState;
+
+	// write the state here
+	saveState["gamutShape"] = this->ui->colorWheel->gamutShape;
+	saveState["wheelShape"] = this->ui->colorWheel->wheelShape;
+	saveState["mixString"] = this->mixString;
+	saveState["enableLighting"] = this->enableLighting;
+	saveState["backgroundSlider"] = this->ui->backgroundSlider->value();
+	saveState["alphaSlider"] = this->ui->alphaSlider->value();
+	saveState["brightnessSlider"] = this->ui->brightnessSlider->value();
+	saveState["darkSlider"] = this->ui->darkSlider->value();
+	saveState["lightSlider"] = this->ui->lightSlider->value();
+
+	this->ui->colorWheel->SaveState(saveState);
+
+	QJsonDocument saveDoc(saveState);
+	saveFile.write(saveDoc.toJson());
 }
 
 void MainWindow::on_btnLoad_clicked()
 {
-	/*auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+	auto docPath = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
 	auto docDir = QDir(docPath);
-	auto fullPath = docDir.filePath("palette.png");
-	auto fileName = QFileDialog::getSaveFileName(this,
-						     tr("Save Palette"),
+	auto fullPath = docDir.filePath("palette.json");
+	auto fileName = QFileDialog::getOpenFileName(this,
+						     tr("Load Palette"),
 						     fullPath,
-						     tr("PNG Files (*.png)"));
+						     tr("JSON Files (*.json)"));
 
-	this->ui->visualPalette->grab().save(fileName);
+	QFile loadFile(fileName);
+	if (!loadFile.open(QIODevice::ReadOnly))
+	{
+		qWarning("Couldn't open file.");
+		return;
+	}
 
-	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));*/
+	QByteArray saveData = loadFile.readAll();
 
+	QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+	QJsonObject saveState = loadDoc.object();
+
+	// load the state here
+	this->ui->colorWheel->ChangeGamutShape((PrestoPalette::GlobalGamutShape)saveState["gamutShape"].toInt());
+	this->ui->colorWheel->ChangeWheelShape((PrestoPalette::GlobalWheelShape)saveState["wheelShape"].toInt());
+	this->mixString = saveState["mixString"].toInt();
+	this->enableLighting = saveState["enableLighting"].toBool();
+	this->ui->backgroundSlider->setValue(saveState["backgroundSlider"].toInt());
+	this->ui->alphaSlider->setValue(saveState["alphaSlider"].toInt());
+	this->ui->brightnessSlider->setValue(saveState["brightnessSlider"].toInt());
+	this->ui->darkSlider->setValue(saveState["darkSlider"].toInt());
+	this->ui->lightSlider->setValue(saveState["lightSlider"].toInt());
+
+	this->ui->colorWheel->LoadState(saveState);
+
+	refresh_sliders();
+	refresh_lighting_buttons();
+	refresh_mixString_buttons();
+	refresh_gamutShape_buttons();
+	refresh_wheel_buttons();
+	refresh_palette();
 }
 
 void MainWindow::on_btnAbout_clicked()

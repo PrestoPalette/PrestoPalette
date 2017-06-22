@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QtMath>
 #include <QFileDialog>
+#include <QJsonArray>
 
 #include <algorithm>
 
@@ -27,7 +28,7 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	primaryRadius = (double)circlePic.width() / 2.0;
 
 	gamutShape = PrestoPalette::GamutShapeNone;
-	wheelShape = PrestoPalette::WheelShapeCourse;
+	wheelShape = PrestoPalette::WheelShapeCoarse;
 
 	backgroundWheel = new QLabel(parent);
 	backgroundWheel->setGeometry(QRect(44, 37, 549, 549));
@@ -657,7 +658,15 @@ void CirclePalette::ChangeGamutShape(PrestoPalette::GlobalGamutShape shape)
 		destroy_gamut();
 	}
 
-	gamutShape = shape;
+	// boundary check
+	if (shape >= PrestoPalette::GamutShapeLast)
+	{
+		gamutShape = PrestoPalette::GamutShapeTriangle;
+	}
+	else
+	{
+		gamutShape = shape;
+	}
 
 	if (gamutShape == PrestoPalette::GamutShapeLine)
 	{
@@ -683,13 +692,102 @@ void CirclePalette::ChangeGamutShape(PrestoPalette::GlobalGamutShape shape)
 	this->drawnElements->repaint();
 }
 
+void CirclePalette::SaveState(QJsonObject &saveState)
+{
+	saveState["centroidTriangleOn"] = this->centroidTriangleOn;
+	saveState["centroidQuadOn"] = this->centroidQuadOn;
+
+	{
+		QJsonArray pointsLineArray;
+		foreach (ColorPoint* point, pointsLine)
+		{
+			QJsonObject s;
+			point->SaveState(s);
+			pointsLineArray.append(s);
+		}
+		saveState["pointsLine"] = pointsLineArray;
+	}
+
+	{
+		QJsonArray pointsTriangleArray;
+		foreach (ColorPoint* point, pointsTriangle)
+		{
+			QJsonObject s;
+			point->SaveState(s);
+			pointsTriangleArray.append(s);
+		}
+		saveState["pointsTriangle"] = pointsTriangleArray;
+	}
+
+	{
+		QJsonArray pointsQuadArray;
+		foreach (ColorPoint* point, pointsQuad)
+		{
+			QJsonObject s;
+			point->SaveState(s);
+			pointsQuadArray.append(s);
+		}
+		saveState["pointsQuad"] = pointsQuadArray;
+	}
+}
+
+void CirclePalette::LoadState(QJsonObject &loadState)
+{
+	this->centroidTriangleOn = loadState["centroidTriangleOn"].toBool();
+	this->centroidQuadOn = loadState["centroidQuadOn"].toBool();
+
+	{
+		QJsonArray array = loadState["pointsLine"].toArray();
+		for (int i = 0; i < array.size(); i++)
+		{
+			QJsonObject s = array[i].toObject();
+			if(pointsLine.size() >= i)
+			{
+				pointsLine[i]->LoadState(s);
+			}
+		}
+	}
+
+	{
+		QJsonArray array = loadState["pointsTriangle"].toArray();
+		for (int i = 0; i < array.size(); i++)
+		{
+			QJsonObject s = array[i].toObject();
+			if(pointsTriangle.size() >= i)
+			{
+				pointsTriangle[i]->LoadState(s);
+			}
+		}
+	}
+
+	{
+		QJsonArray array = loadState["pointsQuad"].toArray();
+		for (int i = 0; i < array.size(); i++)
+		{
+			QJsonObject s = array[i].toObject();
+			if(pointsQuad.size() >= i)
+			{
+				pointsQuad[i]->LoadState(s);
+			}
+		}
+	}
+}
+
 void CirclePalette::ChangeWheelShape(PrestoPalette::GlobalWheelShape shape)
 {
-	wheelShape = shape;
-
-	switch(wheelShape)
+	// boundary check
+	if (shape >= PrestoPalette::WheelShapeLast)
 	{
-	case PrestoPalette::GlobalWheelShape::WheelShapeCourse:
+		this->wheelShape = PrestoPalette::WheelShapeCoarse;
+	}
+	else
+	{
+		this->wheelShape = shape;
+	}
+
+	switch(this->wheelShape)
+	{
+	case PrestoPalette::GlobalWheelShape::WheelShapeCoarse:
 		colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));
 		break;
 	case PrestoPalette::GlobalWheelShape::WheelShapeFine:

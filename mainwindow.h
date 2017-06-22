@@ -72,7 +72,7 @@ private slots:
 	void on_rdoMixString3_clicked(bool checked = false);
 	void on_rdoMixString5_clicked(bool checked = false);
 
-	void on_rdoCourseWheel_clicked(bool checked = false);
+	void on_rdoCoarseWheel_clicked(bool checked = false);
 	void on_rdoFineWheel_clicked(bool checked = false);
 
 	void on_btnLightingOn_clicked(bool checked = false);
@@ -86,6 +86,7 @@ private:
 	void refresh_gamutShape_buttons(void);
 	void refresh_wheel_buttons(void);
 	void refresh_palette();
+	void refresh_sliders();
 };
 
 #endif // MAINWINDOW_H

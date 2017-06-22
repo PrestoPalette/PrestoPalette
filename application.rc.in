@@ -1,0 +1,24 @@
+﻿0 ICON "@CMAKE_CURRENT_SOURCE_DIR@/graphics/favicon.ico"
+1 VERSIONINFO
+FILEVERSION @VERSION_MAJOR@, @VERSION_MINOR@, @VERSION_PATCH@
+PRODUCTVERSION @VERSION_MAJOR@, @VERSION_MINOR@, @VERSION_PATCH@
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "John Cboins and Darryl T. Agostinelli"
+      VALUE "FileDescription", "An artist's tool for creating harmonious color palettes"
+      VALUE "FileVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@"
+      VALUE "InternalName", "@CPACK_PACKAGE_NAME@"
+      VALUE "LegalCopyright", "(c) 2017 by John Cboins and Darryl T. Agostinelli. All Rights Reserved."
+      VALUE "OriginalFilename", "@CPACK_PACKAGE_NAME@.exe"
+      VALUE "ProductName", "@CPACK_PACKAGE_NAME@"
+      VALUE "ProductVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END

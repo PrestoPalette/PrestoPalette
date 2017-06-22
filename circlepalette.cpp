@@ -430,7 +430,7 @@ void CirclePalette::mousePressEvent(QMouseEvent *event)
 
 			if (enableLighting)
 			{
-				if (_is_collision(*lighting, primaryRadius, mousePos))
+				if (_is_collision(*lighting, lightingPic.height(), mousePos))
 				{
 					this->dragStartPosition = event->pos();
 					this->isDragging = true;

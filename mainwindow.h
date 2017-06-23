@@ -85,6 +85,7 @@ private:
 	void refresh_gamutShape_buttons(void);
 	void refresh_wheel_buttons(void);
 	void refresh_palette();
+	void refresh_sliders();
 };
 
 #endif // MAINWINDOW_H

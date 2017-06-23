@@ -33,15 +33,17 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->ui->rdoCoarseWheel->clicked();
 	this->ui->rdoMixString1->clicked();
 	this->ui->btnLightingOff->clicked();
-	this->ui->backgroundSlider->setSliderPosition(92);
-	this->ui->alphaSlider->setSliderPosition(50);
-	this->ui->brightnessSlider->setSliderPosition(0);
-	this->ui->darkSlider->setSliderPosition(70);
-	this->ui->lightSlider->setSliderPosition(70);
+	this->ui->backgroundSlider->setValue(92);
+	this->ui->alphaSlider->setValue(50);
+	this->ui->brightnessSlider->setValue(0);
+	this->ui->darkSlider->setValue(70);
+	this->ui->lightSlider->setValue(70);
 
 	/***************************
 	 * END PRESETS
 	 ***************************/
+
+	refresh_sliders();
 
 	this->controlClick.setSource(QUrl::fromLocalFile(":/main/audio/Select.wav"));
 	this->controlClick.setVolume(0.25f);
@@ -441,6 +443,15 @@ void MainWindow::on_btnClipboard_hoverEnter(QHoverEvent* e)
 void MainWindow::on_btnClipboard_hoverLeave(QHoverEvent* e)
 {
 	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
+}
+
+void MainWindow::refresh_sliders()
+{
+	this->on_backgroundSlider_valueChanged(this->ui->backgroundSlider->value());
+	this->on_alphaSlider_valueChanged(this->ui->alphaSlider->value());
+	this->on_brightnessSlider_valueChanged(this->ui->brightnessSlider->value());
+	this->on_darkSlider_valueChanged(this->ui->darkSlider->value());
+	this->on_lightSlider_valueChanged(this->ui->lightSlider->value());
 }
 
 void MainWindow::refresh_palette()

@@ -23,6 +23,7 @@
 #include "circlepalette.h"
 #include "visualpalette.h"
 #include "clickablelabel.h"
+#include "lightingsliderstyle.h"
 
 #define APP_WIDTH 1250
 #define APP_HEIGHT 800
@@ -102,6 +103,8 @@ public:
 
     QString maroonedOnMars;
     QString calibri;
+
+    LightingSliderStyle *alphaStyle;
 
     void positionDividingLine(QLabel *line, const QRect &position)
     {
@@ -299,6 +302,8 @@ public:
 	alphaSlider->setOrientation(Qt::Horizontal);
 	alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
 					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
+	//alphaStyle = new LightingSliderStyle(alphaSlider->style());
+	//alphaSlider->setStyle(alphaStyle);
 
 	alphaSliderTransparency = new QSlider(centralWidget);
 	alphaSliderTransparency->setObjectName(QStringLiteral("alphaSliderTransparency"));

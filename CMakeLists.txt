@@ -37,11 +37,12 @@ find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5Network REQUIRED)
 
 IF(MINGW)
-	add_executable(${CMAKE_PROJECT_NAME} WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	add_executable(${CMAKE_PROJECT_NAME} WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp lightingsliderstyle.cpp)
 ELSEIF(APPLE)
-		add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "${CMAKE_SOURCE_DIR}/graphics/favicon.icns" main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "${CMAKE_SOURCE_DIR}/graphics/favicon.icns" main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp lightingsliderstyle.cpp)
 ELSE()
-		add_executable(${CMAKE_PROJECT_NAME} main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	# Linux
+	add_executable(${CMAKE_PROJECT_NAME} main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp lightingsliderstyle.cpp)
 ENDIF()
 
 target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets)

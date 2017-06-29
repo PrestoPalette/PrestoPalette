@@ -53,8 +53,10 @@
         <file>graphics/BackgroundSliderBG.png</file>
         <file>graphics/AlphaSliderBG.png</file>
         <file>graphics/AlphaSliderOverlay.png</file>
+        <file>graphics/SliderOverlay.png</file>
         <file>graphics/AboutIcon.png</file>
         <file>graphics/AboutIcon_Hover.png</file>
+        <file>graphics/BrightnessSliderBG.png</file>
         <file>graphics/ClipboardIcon_Hover.png</file>
         <file>graphics/Close.png</file>
         <file>graphics/Close_Hover.png</file>

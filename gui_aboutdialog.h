@@ -47,13 +47,13 @@ public:
     {
 	calibri = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/calibrib.ttf")).at(0);
 
-	qreal screenDPI  = QApplication::primaryScreen()->physicalDotsPerInch();
+	//qreal screenDPI  = QApplication::primaryScreen()->physicalDotsPerInch();
 
-	#ifdef WINDOWS
+	/*#ifdef WINDOWS
 	qreal RENDER_DPI = 96;
 	#else
 	qreal RENDER_DPI = 72;
-	#endif
+	#endif*/
 
 	QFont fontSubTitle;
 	fontSubTitle.setFamily(this->calibri);

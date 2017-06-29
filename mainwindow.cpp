@@ -22,6 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+	stringLight = 0;
+	stringDark = 0;
+	enableLighting = false;
+	ambientColor = QColor::fromRgb(0);
+	ambientColorBrightness = 0;
+	alpha = 0;
+	mixString = 0;
+
 	ui->setupUi(this);
 
 	this->SetCurrentColor(QColor::fromRgb(0, 0, 0));
@@ -481,18 +489,15 @@ void MainWindow::on_colorWheel_hoverColor(const QColor &color)
 
 void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
 {
-	// TODO -- change the slider color
-
 	this->ambientColor = color;
+
+	this->ui->alphaSliderStyle->setColor(this->ambientColor);
+	this->ui->brightnessSliderStyle->setColor(this->ambientColor);
 
 	refresh_palette();
 
-	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-color: yellow; background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
-					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");*/
-
-	/*this->ui->alphaSlider->setStyleSheet("QSlider::groove:horizontal {color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgba(75, 150, 202, 0), stop:1 rgba(75, 150, 202, 255));}"
-						"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
-*/
+	this->ui->alphaSlider->update();
+	this->ui->brightnessSlider->update();
 }
 
 void MainWindow::on_visualPalette_hoverColor(const QColor &color)
@@ -502,11 +507,11 @@ void MainWindow::on_visualPalette_hoverColor(const QColor &color)
 
 void MainWindow::SetCurrentColor(const QColor &color)
 {
-	auto pm = new QPixmap(":/main/graphics/CurrentColorSwatch.png");
-	auto pxr = new QPixmap(pm->size());
-	pxr->fill(color);
-	pxr->setMask(pm->createMaskFromColor(Qt::transparent));
-	this->ui->currentColorSwatch->setPixmap(*pxr);
+	QPixmap pm = QPixmap(":/main/graphics/CurrentColorSwatch.png");
+	QPixmap pxr = QPixmap(pm.size());
+	pxr.fill(color);
+	pxr.setMask(pm.createMaskFromColor(Qt::transparent));
+	this->ui->currentColorSwatch->setPixmap(pxr);
 
 	QString rgbText = QString::number(color.red()) + ", " + QString::number(color.green()) + ", " + QString::number(color.blue());
 	//QString hexText = "#" + QString::number(color.red(), 16) + QString::number(color.green(), 16) + QString::number(color.blue(), 16);

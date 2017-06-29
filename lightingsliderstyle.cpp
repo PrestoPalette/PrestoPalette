@@ -1,46 +1,80 @@
+#include <QDebug>
+#include <qdrawutil.h>
+
 #include "lightingsliderstyle.h"
 
 void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
 {
-    if(option->type == QStyleOption::SO_Slider)
-    {
-	//do something
-	return;
-    }
-    QProxyStyle::drawComplexControl(control, option, painter, widget);
+	const QStyleOptionComplex *opt;
+	QPainter *p;
+	//QStyle::ComplexControl cc;
+
+	//cc = control;
+	opt = option;
+	p = painter;
+
+	if (control == CC_Slider)
+	{
+		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(opt))
+		{
+			QRect groove = subControlRect(CC_Slider, slider, SC_SliderGroove, widget);
+			QRect handle = subControlRect(CC_Slider, slider, SC_SliderHandle, widget);
+
+			if ((slider->subControls & SC_SliderGroove) && groove.isValid())
+			{
+
+				Qt::BGMode oldMode = p->backgroundMode();
+				p->setBackgroundMode(Qt::TransparentMode);
+				p->drawPixmap(widget->rect(), groovePixmap);
+				p->setBackgroundMode(oldMode);
+			}
+
+			if (slider->subControls & SC_SliderHandle)
+			{
+				int x = handle.x(), y = handle.y(), wi = handle.width() - 2, he = slider->rect.height();
+
+				Qt::BGMode oldMode = p->backgroundMode();
+				p->setBackgroundMode(Qt::TransparentMode);
+				auto handlePixMap = QPixmap(_handleImage);
+				p->drawPixmap(QRect(x, y, wi, he), handlePixMap);
+				p->setBackgroundMode(oldMode);
+			}
+		}
+	}
+	else
+	{
+		QProxyStyle::drawComplexControl(control, option, painter, widget);
+	}
 }
 
-void LightingSliderStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *option,
-				QPainter *painter, const QWidget *widget) const
+int LightingSliderStyle::styleHint(QStyle::StyleHint hint,
+				   const QStyleOption *option = 0, const QWidget *widget = 0,
+				   QStyleHintReturn *returnData = 0) const
 {
-    if (element == PE_IndicatorSpinUp || element == PE_IndicatorSpinDown) {
-	QPolygon points(3);
-	int x = option->rect.x();
-	int y = option->rect.y();
-	int w = option->rect.width() / 2;
-	int h = option->rect.height() / 2;
-	x += (option->rect.width() - w) / 2;
-	y += (option->rect.height() - h) / 2;
+	if (hint == QStyle::SH_Slider_AbsoluteSetButtons)
+		return (Qt::LeftButton | Qt::MidButton);
+	return QProxyStyle::styleHint(hint, option, widget, returnData);
+}
 
-	if (element == PE_IndicatorSpinUp) {
-	    points[0] = QPoint(x, y + h);
-	    points[1] = QPoint(x + w, y + h);
-	    points[2] = QPoint(x + w / 2, y);
-	} else { // PE_SpinBoxDown
-	    points[0] = QPoint(x, y);
-	    points[1] = QPoint(x + w, y);
-	    points[2] = QPoint(x + w / 2, y + h);
+void LightingSliderStyle::setColor(QColor ambientColor)
+{
+	groovePixmap = QPixmap(_backgroundImage);
+	QImage alphaMask(groovePixmap.toImage());
+
+	qreal r, g, b, alpha;
+	r = ambientColor.redF();
+	g = ambientColor.greenF();
+	b = ambientColor.blueF();
+
+	for(int x = 0; x < alphaMask.width(); x++)
+	{
+		for(int y = 0; y < alphaMask.height(); y++)
+		{
+			QColor c = alphaMask.pixelColor(x, y);
+			alpha = c.alphaF();
+			alphaMask.setPixelColor(x, y, QColor::fromRgbF(r, g, b, alpha));
+		}
 	}
 
-	if (option->state & State_Enabled) {
-	    painter->setPen(option->palette.mid().color());
-	    painter->setBrush(option->palette.buttonText());
-	} else {
-	    painter->setPen(option->palette.buttonText().color());
-	    painter->setBrush(option->palette.mid());
-	}
-	painter->drawPolygon(points);
-    } else {
-	QProxyStyle::drawPrimitive(element, option, painter, widget);
-    }
+	groovePixmap = QPixmap::fromImage(alphaMask);
 }

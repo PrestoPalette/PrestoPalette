@@ -65,7 +65,9 @@ public:
     QSlider *brightnessSlider;
     QLabel *lblAlphaPct;
     QSlider *alphaSlider;
-    QSlider *alphaSliderTransparency;
+    QLabel *alphaSliderTransparency;
+    LightingSliderStyle *alphaSliderStyle;
+    LightingSliderStyle *brightnessSliderStyle;
     ClickableLabel *btnClipboard;
     QWidget *backgroundArea;
     QLabel *ppLogo;
@@ -104,7 +106,8 @@ public:
     QString maroonedOnMars;
     QString calibri;
 
-    LightingSliderStyle *alphaStyle;
+    // sadly this has to be marked this way -- else there is a memory leak and segfault on app close
+    //static LightingSliderStyle *alphaStyle = nullptr;
 
     void positionDividingLine(QLabel *line, const QRect &position)
     {
@@ -120,13 +123,13 @@ public:
 	maroonedOnMars = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/MaroonedOnMarsBB.ttf")).at(0);
 	calibri = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/calibrib.ttf")).at(0);
 
-	qreal screenDPI  = QApplication::primaryScreen()->physicalDotsPerInch();
+	//qreal screenDPI  = QApplication::primaryScreen()->physicalDotsPerInch();
 
-	#ifdef WINDOWS
+	/*#ifdef WINDOWS
 	qreal RENDER_DPI = 96;
 	#else
 	qreal RENDER_DPI = 72;
-	#endif
+	#endif*/
 
 	QFont fontTitle;
 	fontTitle.setFamily(this->maroonedOnMars);
@@ -293,23 +296,39 @@ public:
 	brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
 	brightnessSlider->setGeometry(QRect(796, TOOLBAR_TEXT_HEIGHT + 42, 110, 21));
 	brightnessSlider->setOrientation(Qt::Horizontal);
-	brightnessSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/LightnessSliderBG.png);}"
-					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle_Brightness.png); height:21px; width: 21px;}");
+	//brightnessSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/LightnessSliderBG.png);}"
+	//				"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle_Brightness.png); height:21px; width: 21px;}");
+
+	brightnessSliderStyle = new LightingSliderStyle(brightnessSlider->style(), QString::fromUtf8(":/main/graphics/SliderHandle_Brightness.png"), QString::fromUtf8(":/main/graphics/SliderOverlay.png"));
+	brightnessSlider->setStyle(brightnessSliderStyle);
 
 	alphaSlider = new QSlider(centralWidget);
 	alphaSlider->setObjectName(QStringLiteral("alphaSlider"));
 	alphaSlider->setGeometry(QRect(796, 718, 110, 21));
 	alphaSlider->setOrientation(Qt::Horizontal);
-	alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
-					"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
-	//alphaStyle = new LightingSliderStyle(alphaSlider->style());
-	//alphaSlider->setStyle(alphaStyle);
+	//alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
+	//				"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
 
-	alphaSliderTransparency = new QSlider(centralWidget);
+	// sadly this has to be done this way -- else there is a memory leak and segfault on app close
+	// local variable, static
+
+	/*static QProxyStyle *alphaStyle = nullptr;
+	if (alphaStyle == nullptr)
+	{
+	    alphaStyle = new LightingSliderStyle(alphaSlider->style());
+	}*/
+
+	alphaSliderStyle = new LightingSliderStyle(alphaSlider->style(), QString::fromUtf8(":/main/graphics/SliderHandle.png"), QString::fromUtf8(":/main/graphics/SliderOverlay.png"));
+	alphaSlider->setStyle(alphaSliderStyle);
+
+	alphaSliderTransparency = new QLabel(centralWidget);
 	alphaSliderTransparency->setObjectName(QStringLiteral("alphaSliderTransparency"));
-	alphaSliderTransparency->setGeometry(QRect(796, 718, 110, 21));
-	alphaSliderTransparency->setOrientation(Qt::Horizontal);
-	alphaSliderTransparency->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderBG.png);}");
+	//alphaSliderTransparency->setGeometry(QRect(796, 718, 110, 30));
+	alphaSliderTransparency->setGeometry(QRect(alphaSlider->geometry()));
+	alphaSliderTransparency->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/AlphaSliderBG.png")));
+	//alphaSliderTransparency->setOrientation(Qt::Horizontal);
+	//alphaSliderTransparency->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderBG.png);}");
+
 	alphaSliderTransparency->lower();
 	alphaSlider->raise();
 
@@ -578,6 +597,28 @@ public:
 	lblSave->setText(QApplication::translate("MainWindow", "SAVE", 0));
 	lblSave->adjustSize();
     } // retranslateUi
+
+    /*
+    ~Ui_MainWindow(void)
+    {
+	delete this->alphaSlider;
+	delete this->alphaSliderStyle;
+	delete this->backgroundArea;
+	delete this->backgroundSlider;
+	delete this->borderBottom;
+	delete this->borderLeft;
+	delete this->borderRight;
+	delete this->borderTop;
+	delete this->brightnessSlider;
+	delete this->btnAbout;
+	delete this->btnClipboard;
+	delete this->btnLightingOff;
+	delete this->btnLightingOn;
+	delete this->btnLoad;
+	delete this->btnSave;
+	delete this->btnSaveJPG;
+    }
+    */
 
 };
 

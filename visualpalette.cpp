@@ -41,11 +41,11 @@ void VisualPalette::setColorAt(int column, int row, const QColor &fillColor)
 
 	swatch = (QLabel *)this->layout->itemAtPosition(row, column)->widget();
 
-	auto pm = new QPixmap(":/main/graphics/PaintSwatch.png");
-	auto pxr = new QPixmap(pm->size());
-	pxr->fill(fillColor);
-	pxr->setMask(pm->createMaskFromColor(Qt::transparent));
-	swatch->setPixmap(*pxr);
+	QPixmap pm = QPixmap(":/main/graphics/PaintSwatch.png");
+	QPixmap pxr = QPixmap(pm.size());
+	pxr.fill(fillColor);
+	pxr.setMask(pm.createMaskFromColor(Qt::transparent));
+	swatch->setPixmap(pxr);
 
 	swatch->setScaledContents(true);
 }

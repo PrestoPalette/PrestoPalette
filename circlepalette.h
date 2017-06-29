@@ -61,6 +61,7 @@ class CirclePalette : public QWidget
 	Q_OBJECT
 public:
 	explicit CirclePalette(QWidget *parent = 0);
+	~CirclePalette(void);
 
 	QWidget *drawnElements;
 	QLabel *colorWheel;

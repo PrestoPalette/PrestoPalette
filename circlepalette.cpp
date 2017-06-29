@@ -22,6 +22,8 @@ QPoint operator *(const QPoint& x, const QPointF& y) {
 
 CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 {
+	isDragging = false;
+
 	lightingPic = QPixmap(QString::fromUtf8(":/main/graphics/LightingIcon.png"));
 
 	circlePic = QPixmap(QString::fromUtf8(":/main/graphics/PrimaryHandle.png"));
@@ -66,6 +68,33 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 
 	this->controlOnClick.setSource(QUrl::fromLocalFile(":/main/audio/Click_On_Short.wav"));
 	this->controlOnClick.setVolume(0.25f);
+}
+
+CirclePalette::~CirclePalette(void)
+{
+	for(auto p: pointsLine)
+	{
+		delete p;
+	}
+	pointsLine.clear();
+
+	for(auto p: pointsTriangle)
+	{
+		delete p;
+	}
+	pointsTriangle.clear();
+
+	for (auto p: pointsQuad)
+	{
+		delete p;
+	}
+	pointsQuad.clear();
+
+	if (lighting)
+	{
+		delete lighting;
+		lighting = NULL;
+	}
 }
 
 QPointF CirclePalette::FindIntersectionWithCircle(const QPoint &p1, const QPoint &p2, const qreal radius)

@@ -39,7 +39,7 @@ find_package(Qt5Network REQUIRED)
 IF(MINGW)
 	add_executable(PrestoPalette WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
 ELSE()
-	add_executable(PrestoPalette main.cpp mainwindow.cpp resources.qrc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	add_executable(PrestoPalette main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
 ENDIF(MINGW)
 
 target_link_libraries(PrestoPalette Qt5::Widgets)
@@ -113,4 +113,20 @@ SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")
 SET(CPACK_NSIS_HELP_LINK "http://www.prestopalette.com")
 SET(CPACK_NSIS_COMPONENT_INSTALL OFF)
 
+#Bundle (OSX)
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.plist.in" "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
+SET(CPACK_BUNDLE_NAME "${CPACK_PACKAGE_NAME}")
+SET(CPACK_BUNDLE_STARTUP_COMMAND ${CPACK_PACKAGE_NAME})
+SET(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
+SET(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/graphics/favicon.icns")
+
+# Debian related stuff
+# SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libstdc++6, libgcc1, libqt (>= 5.5.0)")
+# SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+
+IF(APPLE)
+	SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+ENDIF(APPLE)
+
 INCLUDE(CPack)
+

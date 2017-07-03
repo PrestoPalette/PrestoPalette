@@ -16,7 +16,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-SET(CPACK_PACKAGE_NAME "PrestoPalette")
+SET(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An artist's tool for creating harmonious color palettes")
 SET(CPACK_PACKAGE_VENDOR "John Cbonis and Darryl T. Agostinelli")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
@@ -37,20 +37,24 @@ find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5Network REQUIRED)
 
 IF(MINGW)
-	add_executable(PrestoPalette WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	add_executable(${CMAKE_PROJECT_NAME} WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
 ELSE()
-	add_executable(PrestoPalette main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	IF(APPLE)
+		add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "${CMAKE_SOURCE_DIR}/graphics/favicon.icns" main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	ELSE()
+		add_executable(${CMAKE_PROJECT_NAME} main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
+	ENDIF(APPLE)
 ENDIF(MINGW)
 
-target_link_libraries(PrestoPalette Qt5::Widgets)
-target_link_libraries(PrestoPalette Qt5::Core)
-target_link_libraries(PrestoPalette Qt5::Gui)
-target_link_libraries(PrestoPalette Qt5::Multimedia)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Core)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Gui)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Multimedia)
 
-set_property(TARGET PrestoPalette PROPERTY CXX_STANDARD 11)
-set_property(TARGET PrestoPalette PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
-INSTALL(TARGETS PrestoPalette
+INSTALL(TARGETS ${CMAKE_PROJECT_NAME}
 		BUNDLE DESTINATION .
 		RUNTIME DESTINATION .
 		LIBRARY DESTINATION lib
@@ -67,7 +71,7 @@ IF(MINGW)
 			message(FATAL_ERROR "${file_name} not found")
 		endif()
 	endfunction()
-	
+
 	force_find_library("libgcc_s_seh-1.dll")
 	force_find_library("libstdc++-6.dll")
 	force_find_library("libwinpthread-1.dll")
@@ -103,30 +107,33 @@ ENDIF(MINGW)
 # CPack Variable Cheetsheet
 # https://github.com/mgalloy/cpack-cheatsheets/blob/master/cpack-variables.rst
 
-#NSIS
+# NSIS (Windows)
 SET(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 SET(CPACK_NSIS_MUI_ICON ${CMAKE_CURRENT_SOURCE_DIR}/graphics/favicon.ico)
 SET(CPACK_NSIS_MUI_UNIICON ${CMAKE_CURRENT_SOURCE_DIR}/graphics/favicon.ico)
-SET(CPACK_NSIS_INSTALLED_ICON_NAME ${CPACK_PACKAGE_NAME}.exe)
-SET(CPACK_NSIS_MENU_LINKS ${CPACK_PACKAGE_NAME}.exe;${CPACK_PACKAGE_NAME})
-SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")
+SET(CPACK_NSIS_INSTALLED_ICON_NAME ${CMAKE_PROJECT_NAME}.exe)
+SET(CPACK_NSIS_MENU_LINKS ${CMAKE_PROJECT_NAME}.exe;${CPACK_PACKAGE_NAME})
+SET(CPACK_NSIS_DISPLAY_NAME "${CMAKE_PROJECT_NAME}")
 SET(CPACK_NSIS_HELP_LINK "http://www.prestopalette.com")
 SET(CPACK_NSIS_COMPONENT_INSTALL OFF)
 
-#Bundle (OSX)
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.plist.in" "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
-SET(CPACK_BUNDLE_NAME "${CPACK_PACKAGE_NAME}")
+# Bundle (OSX)
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}.plist.in" "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
+SET(CPACK_BUNDLE_NAME "${CMAKE_PROJECT_NAME}")
+#SET(CPACK_BUNDLE_STARTUP_COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/Launcher")
 SET(CPACK_BUNDLE_STARTUP_COMMAND ${CPACK_PACKAGE_NAME})
 SET(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
 SET(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/graphics/favicon.icns")
+SET(MACOSX_BUNDLE_ICON_FILE favicon.icns)
+
+IF(APPLE)
+	SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/graphics/favicon.icns")
+	SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+	set_source_files_properties("${CMAKE_SOURCE_DIR}/graphics/favicon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+ENDIF(APPLE)
 
 # Debian related stuff
 # SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libstdc++6, libgcc1, libqt (>= 5.5.0)")
 # SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 
-IF(APPLE)
-	SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-ENDIF(APPLE)
-
 INCLUDE(CPack)
-

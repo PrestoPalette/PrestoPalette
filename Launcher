@@ -1,0 +1,5 @@
+#!/bin/sh
+
+BUNDLE="`echo "$0" | sed -e 's/\/Contents\/MacOS\/.*//'`"
+RESOURCES="$BUNDLE/Contents/Resources"
+exec "$RESOURCES/PrestoPalette.app"

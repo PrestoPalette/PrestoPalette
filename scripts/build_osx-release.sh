@@ -10,6 +10,6 @@ mkdir build
 cd build
 
 cmake -G "Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_BUILD_TYPE=Release
-make -j 7 && ctest && make install && cpack -G "Bundle"
+make -j 7
 
 popd

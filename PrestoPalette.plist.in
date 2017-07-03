@@ -10,17 +10,17 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleName</key>
-    <string>@CPACK_PACKAGE_NAME@</string>
+    <string>@CMAKE_PROJECT_NAME@</string>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright (c) 2017 by John Cboins and Darryl T. Agostinelli. All Rights Reserved.</string>
     <key>CFBundleGetInfoString</key>
     <string>@CPACK_PACKAGE_DESCRIPTION_SUMMARY@</string>
     <key>CFBundleSignature</key>
-    <string>@CPACK_PACKAGE_NAME@</string>
+    <string>@CMAKE_PROJECT_NAME@</string>
     <key>CFBundleExecutable</key>
     <string>PrestoPalette</string>
     <key>CFBundleIdentifier</key>
-    <string>com.@CPACK_PACKAGE_NAME@</string>
+    <string>com.@CMAKE_PROJECT_NAME@</string>
     <key>CFBundleShortVersionString</key>
     <string>@PROJECT_VERSION@</string>
     <key>CFBundleVersion</key>

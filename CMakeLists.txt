@@ -38,13 +38,11 @@ find_package(Qt5Network REQUIRED)
 
 IF(MINGW)
 	add_executable(${CMAKE_PROJECT_NAME} WIN32 main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
-ELSE()
-	IF(APPLE)
+ELSEIF(APPLE)
 		add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "${CMAKE_SOURCE_DIR}/graphics/favicon.icns" main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
-	ELSE()
+ELSE()
 		add_executable(${CMAKE_PROJECT_NAME} main.cpp mainwindow.cpp resources.qrc ${CMAKE_CURRENT_BINARY_DIR}/application.rc visualpalette.cpp circlepalette.cpp clickablelabel.cpp aboutdialog.cpp)
-	ENDIF(APPLE)
-ENDIF(MINGW)
+ENDIF()
 
 target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets)
 target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Core)
@@ -102,7 +100,7 @@ IF(MINGW)
 	INSTALL(FILES ${Qt5_Widgets_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Multimedia_Location} DESTINATION . COMPONENT Libraries)
 	INSTALL(FILES ${Qt5_Network_Location} DESTINATION . COMPONENT Libraries)
-ENDIF(MINGW)
+ENDIF()
 
 # CPack Variable Cheetsheet
 # https://github.com/mgalloy/cpack-cheatsheets/blob/master/cpack-variables.rst
@@ -127,13 +125,15 @@ SET(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/graphics/favicon.icns")
 SET(MACOSX_BUNDLE_ICON_FILE favicon.icns)
 
 IF(APPLE)
+	SET(PACKAGE_PLATFORM_TAG "-osx")
 	SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/graphics/favicon.icns")
-	SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 	set_source_files_properties("${CMAKE_SOURCE_DIR}/graphics/favicon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-ENDIF(APPLE)
+ENDIF()
 
 # Debian related stuff
 # SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libstdc++6, libgcc1, libqt (>= 5.5.0)")
 # SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+
+SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}${PACKAGE_PLATFORM_TAG}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 
 INCLUDE(CPack)

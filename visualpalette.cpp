@@ -62,22 +62,6 @@ void VisualPalette::resetSwatches()
 
 				swatch->setMouseTracking(true);
 
-				/* with spaces between cells */
-				/*swatch->setStyleSheet("\
-				QLabel {\
-				border: 0; \
-				margin: 0px 0px 0px 0px; \
-				}");*/
-
-				/* with no space at all between cells */
-				/*
-				swatch->setStyleSheet("\
-				QLabel {\
-				border: 0; \
-				margin: -13px -13px -13px -13px; \
-				}");
-				*/
-
 				layout->addWidget(swatch, y, x);
 				layout->setSpacing(0);
 			}

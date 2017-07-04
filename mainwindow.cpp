@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	stringLight = 0;
 	stringDark = 0;
 	enableLighting = false;
-	ambientColor = QColor::fromRgb(0);
 	ambientColorBrightness = 0;
 	alpha = 0;
 	mixString = 0;
@@ -52,6 +51,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	 ***************************/
 
 	refresh_sliders();
+
+	/* this isn't a preset -- this is just a random shade of orange */
+	/* so that it's not just black */
+	/* black looked weird */
+	setLightingColor(QColor::fromRgbF(0.909804, 0.501961, 0.0901961));
 
 	this->controlClick.setSource(QUrl::fromLocalFile(":/main/audio/Select.wav"));
 	this->controlClick.setVolume(0.25f);
@@ -487,12 +491,17 @@ void MainWindow::on_colorWheel_hoverColor(const QColor &color)
 	SetCurrentColor(color);
 }
 
-void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
+void MainWindow::setLightingColor(const QColor &color)
 {
 	this->ambientColor = color;
 
 	this->ui->alphaSliderStyle->setColor(this->ambientColor);
 	this->ui->brightnessSliderStyle->setColor(this->ambientColor);
+}
+
+void MainWindow::on_colorWheel_lightingColorChanged(const QColor &color)
+{
+	setLightingColor(color);
 
 	refresh_palette();
 
@@ -514,9 +523,5 @@ void MainWindow::SetCurrentColor(const QColor &color)
 	this->ui->currentColorSwatch->setPixmap(pxr);
 
 	QString rgbText = QString::number(color.red()) + ", " + QString::number(color.green()) + ", " + QString::number(color.blue());
-	//QString hexText = "#" + QString::number(color.red(), 16) + QString::number(color.green(), 16) + QString::number(color.blue(), 16);
-
-	//this->ui->currentColorSwatchCaption->setText(QString("RGB:" + rgbText + "\r\nHEX: " + hexText));
 	this->ui->currentColorSwatchCaption->setText(QString(rgbText));
-	//this->ui->currentColorSwatchCaption->adjustSize();
 }

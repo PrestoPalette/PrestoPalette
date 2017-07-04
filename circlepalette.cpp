@@ -40,8 +40,6 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	colorWheel->setGeometry(QRect(70, 62, 499, 499));
 	colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));
 	colorWheel->raise();
-	//colorWheel->installEventFilter(this);
-	//colorWheel->setMouseTracking(true);
 
 	lighting = new QPoint(325, 40);
 
@@ -49,8 +47,6 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 	drawnElements->setGeometry(colorWheel->geometry());
 	drawnElements->raise();
 	drawnElements->installEventFilter(this);
-
-	//drawnElements->setMouseTracking(true);
 
 	setMouseTracking(true);
 

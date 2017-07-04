@@ -14,14 +14,16 @@ private:
 	QPixmap groovePixmap;
 	QString _handleImage;
 	QString _backgroundImage;
+	bool _blendWhite;
 public:
-    LightingSliderStyle(QStyle *style, QString handleImage, QString backgroundImage)
+    LightingSliderStyle(QStyle *style, QString handleImage, QString backgroundImage, bool blendWhite = false)
 	:QProxyStyle(style)
     {
 	    setColor(QColor::fromRgba(0));
 
 	    this->_handleImage = QString(handleImage);
 	    this->_backgroundImage = QString(backgroundImage);
+	    this->_blendWhite = blendWhite;
     }
 
     //void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;

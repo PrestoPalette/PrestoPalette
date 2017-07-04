@@ -7,9 +7,7 @@ void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control, con
 {
 	const QStyleOptionComplex *opt;
 	QPainter *p;
-	//QStyle::ComplexControl cc;
 
-	//cc = control;
 	opt = option;
 	p = painter;
 
@@ -61,6 +59,8 @@ void LightingSliderStyle::setColor(QColor ambientColor)
 	groovePixmap = QPixmap(_backgroundImage);
 	QImage alphaMask(groovePixmap.toImage());
 
+	QImage bg = QPixmap(QString::fromUtf8(":/main/graphics/AlphaSliderBG.png")).toImage();
+
 	qreal r, g, b, alpha;
 	r = ambientColor.redF();
 	g = ambientColor.greenF();
@@ -70,9 +70,25 @@ void LightingSliderStyle::setColor(QColor ambientColor)
 	{
 		for(int y = 0; y < alphaMask.height(); y++)
 		{
-			QColor c = alphaMask.pixelColor(x, y);
-			alpha = c.alphaF();
-			alphaMask.setPixelColor(x, y, QColor::fromRgbF(r, g, b, alpha));
+			alpha = alphaMask.pixelColor(x, y).alphaF();
+
+			if (this->_blendWhite)
+			{
+				QColor backgroundColor = bg.pixelColor(x, y);
+
+				// alpha blending equation
+				// out = alpha * new + (1 - alpha) * old
+				// since we are blending with white and white is 1.0, it drops out of the equation
+				qreal rn, gn, bn;
+				rn = alpha + (1.0f - alpha) * r;
+				gn = alpha + (1.0f - alpha) * g;
+				bn = alpha + (1.0f - alpha) * b;
+				alphaMask.setPixelColor(x, y, QColor::fromRgbF(rn, gn, bn, backgroundColor.alphaF()));
+			}
+			else
+			{
+				alphaMask.setPixelColor(x, y, QColor::fromRgbF(r, g, b, alpha));
+			}
 		}
 	}
 

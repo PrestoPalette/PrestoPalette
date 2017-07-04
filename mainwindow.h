@@ -18,6 +18,8 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+    void setLightingColor(const QColor &color);
+    
 private:
 	Ui::MainWindow *ui;
 

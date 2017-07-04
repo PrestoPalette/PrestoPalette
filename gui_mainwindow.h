@@ -100,8 +100,7 @@ public:
     QLabel *line3;
     QLabel *line4;
     QLabel *line5;
-    QLabel *line6;
-    QLabel *line7;
+    QLabel *line6;    QLabel *line7;
 
     QString maroonedOnMars;
     QString calibri;
@@ -296,38 +295,22 @@ public:
 	brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
 	brightnessSlider->setGeometry(QRect(796, TOOLBAR_TEXT_HEIGHT + 42, 110, 21));
 	brightnessSlider->setOrientation(Qt::Horizontal);
-	//brightnessSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/LightnessSliderBG.png);}"
-	//				"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle_Brightness.png); height:21px; width: 21px;}");
 
-	brightnessSliderStyle = new LightingSliderStyle(brightnessSlider->style(), QString::fromUtf8(":/main/graphics/SliderHandle_Brightness.png"), QString::fromUtf8(":/main/graphics/SliderOverlay.png"));
+	brightnessSliderStyle = new LightingSliderStyle(brightnessSlider->style(), QString::fromUtf8(":/main/graphics/SliderHandle_Brightness.png"), QString::fromUtf8(":/main/graphics/SliderOverlay.png"), true);
 	brightnessSlider->setStyle(brightnessSliderStyle);
 
 	alphaSlider = new QSlider(centralWidget);
 	alphaSlider->setObjectName(QStringLiteral("alphaSlider"));
 	alphaSlider->setGeometry(QRect(796, 718, 110, 21));
 	alphaSlider->setOrientation(Qt::Horizontal);
-	//alphaSlider->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderOverlay.png);}"
-	//				"QSlider::handle:horizontal {background-image:url(:/main/graphics/SliderHandle.png); height:21px; width: 21px;}");
-
-	// sadly this has to be done this way -- else there is a memory leak and segfault on app close
-	// local variable, static
-
-	/*static QProxyStyle *alphaStyle = nullptr;
-	if (alphaStyle == nullptr)
-	{
-	    alphaStyle = new LightingSliderStyle(alphaSlider->style());
-	}*/
 
 	alphaSliderStyle = new LightingSliderStyle(alphaSlider->style(), QString::fromUtf8(":/main/graphics/SliderHandle.png"), QString::fromUtf8(":/main/graphics/SliderOverlay.png"));
 	alphaSlider->setStyle(alphaSliderStyle);
 
 	alphaSliderTransparency = new QLabel(centralWidget);
 	alphaSliderTransparency->setObjectName(QStringLiteral("alphaSliderTransparency"));
-	//alphaSliderTransparency->setGeometry(QRect(796, 718, 110, 30));
 	alphaSliderTransparency->setGeometry(QRect(alphaSlider->geometry()));
 	alphaSliderTransparency->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/AlphaSliderBG.png")));
-	//alphaSliderTransparency->setOrientation(Qt::Horizontal);
-	//alphaSliderTransparency->setStyleSheet("QSlider::groove:horizontal {background-image:url(:/main/graphics/AlphaSliderBG.png);}");
 
 	alphaSliderTransparency->lower();
 	alphaSlider->raise();

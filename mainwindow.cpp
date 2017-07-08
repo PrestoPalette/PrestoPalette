@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->ui->btnLightingOff->clicked();
 	this->ui->backgroundSlider->setValue(92);
 	this->ui->alphaSlider->setValue(50);
-	this->ui->brightnessSlider->setValue(0);
+	this->ui->brightnessSlider->setValue(50);
 	this->ui->darkSlider->setValue(70);
 	this->ui->lightSlider->setValue(70);
 

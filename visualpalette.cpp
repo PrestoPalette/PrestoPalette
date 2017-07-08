@@ -141,19 +141,34 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 
 	if (interpolate)
 	{
-		//(1 - t) * v0 + t * v1;
-		// which direction?
-		if(litOriginal_r < r)
+		// linear interpolation!
+		// (1 - t) * v0 + t * v1;
+
+		qreal interpolationFactor = 0.0f;
+
+		if (go_dark)
 		{
-			r = (1.0 - 0.5f) * litOriginal_r + 0.5f * r;
-			g = (1.0 - 0.5f) * litOriginal_g + 0.5f * g;
-			b = (1.0 - 0.5f) * litOriginal_b + 0.5f * b;
+			// dark (lower makes it more dark)
+			interpolationFactor = 0.35f;
 		}
 		else
 		{
-			r = (1.0 - 0.5f) * r + 0.5f * litOriginal_r;
-			g = (1.0 - 0.5f) * g + 0.5f * litOriginal_g;
-			b = (1.0 - 0.5f) * b + 0.5f * litOriginal_b;
+			// light (higher makes it more light)
+			interpolationFactor = 0.48f;
+		}
+
+		// which direction?
+		if(litOriginal_r < r)
+		{
+			r = (1.0 - interpolationFactor) * litOriginal_r + interpolationFactor * r;
+			g = (1.0 - interpolationFactor) * litOriginal_g + interpolationFactor * g;
+			b = (1.0 - interpolationFactor) * litOriginal_b + interpolationFactor * b;
+		}
+		else
+		{
+			r = (1.0 - interpolationFactor) * r + interpolationFactor * litOriginal_r;
+			g = (1.0 - interpolationFactor) * g + interpolationFactor * litOriginal_g;
+			b = (1.0 - interpolationFactor) * b + interpolationFactor * litOriginal_b;
 		}
 	}
 

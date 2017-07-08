@@ -143,7 +143,7 @@ void MainWindow::on_brightnessSlider_valueChanged(int position)
 
 	refresh_palette();
 
-	ui->lblBrightnessPct->setText(QApplication::translate("MainWindow", "BRIGHTNESS", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
+	ui->lblBrightnessPct->setText(QApplication::translate("MainWindow", "VALUE", 0) + QString(" ") + QString::number(v * 100.0) + QString("%"));
 	ui->lblBrightnessPct->adjustSize();
 }
 

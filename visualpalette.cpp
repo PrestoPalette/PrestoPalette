@@ -83,39 +83,87 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 	QColor ambientColor = in_ambientColor;
 	qreal r, g, b, light_r, light_g, light_b, litOriginal_r, litOriginal_g, litOriginal_b;
 
-	r = (float)unmodifiedColor.red();
-	g = (float)unmodifiedColor.green();
-	b = (float)unmodifiedColor.blue();
+	r = unmodifiedColor.redF();
+	g = unmodifiedColor.greenF();
+	b = unmodifiedColor.blueF();
 
 	/* first light it */
 	if (enableLighting)
 	{
-		light_r = ((255.0 - (float)ambientColor.red()) * ambientColorBrightness) + (float)ambientColor.red();
-		light_g = ((255.0 - (float)ambientColor.green()) * ambientColorBrightness) + (float)ambientColor.green();
-		light_b = ((255.0 - (float)ambientColor.blue()) * ambientColorBrightness) + (float)ambientColor.blue();
+		/*
+		 * Figure out the light's color
+		 */
 
-		// alpha blending equation
-		// out = alpha * new + (1 - alpha) * old
+		// get closer to zero
+		qreal newLightSaturation = (1.0 - ambientColorBrightness) * ambientColor.hsvSaturationF();
+
+		// get closer to 1.0
+		qreal newLightLuminosity = ((1.0 - ambientColor.valueF()) * ambientColorBrightness) + ambientColor.valueF();
+
+		// create new light color using new saturation and value
+		ambientColor = QColor::fromHsvF(ambientColor.hsvHueF(), clamp(newLightSaturation, 0.0, 1.0), clamp(newLightLuminosity, 0.0, 1.0));
+
+		// now multiply color blend
+		light_r = r * ambientColor.redF();
+		light_g = g * ambientColor.greenF();
+		light_b = b * ambientColor.blueF();
+
+		/* last, alpha blend the color over the original  */
 		r = ambientColorAlpha * light_r + (1.0f - ambientColorAlpha) * r;
 		g = ambientColorAlpha * light_g + (1.0f - ambientColorAlpha) * g;
 		b = ambientColorAlpha * light_b + (1.0f - ambientColorAlpha) * b;
 	}
 
+	/* used to calculate the interpolated color */
 	litOriginal_r = r;
 	litOriginal_g = g;
 	litOriginal_b = b;
 
-	if (go_dark ==false)
+	if (light_darkMultiplier != 0)
 	{
-		r = ((255.0 - r) * light_darkMultiplier) + r;
-		g = ((255.0 - g) * light_darkMultiplier) + g;
-		b = ((255.0 - b) * light_darkMultiplier) + b;
-	}
-	else
-	{
-		r = r * light_darkMultiplier;
-		g = g * light_darkMultiplier;
-		b = b * light_darkMultiplier;
+		if (go_dark ==false)
+		{
+			QColor lighter = QColor::fromRgbF(clamp(r, 0.0, 1.0), clamp(g, 0.0, 1.0), clamp(b, 0.0, 1.0));
+
+			/*if (column == 2)
+			{
+				if (row == 0)
+				{
+					qInfo() << "start";
+					qInfo() << "h: " << lighter.hsvHueF() << " s:" << lighter.hsvSaturationF() << " l:" << lighter.valueF();
+					qInfo() << "(1.0 - lighter.valueF(): " << (1.0 - lighter.valueF()) << " ((1.0 - lighter.valueF()) * light_darkMultiplier):" << ((1.0 - lighter.valueF()) * light_darkMultiplier) << " ((1.0 - lighter.valueF()) * light_darkMultiplier) + lighter.valueF():" << (((1.0 - lighter.valueF()) * light_darkMultiplier) + lighter.valueF());
+					qInfo() << "(1.0 - lighter.valueF(): " << 255 * (1.0 - lighter.valueF()) << " ((1.0 - lighter.valueF()) * light_darkMultiplier):" << 255 * ((1.0 - lighter.valueF()) * light_darkMultiplier) << " ((1.0 - lighter.valueF()) * light_darkMultiplier) + lighter.valueF():" << 255 * (((1.0 - lighter.valueF()) * light_darkMultiplier) + lighter.valueF());
+				}
+			}*/
+
+			// get closer to zero
+			qreal newSaturation = (1.0 - light_darkMultiplier) * lighter.hsvSaturationF();
+
+			// get closer to 1.0
+			qreal newLuminosity = ((1.0 - lighter.valueF()) * light_darkMultiplier) + lighter.valueF();
+
+			lighter = QColor::fromHsvF(lighter.hsvHueF(), clamp(newSaturation, 0.0, 1.0), clamp(newLuminosity, 0.0, 1.0));
+			r = lighter.redF();
+			g = lighter.greenF();
+			b = lighter.blueF();
+
+			/*if (column == 2)
+			{
+				if (row == 0)
+				{
+					qInfo() << "h: " << lighter.hsvHueF() << " s:" << lighter.hsvSaturationF() << " l:" << lighter.valueF();
+					qInfo() << "r: " << lighter.redF() << " g:" << lighter.greenF() << " b:" << lighter.blueF();
+					qInfo() << "r: " << r << " g:" << g << " b:" << b;
+					qInfo() << "end";
+				}
+			}*/
+		}
+		else
+		{
+			r = r * light_darkMultiplier;
+			g = g * light_darkMultiplier;
+			b = b * light_darkMultiplier;
+		}
 	}
 
 	if (interpolate)
@@ -136,7 +184,7 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 		}
 	}
 
-	newColor = QColor(clamp(r, 0.0, 255.0), clamp(g, 0.0, 255.0), clamp(b, 0.0, 255.0));
+	newColor = QColor::fromRgbF(clamp(r, 0.0, 1.0), clamp(g, 0.0, 1.0), clamp(b, 0.0, 1.0));
 
 	setColorAt(column, row, newColor);
 }
@@ -146,13 +194,6 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 			      bool enableLighting, QColor ambientColor, qreal ambientColorBrightness,
 			      qreal ambientColorAlpha)
 {
-	/*
-	 * Sort them clockwise order from hottest with is yellow.
-	 * Use first in clockwise order
-	 */
-
-	// TODO -- sort the colors according to john's specification
-
 	// top line moves closer to white
 	// second line linear interpolates between middle and top
 	// third line is un-modified
@@ -162,29 +203,6 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	int paletteWidth = combinedColors.length();
 
 	int midLine = 2;
-
-	/*
-	if (paletteHeight == 3)
-	{
-		midLine = 1;
-	}
-	else if (paletteHeight == 5)
-	{
-		midLine = 2;
-	}
-	else
-	{
-		midLine = 0;
-	}
-	*/
-
-	// only call reset if necessary, otherwise, there will be flicker
-	/*if ((this->paletteHeight != paletteHeight) || (this->paletteWidth != paletteWidth))
-	{
-		this->paletteHeight = paletteHeight;
-		this->paletteWidth = paletteWidth;
-		resetSwatches();
-	}*/
 
 	this->paletteHeight = paletteHeight;
 	this->paletteWidth = paletteWidth;
@@ -230,7 +248,6 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 
 bool VisualPalette::eventFilter(QObject* watched, QEvent* event)
 {
-	// TODO Fix me!  This is the hover over the palette
 	if (event->type() == QEvent::MouseMove)
 	{
 		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);

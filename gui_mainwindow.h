@@ -114,7 +114,7 @@ public:
 
     void setupUi(QMainWindow *MainWindow)
     {
-	MainWindow->setWindowIcon(QIcon(":/favicon.ico"));
+	MainWindow->setWindowIcon(QIcon(":/main/graphics/favicon.ico"));
 
 	maroonedOnMars = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/MaroonedOnMarsBB.ttf")).at(0);
 	calibri = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/calibrib.ttf")).at(0);

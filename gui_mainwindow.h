@@ -39,16 +39,13 @@ public:
     QWidget *centralWidget;
     CirclePalette *colorWheel;
     QLabel *lblResolution;
-    //QGroupBox *groupBoxResolution;
     ClickableLabel *rdoFineWheel;
     ClickableLabel *rdoCoarseWheel;
     QLabel *lblGamutShape;
-    //QGroupBox *groupBoxGamutShape;
     ClickableLabel *rdoGamutShapeLine;
     ClickableLabel *rdoGamutShapeTriangle;
     ClickableLabel *rdoGamutShapeSquare;
     QLabel *lblMixString;
-    //QGroupBox *groupBoxMixString;
     ClickableLabel *rdoMixString1;
     ClickableLabel *rdoMixString3;
     ClickableLabel *rdoMixString5;
@@ -527,7 +524,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-	MainWindow->setWindowTitle(QApplication::translate("PrestoPalette (BETA)", "PrestoPalette (BETA)", 0));
+	MainWindow->setWindowTitle(QApplication::translate("PrestoPalette", "PrestoPalette", 0));
 	lblResolution->setText(QApplication::translate("MainWindow", "RESOLUTION", 0));
 	lblResolution->adjustSize();
 	rdoFineWheel->setText(QApplication::translate("MainWindow", "Fi&ne", 0));

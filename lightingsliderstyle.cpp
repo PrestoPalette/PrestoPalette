@@ -29,12 +29,10 @@ void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control, con
 
 			if (slider->subControls & SC_SliderHandle)
 			{
-				int x = handle.x(), y = handle.y(), wi = handle.width() - 2, he = slider->rect.height();
-
 				Qt::BGMode oldMode = p->backgroundMode();
 				p->setBackgroundMode(Qt::TransparentMode);
 				auto handlePixMap = QPixmap(_handleImage);
-				p->drawPixmap(QRect(x, y, wi, he), handlePixMap);
+				p->drawPixmap(handle.x(), handle.y(), handlePixMap);
 				p->setBackgroundMode(oldMode);
 			}
 		}

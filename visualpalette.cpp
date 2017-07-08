@@ -87,33 +87,6 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 	g = unmodifiedColor.greenF();
 	b = unmodifiedColor.blueF();
 
-	/* first light it */
-	if (enableLighting)
-	{
-		/*
-		 * Figure out the light's color
-		 */
-
-		// get closer to zero
-		qreal newLightSaturation = (1.0 - ambientColorBrightness) * ambientColor.hsvSaturationF();
-
-		// get closer to 1.0
-		qreal newLightLuminosity = ((1.0 - ambientColor.valueF()) * ambientColorBrightness) + ambientColor.valueF();
-
-		// create new light color using new saturation and value
-		ambientColor = QColor::fromHsvF(ambientColor.hsvHueF(), clamp(newLightSaturation, 0.0, 1.0), clamp(newLightLuminosity, 0.0, 1.0));
-
-		// now multiply color blend
-		light_r = r * ambientColor.redF();
-		light_g = g * ambientColor.greenF();
-		light_b = b * ambientColor.blueF();
-
-		/* last, alpha blend the color over the original  */
-		r = ambientColorAlpha * light_r + (1.0f - ambientColorAlpha) * r;
-		g = ambientColorAlpha * light_g + (1.0f - ambientColorAlpha) * g;
-		b = ambientColorAlpha * light_b + (1.0f - ambientColorAlpha) * b;
-	}
-
 	/* used to calculate the interpolated color */
 	litOriginal_r = r;
 	litOriginal_g = g;
@@ -182,6 +155,33 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 			g = (1.0 - 0.5f) * g + 0.5f * litOriginal_g;
 			b = (1.0 - 0.5f) * b + 0.5f * litOriginal_b;
 		}
+	}
+
+	/* light it LAST */
+	if (enableLighting)
+	{
+		/*
+		 * Figure out the light's color
+		 */
+
+		// get closer to zero
+		qreal newLightSaturation = (1.0 - ambientColorBrightness) * ambientColor.hsvSaturationF();
+
+		// get closer to 1.0
+		qreal newLightLuminosity = ((1.0 - ambientColor.valueF()) * ambientColorBrightness) + ambientColor.valueF();
+
+		// create new light color using new saturation and value
+		ambientColor = QColor::fromHsvF(ambientColor.hsvHueF(), clamp(newLightSaturation, 0.0, 1.0), clamp(newLightLuminosity, 0.0, 1.0));
+
+		// now multiply color blend
+		light_r = r * ambientColor.redF();
+		light_g = g * ambientColor.greenF();
+		light_b = b * ambientColor.blueF();
+
+		/* last, alpha blend the color over the original  */
+		r = ambientColorAlpha * light_r + (1.0f - ambientColorAlpha) * r;
+		g = ambientColorAlpha * light_g + (1.0f - ambientColorAlpha) * g;
+		b = ambientColorAlpha * light_b + (1.0f - ambientColorAlpha) * b;
 	}
 
 	newColor = QColor::fromRgbF(clamp(r, 0.0, 1.0), clamp(g, 0.0, 1.0), clamp(b, 0.0, 1.0));

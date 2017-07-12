@@ -12,8 +12,7 @@ class LightingSliderStyle : public QProxyStyle
 {
 private:
 	QPixmap groovePixmap;
-	QString _handleImage;
-	QString _backgroundImage;
+	QPixmap handlePixmap;
 	bool _blendWhite;
 public:
     LightingSliderStyle(QStyle *style, QString handleImage, QString backgroundImage, bool blendWhite = false)
@@ -21,13 +20,15 @@ public:
     {
 	    setColor(QColor::fromRgba(0));
 
-	    this->_handleImage = QString(handleImage);
-	    this->_backgroundImage = QString(backgroundImage);
+	    this->handlePixmap = QPixmap(QString(handleImage));
+	    this->groovePixmap = QPixmap(QString(backgroundImage));
 	    this->_blendWhite = blendWhite;
     }
 
     //void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
     void drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
+
+    QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const;
 
     int styleHint(QStyle::StyleHint hint, const QStyleOption* option,
     const QWidget* widget, QStyleHintReturn* returnData) const;

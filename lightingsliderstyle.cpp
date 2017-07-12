@@ -3,37 +3,56 @@
 
 #include "lightingsliderstyle.h"
 
-void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
+QRect LightingSliderStyle::subControlRect(ComplexControl control,
+					  const QStyleOptionComplex *option,
+					  SubControl subControl,
+					  const QWidget *widget) const
 {
-	const QStyleOptionComplex *opt;
-	QPainter *p;
+	QRect rect;
 
-	opt = option;
-	p = painter;
+	rect = QCommonStyle::subControlRect(control, option, subControl, widget);
 
+	if (control == CC_Slider && subControl == SC_SliderHandle)
+	{
+		// this is the exact pixel dimensions of the handle png files
+		rect.setWidth(21);
+		rect.setHeight(21);
+	}
+	else if (control == CC_Slider && subControl == SC_SliderGroove)
+	{
+		// this is the exact pixel dimensions of the slider png files
+		rect.setWidth(widget->width());
+		rect.setHeight(widget->height());
+	}
+	return rect;
+}
+
+void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control,
+					     const QStyleOptionComplex *option,
+					     QPainter *painter,
+					     const QWidget *widget) const
+{
 	if (control == CC_Slider)
 	{
-		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(opt))
+		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option))
 		{
 			QRect groove = subControlRect(CC_Slider, slider, SC_SliderGroove, widget);
 			QRect handle = subControlRect(CC_Slider, slider, SC_SliderHandle, widget);
 
 			if ((slider->subControls & SC_SliderGroove) && groove.isValid())
 			{
-
-				Qt::BGMode oldMode = p->backgroundMode();
-				p->setBackgroundMode(Qt::TransparentMode);
-				p->drawPixmap(widget->rect(), groovePixmap);
-				p->setBackgroundMode(oldMode);
+				Qt::BGMode oldMode = painter->backgroundMode();
+				painter->setBackgroundMode(Qt::TransparentMode);
+				painter->drawPixmap(groove, groovePixmap);
+				painter->setBackgroundMode(oldMode);
 			}
 
-			if (slider->subControls & SC_SliderHandle)
+			if ((slider->subControls & SC_SliderHandle) && handle.isValid())
 			{
-				Qt::BGMode oldMode = p->backgroundMode();
-				p->setBackgroundMode(Qt::TransparentMode);
-				auto handlePixMap = QPixmap(_handleImage);
-				p->drawPixmap(handle.x(), handle.y(), handlePixMap);
-				p->setBackgroundMode(oldMode);
+				Qt::BGMode oldMode = painter->backgroundMode();
+				painter->setBackgroundMode(Qt::TransparentMode);
+				painter->drawPixmap(handle, handlePixmap);
+				painter->setBackgroundMode(oldMode);
 			}
 		}
 	}
@@ -44,17 +63,19 @@ void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control, con
 }
 
 int LightingSliderStyle::styleHint(QStyle::StyleHint hint,
-				   const QStyleOption *option = 0, const QWidget *widget = 0,
+				   const QStyleOption *option = 0,
+				   const QWidget *widget = 0,
 				   QStyleHintReturn *returnData = 0) const
 {
 	if (hint == QStyle::SH_Slider_AbsoluteSetButtons)
+	{
 		return (Qt::LeftButton | Qt::MidButton);
+	}
 	return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
 void LightingSliderStyle::setColor(QColor ambientColor)
 {
-	groovePixmap = QPixmap(_backgroundImage);
 	QImage alphaMask(groovePixmap.toImage());
 
 	QImage bg = QPixmap(QString::fromUtf8(":/main/graphics/AlphaSliderBG.png")).toImage();

@@ -26,7 +26,6 @@ class LightingSliderStyle : public QProxyStyle
 		this->_blendWhite = blendWhite;
 	}
 
-	//void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
 	void drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
 
 	QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const;

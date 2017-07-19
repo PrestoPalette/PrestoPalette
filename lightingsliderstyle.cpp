@@ -24,6 +24,7 @@ QRect LightingSliderStyle::subControlRect(ComplexControl control,
 		rect.setWidth(widget->width());
 		rect.setHeight(widget->height());
 	}
+
 	return rect;
 }
 
@@ -71,6 +72,7 @@ int LightingSliderStyle::styleHint(QStyle::StyleHint hint,
 	{
 		return (Qt::LeftButton | Qt::MidButton);
 	}
+
 	return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 

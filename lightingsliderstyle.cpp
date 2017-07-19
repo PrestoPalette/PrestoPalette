@@ -85,9 +85,9 @@ void LightingSliderStyle::setColor(QColor ambientColor)
 	g = ambientColor.greenF();
 	b = ambientColor.blueF();
 
-	for(int x = 0; x < alphaMask.width(); x++)
+	for (int x = 0; x < alphaMask.width(); x++)
 	{
-		for(int y = 0; y < alphaMask.height(); y++)
+		for (int y = 0; y < alphaMask.height(); y++)
 		{
 			alpha = alphaMask.pixelColor(x, y).alphaF();
 

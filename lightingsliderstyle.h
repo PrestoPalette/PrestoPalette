@@ -10,31 +10,31 @@
 
 class LightingSliderStyle : public QProxyStyle
 {
-private:
+      private:
 	QPixmap groovePixmap;
 	QPixmap handlePixmap;
 	bool _blendWhite;
-public:
-    LightingSliderStyle(QStyle *style, QString handleImage, QString backgroundImage, bool blendWhite = false)
-	:QProxyStyle(style)
-    {
-	    setColor(QColor::fromRgba(0));
 
-	    this->handlePixmap = QPixmap(QString(handleImage));
-	    this->groovePixmap = QPixmap(QString(backgroundImage));
-	    this->_blendWhite = blendWhite;
-    }
+      public:
+	LightingSliderStyle(QStyle *style, QString handleImage, QString backgroundImage, bool blendWhite = false)
+	    : QProxyStyle(style)
+	{
+		setColor(QColor::fromRgba(0));
 
-    //void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
-    void drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
+		this->handlePixmap = QPixmap(QString(handleImage));
+		this->groovePixmap = QPixmap(QString(backgroundImage));
+		this->_blendWhite = blendWhite;
+	}
 
-    QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const;
+	//void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
+	void drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
 
-    int styleHint(QStyle::StyleHint hint, const QStyleOption* option,
-    const QWidget* widget, QStyleHintReturn* returnData) const;
+	QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const;
 
-    void setColor(QColor color);
+	int styleHint(QStyle::StyleHint hint, const QStyleOption *option,
+		      const QWidget *widget, QStyleHintReturn *returnData) const;
+
+	void setColor(QColor color);
 };
-
 
 #endif // LIGHTINGSLIDERSTYLE_H

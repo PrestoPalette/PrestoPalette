@@ -11,6 +11,7 @@
 class LightingSliderStyle : public QProxyStyle
 {
       private:
+	QPixmap groovePixmapOriginal;
 	QPixmap groovePixmap;
 	QPixmap handlePixmap;
 	bool _blendWhite;
@@ -22,7 +23,7 @@ class LightingSliderStyle : public QProxyStyle
 		setColor(QColor::fromRgba(0));
 
 		this->handlePixmap = QPixmap(QString(handleImage));
-		this->groovePixmap = QPixmap(QString(backgroundImage));
+		this->groovePixmapOriginal = QPixmap(QString(backgroundImage));
 		this->_blendWhite = blendWhite;
 	}
 

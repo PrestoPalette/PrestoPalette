@@ -79,7 +79,7 @@ int LightingSliderStyle::styleHint(QStyle::StyleHint hint,
 
 void LightingSliderStyle::setColor(QColor ambientColor)
 {
-	QImage alphaMask(groovePixmapOriginal.toImage());
+	QImage alphaMask(grooveMaskPixmap.toImage());
 
 	QImage bg = QPixmap(QString::fromUtf8(":/main/graphics/AlphaSliderBG.png")).toImage();
 

@@ -16,11 +16,13 @@
 #define LEFT_SHIFT 60
 #define TOP_SHIFT 57
 
-QPoint operator *(const QPoint& x, const QPointF& y) {
-    return QPoint((qreal)x.x() * y.x(), (qreal)x.y() * y.y());
+QPoint operator*(const QPoint &x, const QPointF &y)
+{
+	return QPoint((qreal)x.x() * y.x(), (qreal)x.y() * y.y());
 }
 
-CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
+CirclePalette::CirclePalette(QWidget *parent)
+    : QWidget(parent)
 {
 	isDragging = false;
 
@@ -68,19 +70,19 @@ CirclePalette::CirclePalette(QWidget *parent) : QWidget(parent)
 
 CirclePalette::~CirclePalette(void)
 {
-	for(auto p: pointsLine)
+	for (auto p : pointsLine)
 	{
 		delete p;
 	}
 	pointsLine.clear();
 
-	for(auto p: pointsTriangle)
+	for (auto p : pointsTriangle)
 	{
 		delete p;
 	}
 	pointsTriangle.clear();
 
-	for (auto p: pointsQuad)
+	for (auto p : pointsQuad)
 	{
 		delete p;
 	}
@@ -127,7 +129,7 @@ void CirclePalette::_draw_line_imp(QPainter &painter, const QPoint &p1, const QP
 	}
 	else
 	{
-		painter.setBrush(QBrush(QColor(64,64,57))); //off color
+		painter.setBrush(QBrush(QColor(64, 64, 57))); //off color
 	}
 	painter.drawEllipse(midpoint, circleRadius, circleRadius);
 }
@@ -158,7 +160,7 @@ void CirclePalette::_draw_centroid(QPainter &painter, int circleRadius, bool sec
 	}
 	else
 	{
-		painter.setBrush(QBrush(QColor(64,64,57))); //off color
+		painter.setBrush(QBrush(QColor(64, 64, 57))); //off color
 	}
 	painter.drawEllipse(*centroid, secondaryRadius, secondaryRadius);
 }
@@ -176,31 +178,32 @@ bool CirclePalette::sort_angles(const ColorPoint i, const ColorPoint j)
 
 	QPoint center = *centroid;
 
-    if (a.x() - center.x() >= 0 && b.x() - center.x() < 0)
-	return true;
-    if (a.x() - center.x() < 0 && b.x() - center.x() >= 0)
-	return false;
-    if (a.x() - center.x() == 0 && b.x() - center.x() == 0) {
-	if (a.y() - center.y() >= 0 || b.y() - center.y() >= 0)
-	    return a.y() > b.y();
-	return b.y() > a.y();
-    }
+	if (a.x() - center.x() >= 0 && b.x() - center.x() < 0)
+		return true;
+	if (a.x() - center.x() < 0 && b.x() - center.x() >= 0)
+		return false;
+	if (a.x() - center.x() == 0 && b.x() - center.x() == 0)
+	{
+		if (a.y() - center.y() >= 0 || b.y() - center.y() >= 0)
+			return a.y() > b.y();
+		return b.y() > a.y();
+	}
 
-    // compute the cross product of vectors (center -> a) x (center -> b)
-    int det = (a.x() - center.x()) * (b.y() - center.y()) - (b.x() - center.x()) * (a.y() - center.y());
-    if (det < 0)
-	return true;
-    if (det > 0)
-	return false;
+	// compute the cross product of vectors (center -> a) x (center -> b)
+	int det = (a.x() - center.x()) * (b.y() - center.y()) - (b.x() - center.x()) * (a.y() - center.y());
+	if (det < 0)
+		return true;
+	if (det > 0)
+		return false;
 
-    // points a and b are on the same line from the center
-    // check which point is closer to the center
-    int d1 = (a.x() - center.x()) * (a.x() - center.x()) + (a.y() - center.y()) * (a.y() - center.y());
-    int d2 = (b.x() - center.x()) * (b.x() - center.x()) + (b.y() - center.y()) * (b.y() - center.y());
-    return d1 > d2;
+	// points a and b are on the same line from the center
+	// check which point is closer to the center
+	int d1 = (a.x() - center.x()) * (a.x() - center.x()) + (a.y() - center.y()) * (a.y() - center.y());
+	int d2 = (b.x() - center.x()) * (b.x() - center.x()) + (b.y() - center.y()) * (b.y() - center.y());
+	return d1 > d2;
 }
 
-bool sort_angles1 (ColorPoint *i, ColorPoint *j)
+bool sort_angles1(ColorPoint *i, ColorPoint *j)
 {
 	return (i->angle <= j->angle);
 }
@@ -243,11 +246,11 @@ float PointPairToBearingDegrees(QPoint startingPoint, QPoint point)
 	return qDegreesToRadians(bearingDegrees);
 }
 
-bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
+bool CirclePalette::eventFilter(QObject *watched, QEvent *event)
 {
 	if (event->type() == QEvent::MouseMove && (watched == this))
 	{
-		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
+		const QMouseEvent *me = static_cast<const QMouseEvent *>(event);
 
 		QPoint p = colorWheel->mapFromGlobal(QCursor::pos());
 		QPoint wheelCenter = QPoint(colorWheel->width() / 2, colorWheel->height() / 2);
@@ -281,11 +284,11 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		QPoint center = QPoint(drawnElements->width() / 2.0, drawnElements->height() / 2.0);
 
 		/* draw the lighting icon */
-		if(enableLighting)
+		if (enableLighting)
 		{
 			painter.drawPixmap(QPoint(lighting->x() - (lightingPic.width() / 2),
 						  lighting->y() - (lightingPic.height() / 2) + LIGHTING_ICON_MIDDLE_TO_TOP),
-						  lightingPic);
+					   lightingPic);
 
 			QColor lightingColor = colorWheel->pixmap()->toImage().pixelColor(lighting->x(), lighting->y());
 
@@ -407,7 +410,7 @@ bool CirclePalette::eventFilter(QObject* watched, QEvent* event)
 		}
 
 		QVector<QColor> newColors;
-		for(auto cc : sortedColors)
+		for (auto cc : sortedColors)
 		{
 			newColors.append(cc);
 		}
@@ -724,7 +727,7 @@ void CirclePalette::SaveState(QJsonObject &saveState)
 
 	{
 		QJsonArray pointsLineArray;
-		foreach (ColorPoint* point, pointsLine)
+		foreach (ColorPoint *point, pointsLine)
 		{
 			QJsonObject s;
 			point->SaveState(s);
@@ -735,7 +738,7 @@ void CirclePalette::SaveState(QJsonObject &saveState)
 
 	{
 		QJsonArray pointsTriangleArray;
-		foreach (ColorPoint* point, pointsTriangle)
+		foreach (ColorPoint *point, pointsTriangle)
 		{
 			QJsonObject s;
 			point->SaveState(s);
@@ -746,7 +749,7 @@ void CirclePalette::SaveState(QJsonObject &saveState)
 
 	{
 		QJsonArray pointsQuadArray;
-		foreach (ColorPoint* point, pointsQuad)
+		foreach (ColorPoint *point, pointsQuad)
 		{
 			QJsonObject s;
 			point->SaveState(s);
@@ -766,7 +769,7 @@ void CirclePalette::LoadState(QJsonObject &loadState)
 		for (int i = 0; i < array.size(); i++)
 		{
 			QJsonObject s = array[i].toObject();
-			if(pointsLine.size() >= i)
+			if (pointsLine.size() >= i)
 			{
 				pointsLine[i]->LoadState(s);
 			}
@@ -778,7 +781,7 @@ void CirclePalette::LoadState(QJsonObject &loadState)
 		for (int i = 0; i < array.size(); i++)
 		{
 			QJsonObject s = array[i].toObject();
-			if(pointsTriangle.size() >= i)
+			if (pointsTriangle.size() >= i)
 			{
 				pointsTriangle[i]->LoadState(s);
 			}
@@ -790,7 +793,7 @@ void CirclePalette::LoadState(QJsonObject &loadState)
 		for (int i = 0; i < array.size(); i++)
 		{
 			QJsonObject s = array[i].toObject();
-			if(pointsQuad.size() >= i)
+			if (pointsQuad.size() >= i)
 			{
 				pointsQuad[i]->LoadState(s);
 			}
@@ -810,7 +813,7 @@ void CirclePalette::ChangeWheelShape(PrestoPalette::GlobalWheelShape shape)
 		this->wheelShape = shape;
 	}
 
-	switch(this->wheelShape)
+	switch (this->wheelShape)
 	{
 	case PrestoPalette::GlobalWheelShape::WheelShapeCoarse:
 		colorWheel->setPixmap(QPixmap(QString::fromUtf8(":/main/graphics/YWheel_Course.png")));

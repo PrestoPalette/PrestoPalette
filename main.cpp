@@ -3,14 +3,14 @@
 #include <QtGlobal>
 #include <iostream>
 
-void customLogHandler(QtMsgType type, const QMessageLogContext& context,
-		      const QString& msg)
+void customLogHandler(QtMsgType type, const QMessageLogContext &context,
+		      const QString &msg)
 {
-   // now output to debugger console
+// now output to debugger console
 #ifdef Q_OS_WIN
-    //OutputDebugString(msg.toStdWString().c_str());
+//OutputDebugString(msg.toStdWString().c_str());
 #else
-    std::cerr << msg.toStdString() << std::endl;
+	std::cerr << msg.toStdString() << std::endl;
 #endif
 }
 

@@ -9,14 +9,18 @@
 #define DEFAULT_PALETTE_WIDTH 9.0
 #define DEFAULT_PALETTE_HEIGHT 5.0
 
-template<class T>
-const T& clamp(const T& x, const T& lower, const T& upper) {
-	if (x < lower) return lower;
-	if (x > upper) return upper;
+template <class T>
+const T &clamp(const T &x, const T &lower, const T &upper)
+{
+	if (x < lower)
+		return lower;
+	if (x > upper)
+		return upper;
 	return x;
 }
 
-VisualPalette::VisualPalette(QWidget *parent) : QWidget(parent)
+VisualPalette::VisualPalette(QWidget *parent)
+    : QWidget(parent)
 {
 	layout = new QGridLayout(this);
 	this->setLayout(layout);
@@ -94,7 +98,7 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 
 	if (light_darkMultiplier != 0)
 	{
-		if (go_dark ==false)
+		if (go_dark == false)
 		{
 			QColor lighter = QColor::fromRgbF(clamp(r, 0.0, 1.0), clamp(g, 0.0, 1.0), clamp(b, 0.0, 1.0));
 
@@ -158,7 +162,7 @@ void VisualPalette::_setColor(int column, int row, QColor &unmodifiedColor, qrea
 		}
 
 		// which direction?
-		if(litOriginal_r < r)
+		if (litOriginal_r < r)
 		{
 			r = (1.0 - interpolationFactor) * litOriginal_r + interpolationFactor * r;
 			g = (1.0 - interpolationFactor) * litOriginal_g + interpolationFactor * g;
@@ -261,11 +265,11 @@ void VisualPalette::Formulate(QVector<QColor> combinedColors, QVector<QColor> pr
 	}
 }
 
-bool VisualPalette::eventFilter(QObject* watched, QEvent* event)
+bool VisualPalette::eventFilter(QObject *watched, QEvent *event)
 {
 	if (event->type() == QEvent::MouseMove)
 	{
-		const QMouseEvent* me = static_cast<const QMouseEvent*>(event);
+		const QMouseEvent *me = static_cast<const QMouseEvent *>(event);
 
 		QPoint p = this->mapFromGlobal(QCursor::pos());
 		int swatchWidth = this->width() / DEFAULT_PALETTE_WIDTH;

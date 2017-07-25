@@ -7,7 +7,7 @@
 
 #include "clickablelabel.h"
 
-ClickableLabel::ClickableLabel(QWidget* parent)
+ClickableLabel::ClickableLabel(QWidget *parent)
     : QLabel(parent)
 {
 	setMouseTracking(true);
@@ -20,36 +20,34 @@ ClickableLabel::~ClickableLabel()
 {
 }
 
-void ClickableLabel::mouseReleaseEvent(QMouseEvent* event)
+void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
 {
 	emit clicked();
 }
 
-void ClickableLabel::mousePressEvent(QMouseEvent* event)
+void ClickableLabel::mousePressEvent(QMouseEvent *event)
 {
 	emit pressed();
 }
 
-bool ClickableLabel::event(QEvent * e)
+bool ClickableLabel::event(QEvent *e)
 {
-    switch(e->type())
-    {
-    case QEvent::HoverEnter:
-	emit hoverEnter(static_cast<QHoverEvent*>(e));
-	return true;
-	break;
-    case QEvent::HoverLeave:
-	emit hoverLeave(static_cast<QHoverEvent*>(e));
-	return true;
-	break;
-    case QEvent::HoverMove:
-	emit hoverMove(static_cast<QHoverEvent*>(e));
-	return true;
-	break;
-    default:
-	break;
-    }
-    return QWidget::event(e);
+	switch (e->type())
+	{
+	case QEvent::HoverEnter:
+		emit hoverEnter(static_cast<QHoverEvent *>(e));
+		return true;
+		break;
+	case QEvent::HoverLeave:
+		emit hoverLeave(static_cast<QHoverEvent *>(e));
+		return true;
+		break;
+	case QEvent::HoverMove:
+		emit hoverMove(static_cast<QHoverEvent *>(e));
+		return true;
+		break;
+	default:
+		break;
+	}
+	return QWidget::event(e);
 }
-
-

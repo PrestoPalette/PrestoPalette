@@ -18,9 +18,9 @@
 
 const qreal circleWidth = 14.0;
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow)
 {
 	stringLight = 0;
 	stringDark = 0;
@@ -106,7 +106,7 @@ void MainWindow::on_backgroundSlider_valueChanged(int position)
 {
 	int rgb = ((100.0 - (double)position) / 100.0) * 255.0;
 	QPalette Pal(palette());
-	Pal.setColor(QPalette::Background, QColor::fromRgb(rgb,rgb,rgb));
+	Pal.setColor(QPalette::Background, QColor::fromRgb(rgb, rgb, rgb));
 	ui->backgroundArea->setAutoFillBackground(true);
 	ui->backgroundArea->setPalette(Pal);
 }
@@ -175,7 +175,7 @@ void MainWindow::on_rdoFineWheel_clicked(bool checked)
 
 void MainWindow::refresh_wheel_buttons(void)
 {
-	switch(this->ui->colorWheel->wheelShape)
+	switch (this->ui->colorWheel->wheelShape)
 	{
 	case PrestoPalette::GlobalWheelShape::WheelShapeCoarse:
 		this->ui->rdoCoarseWheel->setPixmap(QPixmap(":/main/graphics/Button_Course_Selected.png"));
@@ -219,7 +219,7 @@ void MainWindow::on_rdoGamutShapeSquare_clicked(bool checked)
 
 void MainWindow::refresh_gamutShape_buttons(void)
 {
-	switch(this->ui->colorWheel->gamutShape)
+	switch (this->ui->colorWheel->gamutShape)
 	{
 	case PrestoPalette::GlobalGamutShape::GamutShapeLine:
 		this->ui->rdoGamutShapeLine->setPixmap(QPixmap(":/main/graphics/Button_2point_Selected.png"));
@@ -270,7 +270,7 @@ void MainWindow::on_rdoMixString5_clicked(bool checked)
 
 void MainWindow::refresh_mixString_buttons(void)
 {
-	switch(this->mixString)
+	switch (this->mixString)
 	{
 	case 1:
 		this->ui->rdoMixString1->setPixmap(QPixmap(":/main/graphics/Button_1_Selected.png"));
@@ -300,42 +300,42 @@ void MainWindow::refresh_mixString_buttons(void)
 	refresh_palette();
 }
 
-void MainWindow::on_btnSaveJPG_hoverEnter(QHoverEvent* e)
+void MainWindow::on_btnSaveJPG_hoverEnter(QHoverEvent *e)
 {
 	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon_Hover.png"));
 }
 
-void MainWindow::on_btnSaveJPG_hoverLeave(QHoverEvent* e)
+void MainWindow::on_btnSaveJPG_hoverLeave(QHoverEvent *e)
 {
 	this->ui->btnSaveJPG->setPixmap(QPixmap(":/main/graphics/PNGIcon.png"));
 }
 
-void MainWindow::on_btnSave_hoverEnter(QHoverEvent* e)
+void MainWindow::on_btnSave_hoverEnter(QHoverEvent *e)
 {
 	this->ui->btnSave->setPixmap(QPixmap(":/main/graphics/SaveIcon_Hover.png"));
 }
 
-void MainWindow::on_btnSave_hoverLeave(QHoverEvent* e)
+void MainWindow::on_btnSave_hoverLeave(QHoverEvent *e)
 {
 	this->ui->btnSave->setPixmap(QPixmap(":/main/graphics/SaveIcon.png"));
 }
 
-void MainWindow::on_btnLoad_hoverEnter(QHoverEvent* e)
+void MainWindow::on_btnLoad_hoverEnter(QHoverEvent *e)
 {
 	this->ui->btnLoad->setPixmap(QPixmap(":/main/graphics/LoadIcon_Hover.png"));
 }
 
-void MainWindow::on_btnLoad_hoverLeave(QHoverEvent* e)
+void MainWindow::on_btnLoad_hoverLeave(QHoverEvent *e)
 {
 	this->ui->btnLoad->setPixmap(QPixmap(":/main/graphics/LoadIcon.png"));
 }
 
-void MainWindow::on_btnAbout_hoverEnter(QHoverEvent* e)
+void MainWindow::on_btnAbout_hoverEnter(QHoverEvent *e)
 {
 	this->ui->btnAbout->setPixmap(QPixmap(":/main/graphics/AboutIcon_Hover.png"));
 }
 
-void MainWindow::on_btnAbout_hoverLeave(QHoverEvent* e)
+void MainWindow::on_btnAbout_hoverLeave(QHoverEvent *e)
 {
 	this->ui->btnAbout->setPixmap(QPixmap(":/main/graphics/AboutIcon.png"));
 }
@@ -447,12 +447,12 @@ void MainWindow::on_btnClipboard_clicked()
 	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
 }
 
-void MainWindow::on_btnClipboard_hoverEnter(QHoverEvent* e)
+void MainWindow::on_btnClipboard_hoverEnter(QHoverEvent *e)
 {
 	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon_Hover.png"));
 }
 
-void MainWindow::on_btnClipboard_hoverLeave(QHoverEvent* e)
+void MainWindow::on_btnClipboard_hoverLeave(QHoverEvent *e)
 {
 	this->ui->btnClipboard->setPixmap(QPixmap(":/main/graphics/ClipboardIcon.png"));
 }

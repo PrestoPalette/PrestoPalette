@@ -6,21 +6,22 @@
 
 #include "gui_mainwindow.h"
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
-	
-public:
+
+      public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
-    void setLightingColor(const QColor &color);
-    
-private:
+	void setLightingColor(const QColor &color);
+
+      private:
 	Ui::MainWindow *ui;
 
 	qreal stringLight;
@@ -32,26 +33,26 @@ private:
 	int mixString;
 	QSoundEffect controlClick;
 
-private slots:
+      private slots:
 	void on_btnSaveJPG_clicked();
-	void on_btnSaveJPG_hoverEnter(QHoverEvent* e);
-	void on_btnSaveJPG_hoverLeave(QHoverEvent* e);
+	void on_btnSaveJPG_hoverEnter(QHoverEvent *e);
+	void on_btnSaveJPG_hoverLeave(QHoverEvent *e);
 
 	void on_btnClipboard_clicked();
-	void on_btnClipboard_hoverEnter(QHoverEvent* e);
-	void on_btnClipboard_hoverLeave(QHoverEvent* e);
+	void on_btnClipboard_hoverEnter(QHoverEvent *e);
+	void on_btnClipboard_hoverLeave(QHoverEvent *e);
 
 	void on_btnSave_clicked();
-	void on_btnSave_hoverEnter(QHoverEvent* e);
-	void on_btnSave_hoverLeave(QHoverEvent* e);
+	void on_btnSave_hoverEnter(QHoverEvent *e);
+	void on_btnSave_hoverLeave(QHoverEvent *e);
 
 	void on_btnLoad_clicked();
-	void on_btnLoad_hoverEnter(QHoverEvent* e);
-	void on_btnLoad_hoverLeave(QHoverEvent* e);
+	void on_btnLoad_hoverEnter(QHoverEvent *e);
+	void on_btnLoad_hoverLeave(QHoverEvent *e);
 
 	void on_btnAbout_clicked();
-	void on_btnAbout_hoverEnter(QHoverEvent* e);
-	void on_btnAbout_hoverLeave(QHoverEvent* e);
+	void on_btnAbout_hoverEnter(QHoverEvent *e);
+	void on_btnAbout_hoverLeave(QHoverEvent *e);
 
 	void on_backgroundSlider_valueChanged(int position);
 	void on_lightSlider_valueChanged(int position);
@@ -79,7 +80,7 @@ private slots:
 	void on_btnLightingOn_clicked(bool checked = false);
 	void on_btnLightingOff_clicked(bool checked = false);
 
-private:
+      private:
 	void SetCurrentColor(const QColor &fillColor);
 
 	void refresh_lighting_buttons();

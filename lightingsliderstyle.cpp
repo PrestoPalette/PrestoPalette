@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <qdrawutil.h>
+#include <QStyleOptionComplex>
 
 #include "lightingsliderstyle.h"
 
@@ -104,7 +105,10 @@ void LightingSliderStyle::setColor(QColor ambientColor)
 				rn = alpha + (1.0f - alpha) * r;
 				gn = alpha + (1.0f - alpha) * g;
 				bn = alpha + (1.0f - alpha) * b;
+
 				alphaMask.setPixelColor(x, y, QColor::fromRgbF(rn, gn, bn, backgroundColor.alphaF()));
+
+                //alphaMask.setPixelColor(x, y, QColor::fromRgbF(r, g, b, backgroundColor.alphaF()));
 			}
 			else
 			{

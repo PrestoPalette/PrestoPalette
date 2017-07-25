@@ -27,7 +27,7 @@ enum GlobalWheelShape
 
 class ColorPoint
 {
-public:
+      public:
 	QColor color;
 	QPoint point;
 	qreal angle; // in radians
@@ -59,7 +59,7 @@ public:
 class CirclePalette : public QWidget
 {
 	Q_OBJECT
-public:
+      public:
 	explicit CirclePalette(QWidget *parent = 0);
 	~CirclePalette(void);
 
@@ -82,28 +82,27 @@ public:
 	void SaveState(QJsonObject &saveState);
 	void LoadState(QJsonObject &loadState);
 
-signals:
+      signals:
 	void selectedColorsChanged();
 	void hoverColor(const QColor &color);
 	void lightingColorChanged(const QColor &color);
 
-private slots:
+      private slots:
 
-
-private:
-    bool eventFilter(QObject* watched, QEvent* event) override;
+      private:
+	bool eventFilter(QObject *watched, QEvent *event) override;
 	void mousePressEvent(QMouseEvent *event) override;
 	void mouseReleaseEvent(QMouseEvent *event) override;
 	void mouseMoveEvent(QMouseEvent *event) override;
 
-private:
+      private:
 	int primaryRadius = 15;
 	int secondaryRadius = 6;
 	int centroidRadius = 5;
 
-	std::vector<ColorPoint*> pointsLine;
-	std::vector<ColorPoint*> pointsTriangle;
-	std::vector<ColorPoint*> pointsQuad;
+	std::vector<ColorPoint *> pointsLine;
+	std::vector<ColorPoint *> pointsTriangle;
+	std::vector<ColorPoint *> pointsQuad;
 
 	QPoint centroidTriangle;
 	QPoint centroidQuad;
@@ -111,7 +110,7 @@ private:
 	bool centroidTriangleOn;
 	bool centroidQuadOn;
 
-	std::vector<ColorPoint*> *points;
+	std::vector<ColorPoint *> *points;
 
 	QPoint *lighting;
 	QPoint *centroid;
@@ -125,7 +124,7 @@ private:
 	QPixmap lightingPic;
 
 	void create_gamut_line();
-        void create_gamut_triangle();
+	void create_gamut_triangle();
 	void create_gamut_square();
 	void destroy_gamut();
 
@@ -135,12 +134,19 @@ private:
 	void _draw_centroid(QPainter &painter, int circleRadius, bool secondaryOn);
 	bool _is_collision(const QPoint &circle, int circleRadius, const QPoint &hitTest);
 
-public:
-	struct Less {
-	       Less(CirclePalette& c) : circlePalette(c) {}
-	       bool operator () ( const ColorPoint & i1, const ColorPoint & i2 ) {return circlePalette.sort_angles(i1, i2);}
-	       CirclePalette& circlePalette;
-	   };
+      public:
+	struct Less
+	{
+		Less(CirclePalette &c)
+		    : circlePalette(c)
+		{
+		}
+		bool operator()(const ColorPoint &i1, const ColorPoint &i2)
+		{
+			return circlePalette.sort_angles(i1, i2);
+		}
+		CirclePalette &circlePalette;
+	};
 
 	bool sort_angles(const ColorPoint i, const ColorPoint j);
 	QColor getColorAt(const QPoint &p);

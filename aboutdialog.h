@@ -3,7 +3,8 @@
 
 #include <QDialog>
 
-namespace Ui {
+namespace Ui
+{
 class AboutDialog;
 }
 
@@ -11,16 +12,16 @@ class AboutDialog : public QDialog
 {
 	Q_OBJECT
 
-public:
+      public:
 	explicit AboutDialog(QWidget *parent = 0);
 	~AboutDialog();
 
-private:
+      private:
 	Ui::AboutDialog *ui;
 
-private slots:
-	void on_closeButton_hoverLeave(QHoverEvent* e);
-	void on_closeButton_hoverEnter(QHoverEvent* e);
+      private slots:
+	void on_closeButton_hoverLeave(QHoverEvent *e);
+	void on_closeButton_hoverEnter(QHoverEvent *e);
 	void on_closeButton_clicked();
 };
 

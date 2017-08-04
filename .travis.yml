@@ -6,16 +6,16 @@ sudo: required
 
 compiler:
   - gcc
-#  - clang
+  - clang
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   matrix:
     - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
-#    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
+    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 before_install:
  - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty

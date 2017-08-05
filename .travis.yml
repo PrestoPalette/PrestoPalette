@@ -22,10 +22,11 @@ before_install:
  - sudo apt-get update -qq
  
 install:
-- sudo apt-get install -qq cmake qt58base
+ - sudo apt-get install -qq cmake qt58base
 # - sudo apt-get -qy install qt58base qt58svg qt58xmlpatterns
 # - sudo apt-get -qy install qtmultimedia5-dev
  - source /opt/qt58/bin/qt58-env.sh
+ - qmake --version
  
 # - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev
 # - sudo apt-get install qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev

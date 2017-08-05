@@ -20,7 +20,7 @@ env:
 before_install:
  - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
  - sudo apt-get update -qq
- - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev cmake
+ - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
   
 script:
   - export QT_SELECT=qt5

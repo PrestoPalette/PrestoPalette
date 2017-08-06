@@ -7,27 +7,34 @@ sudo: required
 compiler:
   - gcc
   - clang
-
+  
 os:
-  - linux
+  - osx
+#  - linux
+# Linux is disabled right now because we can't get Qt 5.8 installed
 
 env:
   matrix:
     - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
-before_install:
- - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
- - sudo apt-get update -qq
-
 install:
- - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then 
+       brew update > /dev/null
+    && brew install qt5 > /dev/null
+    && export PATH=/usr/local/opt/qt5/bin/:$PATH
+    ;
+  fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+       add-apt-repository --yes ppa:beineri/opt-qt58-trusty
+    && sudo apt-get update -qq
+    && source /opt/qt58/bin/qt58-env.sh
+    && sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
+    && export QT_SELECT=qt5
+       ; 
+  fi  
   
 script:
-  - export QT_SELECT=qt5
-  - source /opt/qt58/bin/qt58-env.sh
-  - /opt/qt58/bin/qmake PREFIX=/usr
-  - /opt/qt58/bin/qmake --version
   - qmake --version
   - mkdir build
   - cd build

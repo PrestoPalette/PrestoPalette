@@ -8,6 +8,6 @@ cd PrestoPalette
 cd scripts
 ./build_linux-debug.sh
 
-# sudo docker build -t PrestoPalette .
-# sudo docker run PrestoPalette
-# sudo docker run -t -i PrestoPalette /bin/bash
+# sudo docker build -t build_bot .
+# sudo docker run build_bot
+# sudo docker run -t -i build_bot /bin/bash

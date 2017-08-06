@@ -12,11 +12,6 @@ os:
   - osx
   - linux
 
-env:
-  matrix:
-    - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
-    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
-
 install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
        brew update > /dev/null

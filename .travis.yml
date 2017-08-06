@@ -1,6 +1,6 @@
 language: cpp
 
-dist: trusty
+dist: latest
 
 sudo: required
 
@@ -18,12 +18,17 @@ env:
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 before_install:
- - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
+ - sudo add-apt-repository --yes ppa:beineri/opt-qt58-latest
  - sudo apt-get update -qq
+
+install:
  - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
   
 script:
   - export QT_SELECT=qt5
+  - source /opt/qt58/bin/qt58-env.sh
+  - /opt/qt58/bin/qmake PREFIX=/usr
+  - /opt/qt58/bin/qmake --version
   - qmake --version
   - mkdir build
   - cd build
@@ -36,3 +41,4 @@ addons:
     packages:
     - cmake
     - cmake-data
+

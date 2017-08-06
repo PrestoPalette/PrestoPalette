@@ -35,7 +35,7 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker build -t build_bot . ; fi
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run -v .:/tmp/output build_bot; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run build_bot; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then qmake --version && cd scripts && ./build_linux-debug.sh; fi
 
 addons:

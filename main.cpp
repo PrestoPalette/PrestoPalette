@@ -16,10 +16,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context,
 
 int main(int argc, char *argv[])
 {
-	// The version that Ubuntu uses for QT isn't hiqh enough to support this, so neither of these will work.
-	// commenting both of them out will work
-	//QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-	//QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+	QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
 
 	qInstallMessageHandler(&customLogHandler);
 

@@ -15,11 +15,7 @@ os:
 env:
   matrix:
     - FLAGS="-DCMAKE_BUILD_TYPE=Debug"
-    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
-
-#before_install:
-# - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
-# - sudo apt-get update -qq
+#    - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then 
@@ -29,7 +25,9 @@ install:
     ;
   fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-       source /opt/qt58/bin/qt58-env.sh
+       add-apt-repository --yes ppa:beineri/opt-qt58-trusty
+    && sudo apt-get update -qq
+    && source /opt/qt58/bin/qt58-env.sh
     && sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
     && export QT_SELECT=qt5
        ; 

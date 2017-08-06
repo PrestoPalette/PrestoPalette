@@ -10,8 +10,7 @@ compiler:
   
 os:
   - osx
-#  - linux
-# Linux is disabled right now because we can't get Qt 5.8 installed
+  - linux
 
 env:
   matrix:

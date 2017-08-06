@@ -9,7 +9,7 @@ compiler:
   - clang
 
 os:
-#  - linux
+  - linux
   - osx
 
 env:
@@ -28,14 +28,17 @@ install:
     && export PATH=/usr/local/opt/qt5/bin/:$PATH
     ;
   fi
-# - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+       source /opt/qt58/bin/qt58-env.sh
+    && sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
+    && export QT_SELECT=qt5
+       ; 
+  fi  
   
 script:
-#  - export QT_SELECT=qt5
-#  - source /opt/qt58/bin/qt58-env.sh
 #  - /opt/qt58/bin/qmake PREFIX=/usr
 #  - /opt/qt58/bin/qmake --version
-#  - qmake --version
+  - qmake --version
   - mkdir build
   - cd build
   - cmake --version

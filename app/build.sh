@@ -1,8 +1,5 @@
 #! /bin/bash
 
-export QT_SELECT=qt5
-qmake --version
-
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
 cd scripts

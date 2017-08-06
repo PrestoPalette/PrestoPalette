@@ -16,6 +16,7 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
        brew update > /dev/null
     && brew install qt5 > /dev/null
+    && brew install pngcrush > /dev/null
     && export PATH=/usr/local/opt/qt5/bin/:$PATH
     ;
   fi

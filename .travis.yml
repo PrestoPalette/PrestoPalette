@@ -1,6 +1,6 @@
 language: cpp
 
-dist: latest
+dist: trusty
 
 sudo: required
 
@@ -18,7 +18,7 @@ env:
     - FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 before_install:
- - sudo add-apt-repository --yes ppa:beineri/opt-qt58-latest
+ - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
  - sudo apt-get update -qq
 
 install:

@@ -27,7 +27,7 @@ install:
     && brew install qt5 > /dev/null
     && export PATH=/usr/local/opt/qt5/bin/:$PATH
     ;
-fi
+  fi
 # - sudo apt-get -qy install qt5-qmake qtbase5-dev libqt5xmlpatterns5-dev pngcrush build-essential qtmultimedia5-dev
   
 script:

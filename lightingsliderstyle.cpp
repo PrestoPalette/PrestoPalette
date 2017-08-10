@@ -10,23 +10,40 @@ QRect LightingSliderStyle::subControlRect(ComplexControl control,
 					  const QWidget *widget) const
 {
 	QRect rect;
+    int tickOffset = 0;
+    int thickness = 21;  // height
+    int len = 21;  // width
 
-	rect = QCommonStyle::subControlRect(control, option, subControl, widget);
+    if (control == CC_Slider)
+    {
+        if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option))
+        {
+             bool horizontal = slider->orientation == Qt::Horizontal;
 
-	if (control == CC_Slider && subControl == SC_SliderHandle)
-	{
-		// this is the exact pixel dimensions of the handle png files
-		rect.setWidth(21);
-		rect.setHeight(21);
-	}
-	else if (control == CC_Slider && subControl == SC_SliderGroove)
-	{
-		// this is the exact pixel dimensions of the slider png files
-		rect.setWidth(widget->width());
-		rect.setHeight(widget->height());
-	}
+            if (subControl == SC_SliderHandle)
+            {
+                int sliderPos = sliderPositionFromValue(slider->minimum, slider->maximum + 1, slider->sliderPosition, (horizontal ? slider->rect.width() : slider->rect.height()) - len, slider->upsideDown);
 
-	return rect;
+                if (horizontal)
+                    rect.setRect(slider->rect.x() +  sliderPos, slider->rect.y() +  tickOffset, len, thickness);
+                else
+                    rect.setRect(slider->rect.x() +  tickOffset, slider->rect.y() +  sliderPos, thickness, len);
+            }
+
+            if (subControl == SC_SliderGroove)
+            {
+                if (horizontal)
+                    rect.setRect(slider->rect.x(), slider->rect.y() + tickOffset, slider->rect.width(), thickness);
+                else
+                    rect.setRect(slider->rect.x() + tickOffset, slider->rect.y(), thickness, slider->rect.height());
+            }
+
+            return visualRect(slider->direction, slider->rect, rect);
+        }
+    }
+
+    return QCommonStyle::subControlRect(control, option, subControl, widget);
+
 }
 
 void LightingSliderStyle::drawComplexControl(QStyle::ComplexControl control,

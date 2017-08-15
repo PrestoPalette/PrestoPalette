@@ -16,7 +16,10 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context,
 
 int main(int argc, char *argv[])
 {
+	//https://stackoverflow.com/questions/20464814/changing-dpi-scaling-size-of-displa
+
 	QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+	//QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
 	qInstallMessageHandler(&customLogHandler);
 

@@ -120,7 +120,8 @@ class Ui_MainWindow
 		maroonedOnMars = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/MaroonedOnMarsBB.ttf")).at(0);
 		calibri = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(":/main/fonts/calibrib.ttf")).at(0);
 
-		qreal screenDPI = QApplication::primaryScreen()->physicalDotsPerInch() / 96.0;
+		//qreal screenDPI = QApplication::primaryScreen()->physicalDotsPerInch() / 96.0;
+		qreal screenDPI = 1.4f;
 
 		QFont fontTitle;
 		fontTitle.setFamily(this->maroonedOnMars);

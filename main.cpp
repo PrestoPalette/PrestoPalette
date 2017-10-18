@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
 
 	qInstallMessageHandler(&customLogHandler);
 
+	QCoreApplication::addLibraryPath(".");
+
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();

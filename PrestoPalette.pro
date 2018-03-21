@@ -4,11 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
-TARGET = untitled1
+TARGET = PrestoPalette
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use

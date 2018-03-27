@@ -19,11 +19,14 @@
 *.qbs.user
 *.qbs.user.*
 *.moc
+moc_predefs.h
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
 Makefile*
 *build-*
+object_script.*.Debug
+object_script.*.Release
 
 # QtCreator
 

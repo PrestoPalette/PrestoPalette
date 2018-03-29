@@ -1,4 +1,4 @@
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 environment:
   DEPLOY_DIR: PrestoPalette-%APPVEYOR_BUILD_VERSION%

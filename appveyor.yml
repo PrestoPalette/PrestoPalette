@@ -1,0 +1,32 @@
+image: Visual Studio 2015
+
+environment:
+  DEPLOY_DIR: PrestoPalette-%APPVEYOR_BUILD_VERSION%
+  matrix:
+  - QTDIR: C:\Qt\5.10.1\msvc2017_64
+    VS_FOLDER: Microsoft Visual Studio 14.0
+    PLATFORM: x64
+  - QTDIR: C:\Qt\5.10.1\msvc2017
+    VS_FOLDER: Microsoft Visual Studio 14.0
+    PLATFORM: x86
+
+init:
+- call "%QTDIR%\bin\qtenv2.bat"
+- set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
+- call "%ProgramFiles(x86)%\%VS_FOLDER%\VC\vcvarsall.bat" %platform%
+- cd /D "%APPVEYOR_BUILD_FOLDER%"
+
+before_build:
+- qmake -config release PrestoPalette.pro
+
+build_script:
+- nmake
+- windeployqt build\release\PrestoPalette.exe
+
+after_build:
+- 7z a prestopalette.zip "%DEPLOY_DIR%\"
+
+test: off
+
+artifacts:
+- path: prestopalette.zip

@@ -16,6 +16,7 @@ build_script:
 - nmake
 - windeployqt build\release\PrestoPalette.exe
 - cp PrestoPalette.iss build\release\
+- cp icon.bmp build\release\
 - iscc build\release\PrestoPalette.iss
 
 after_build:

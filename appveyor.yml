@@ -11,9 +11,9 @@ environment:
     PLATFORM: x86
 
 init:
-- set PATH=%QTDIR%\bin;%PATH%
-- call "%ProgramFiles(x86)%\%VS_FOLDER%\VC\vcvarsall.bat" %platform%
-- cd /D "%APPVEYOR_BUILD_FOLDER%"
+- set PATH=%QTDIR%\bin;%PATH%;
+#- call "%ProgramFiles(x86)%\%VS_FOLDER%\VC\vcvarsall.bat" %platform%
+#- cd /D "%APPVEYOR_BUILD_FOLDER%"
 
 before_build:
 - qmake -config release PrestoPalette.pro

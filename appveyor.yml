@@ -11,8 +11,7 @@ environment:
     PLATFORM: x86
 
 init:
-- call "%QTDIR%\bin\qtenv2.bat"
-- set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
+- set PATH=%QTDIR%\bin;%PATH%
 - call "%ProgramFiles(x86)%\%VS_FOLDER%\VC\vcvarsall.bat" %platform%
 - cd /D "%APPVEYOR_BUILD_FOLDER%"
 

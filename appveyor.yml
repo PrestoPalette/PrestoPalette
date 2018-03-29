@@ -4,16 +4,10 @@ environment:
   DEPLOY_DIR: PrestoPalette-%APPVEYOR_BUILD_VERSION%
   matrix:
   - QTDIR: C:\Qt\5.10.1\msvc2017_64
-    VS_FOLDER: Microsoft Visual Studio 14.0
-    PLATFORM: x64
-  - QTDIR: C:\Qt\5.10.1\msvc2017
-    VS_FOLDER: Microsoft Visual Studio 14.0
-    PLATFORM: x86
 
 init:
 - set PATH=%QTDIR%\bin;%PATH%;
-#- call "%ProgramFiles(x86)%\%VS_FOLDER%\VC\vcvarsall.bat" %platform%
-#- cd /D "%APPVEYOR_BUILD_FOLDER%"
+- call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 before_build:
 - qmake -config release PrestoPalette.pro

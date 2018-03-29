@@ -1,7 +1,6 @@
 image: Visual Studio 2017
 
 environment:
-  DEPLOY_DIR: PrestoPalette-%APPVEYOR_BUILD_VERSION%
   matrix:
   - QTDIR: C:\Qt\5.10.1\msvc2017_64
 
@@ -17,7 +16,7 @@ build_script:
 - windeployqt build\release\PrestoPalette.exe
 
 after_build:
-- 7z a prestopalette.zip "%DEPLOY_DIR%\"
+- 7z a prestopalette.zip build\release
 
 test: off
 

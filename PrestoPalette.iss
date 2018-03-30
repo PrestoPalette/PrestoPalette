@@ -15,6 +15,8 @@
 	#define FormattedBuildSuffix " (" + Str(BuildConfiguration) + ")"
 #endif
 
+#define BIN "build\release"
+
 [Setup]
 AppName={#ProductName}{#FormattedBuildSuffix}
 
@@ -98,15 +100,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#AppExeName}"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "libEGL.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "libGLESv2.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "Qt5Core.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "Qt5Gui.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "Qt5Multimedia.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "Qt5Network.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-Source: "Qt5Widgets.dll"; DestDir: "{app}"; Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
-; NOTE: Don't use "Flags: overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;" on any shared system files
+Source: "{#BIN}\*"; DestDir: "{app}"; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
 
 [Icons]
 Name: "{commonprograms}\{#ProductName}"; Filename: "{app}\{#AppExeName}"
@@ -114,5 +108,6 @@ Name: "{commondesktop}\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: quicklaunchicon
 
 [Run]
+Filename: {#BIN}\vcredist_x64.exe; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ProductName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

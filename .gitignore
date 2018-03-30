@@ -43,3 +43,4 @@ install
 build
 .idea
 release
+installer/

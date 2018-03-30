@@ -9,15 +9,8 @@ init:
 - set PATH=C:\Program Files (x86)\Inno Setup 5;%PATH%;
 - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-before_build:
-- qmake -config release PrestoPalette.pro
-
 build_script:
-- nmake
-- windeployqt build\release\PrestoPalette.exe
-- cp PrestoPalette.iss build\release\
-- cp icon.bmp build\release\
-- iscc build\release\PrestoPalette.iss
+- call scripts\build_windows-release.bat
 
 after_build:
 - 7z a prestopalette.zip build\release

@@ -1,4 +1,14 @@
+@ECHO OFF
 
-c:\Qt\5.10.0\msvc2017_64\bin\qmake.exe -config release
+PUSHD "%~dp0"
+
+cd ..
+
+qmake.exe -config release PrestoPalette.pro
 nmake
-c:\Qt\5.10.0\msvc2017_64\bin\windeployqt.exe build\release\PrestoPalette.exe
+windeployqt.exe build\release\PrestoPalette.exe
+cp PrestoPalette.iss build\release
+cp icon.bmp build\release
+iscc build\release\PrestoPalette.iss
+
+POPD

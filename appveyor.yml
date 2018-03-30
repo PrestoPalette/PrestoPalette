@@ -12,7 +12,7 @@ init:
 build_script:
 - call scripts\build_windows.bat
 
-test: off
+after_build:
+- appveyor PushArtifact installer\*.exe
 
-artifacts:
-- path: installer\*
+test: off

@@ -1,10 +1,7 @@
 FROM fedora:26
 
-# Set the working directory to /app
-WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-ADD . /app
+WORKDIR /workdir
+ADD . /workdir
 
 RUN dnf install -y \
 	cmake \
@@ -13,4 +10,5 @@ RUN dnf install -y \
 	qt5-devel \
 	pngcrush
 
-CMD ["bash", "/app/app/build.sh"]
+WORKDIR /workdir
+CMD ["bash", "scripts/docker-worker.sh"]

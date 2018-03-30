@@ -1,51 +1,53 @@
 ; PrestoPalette Installer Script
-
-#define AppVersion "1.0"
-#define CompanyName "John Cboins and Darryl T. Agostinelli"
-#define ProductName "PrestoPalette"
-#define ProductVersion "1.0"
-#define Copyright "Copyright 2010 John Cboins and Darryl T. Agostinelli"
-#define Description "PrestoPalette"
-#define BuildConfiguration 
-#define AppURL "https://github.com/PrestoPalette/PrestoPalette"
 #define AppExeName "PrestoPalette.exe"
+#define ProductName "PrestoPalette"
 
-#define FormattedBuildSuffix
-#if Len(BuildConfiguration) > 0
-	#define FormattedBuildSuffix " (" + Str(BuildConfiguration) + ")"
+#define FileVersion GetFileVersion(AddBackslash(CustomBinaryLocation) + AppExeName)
+#define CompanyName GetFileCompany(AddBackslash(CustomBinaryLocation) + AppExeName)
+#define ProductVersion GetFileProductVersion(AddBackslash(CustomBinaryLocation) + AppExeName)
+#define Copyright GetFileCopyright(AddBackslash(CustomBinaryLocation) + AppExeName)
+#define Description GetFileDescription(AddBackslash(CustomBinaryLocation) + AppExeName)
+
+#define AppURL "https://github.com/PrestoPalette/PrestoPalette"
+
+#ifdef Configuration
+	#define FormattedConfiguration Configuration
 #endif
 
-#define BIN "build\release"
+#define FormattedBuildSuffix
+#ifdef FormattedConfiguration
+	#define FormattedBuildSuffix " (" + Str(FormattedConfiguration) + ")"
+#endif
 
 [Setup]
-AppName={#ProductName}{#FormattedBuildSuffix}
-
 ; This is the registry key name for the Uninstall area (Software\Microsoft\Windows\CurrentVersion\Uninstall\{AppId}_is1\)
 AppId=PrestoPalette
 
-; Name of installer exe (default is setup.exe)
-OutputBaseFilename={#ProductName}-{#AppVersion}{#FormattedBuildSuffix}
-
-; Name of folder in Program Files
-DefaultDirName={pf}\{#ProductName}
-
-; Start Menu name
-DefaultGroupName={#ProductName}
+AppName={#ProductName}{#FormattedBuildSuffix}
 
 ; Info for the control panel's Add/Remove Programs
-AppVersion={#AppVersion}
-AppVerName={#ProductName}{#FormattedBuildSuffix} {#AppVersion}
+AppVersion={#FileVersion}
+AppVerName={#ProductName}{#FormattedBuildSuffix} {#FileVersion}
 AppPublisher={#CompanyName}
 AppPublisherURL={#AppURL}
 AppSupportURL={#AppURL}
 AppUpdatesURL={#AppURL}
 AppCopyright={#Copyright}
 
-VersionInfoVersion={#AppVersion}
-VersionInfoTextVersion={#AppVersion}
+VersionInfoVersion={#FileVersion}
+VersionInfoTextVersion={#FileVersion}
 VersionInfoProductTextVersion={#ProductVersion}
 UninstallDisplayIcon={app}\{#ProductName}
 UninstallDisplayName={#ProductName}{#FormattedBuildSuffix}
+
+; Name of installer exe (default is setup.exe)
+OutputBaseFilename={#ProductName}-{#FileVersion}{#FormattedBuildSuffix}
+
+; Name of folder in Program Files
+DefaultDirName={pf}\{#ProductName}
+
+; Start Menu name
+DefaultGroupName={#ProductName}
 
 ; Display software license during install
 ;LicenseFile="path\to\License.txt"
@@ -100,7 +102,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#BIN}\*"; DestDir: "{app}"; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
+Source: "{#CustomBinaryLocation}\*"; DestDir: "{app}"; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
 
 [Icons]
 Name: "{commonprograms}\{#ProductName}"; Filename: "{app}\{#AppExeName}"
@@ -108,6 +110,6 @@ Name: "{commondesktop}\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-Filename: {#BIN}\vcredist_x64.exe; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...
+Filename: {#CustomBinaryLocation}\vcredist_x64.exe; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ProductName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

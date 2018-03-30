@@ -44,3 +44,4 @@ build
 .idea
 release
 installer/
+PrestoPalette_resource.rc

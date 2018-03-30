@@ -1,15 +1,19 @@
 #-------------------------------------------------
-#
-# Project created by QtCreator 2018-03-18T13:23:21
-#
+# PrestoPalette
 #-------------------------------------------------
 
-QT       += core gui widgets
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
+QT       += core gui widgets multimedia
 
 TARGET = PrestoPalette
 TEMPLATE = app
+
+win32:VERSION = 0.1.31
+else:VERSION = 0.1.31
+
+QMAKE_TARGET_COMPANY = John Cboins and Darryl T. Agostinelli
+QMAKE_TARGET_PRODUCT = PrestoPalette
+QMAKE_TARGET_DESCRIPTION = "An artist's tool for creating harmonious color palettes"
+QMAKE_TARGET_COPYRIGHT = (c) 2018 by John Cboins and Darryl T. Agostinelli. All Rights Reserved.
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -52,3 +56,6 @@ CONFIG(debug, debug|release) {
 } else {
 	DESTDIR = build/release
 }
+
+RC_ICONS = graphics/favicon.ico
+

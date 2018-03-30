@@ -42,6 +42,7 @@ CMakeLists.txt.user
 install
 build
 .idea
-release
+release/
+debug/
 installer/
 PrestoPalette_resource.rc

@@ -10,12 +10,9 @@ init:
 - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 build_script:
-- call scripts\build_windows-release.bat
-
-after_build:
-- 7z a prestopalette.zip build\release
+- call scripts\build_windows.bat
 
 test: off
 
 artifacts:
-- path: prestopalette.zip
+- path: installer\*

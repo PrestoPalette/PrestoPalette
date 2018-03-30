@@ -7,8 +7,10 @@ QT       += core gui widgets multimedia
 TARGET = PrestoPalette
 TEMPLATE = app
 
-win32:VERSION = 0.1.31
-else:VERSION = 0.1.31
+VER_MAJ = 0
+VER_MIN = 1
+VER_PAT = 31
+VERSION = $$sprintf("%1.%2.%3",$$VER_MAJ,$$VER_MIN,$$VER_PAT)
 
 QMAKE_TARGET_COMPANY = John Cboins and Darryl T. Agostinelli
 QMAKE_TARGET_PRODUCT = PrestoPalette

@@ -37,7 +37,7 @@ AppCopyright={#Copyright}
 VersionInfoVersion={#FileVersion}
 VersionInfoTextVersion={#FileVersion}
 VersionInfoProductTextVersion={#ProductVersion}
-UninstallDisplayIcon={app}\{#ProductName}
+UninstallDisplayIcon={app}\{#AppExeName}
 UninstallDisplayName={#ProductName}{#FormattedBuildSuffix}
 
 ; Name of installer exe (default is setup.exe)
@@ -102,7 +102,12 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#CustomBinaryLocation}\*"; DestDir: "{app}"; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
+Source: "{#CustomBinaryLocation}\*"; DestDir: {app}; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
+#ifndef Configuration
+	Source: "{#CustomBinaryLocation}\vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+#endif
+
+
 
 [Icons]
 Name: "{commonprograms}\{#ProductName}"; Filename: "{app}\{#AppExeName}"
@@ -110,6 +115,15 @@ Name: "{commondesktop}\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-Filename: {#CustomBinaryLocation}\vcredist_x64.exe; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...; Check: IsNotDebug
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ProductName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+function IsNotDebug: Boolean;
+begin
+#ifdef Configuration
+	Result := False
+#else
+	Result := True
+#endif
+end;

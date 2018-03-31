@@ -10,13 +10,9 @@
 
 #define AppURL "https://github.com/PrestoPalette/PrestoPalette"
 
-#ifdef Configuration
-	#define FormattedConfiguration Configuration
-#endif
-
 #define FormattedBuildSuffix
-#ifdef FormattedConfiguration
-	#define FormattedBuildSuffix " (" + Str(FormattedConfiguration) + ")"
+#ifdef Configuration
+	#define FormattedBuildSuffix " (" + Str(Configuration) + ")"
 #endif
 
 [Setup]

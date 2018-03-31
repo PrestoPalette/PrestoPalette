@@ -2,7 +2,6 @@
 
 pushd `pwd`
 
-./build_linux-debug.sh
-./build_linux-release.sh
+./build_linux.sh
 
 popd

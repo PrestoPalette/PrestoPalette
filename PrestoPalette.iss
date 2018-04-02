@@ -100,7 +100,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "{#CustomBinaryLocation}\*"; DestDir: {app}; Flags: recursesubdirs overwritereadonly ignoreversion replacesameversion restartreplace uninsrestartdelete;
 #ifndef Configuration
-	Source: "{#CustomBinaryLocation}\vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+	Source: "{#CustomBinaryLocation}\vc_redist.x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 #endif
 
 
@@ -111,7 +111,7 @@ Name: "{commondesktop}\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ProductName}"; Filename: "{app}\{#AppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...; Check: IsNotDebug
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/passive /quiet /norestart"; StatusMsg: Installing 64-bit Microsoft Visual C++ RunTime...; Check: IsNotDebug
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(ProductName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Code]

@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/PrestoPalette/PrestoPalette.svg?branch=master)](https://travis-ci.org/PrestoPalette/PrestoPalette) 
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/prestopalette/prestopalette?svg=true&passingText=AppVeyor)](https://ci.appveyor.com/project/dagostinelli/prestopalette) 
+
 
 # PrestoPalette
 

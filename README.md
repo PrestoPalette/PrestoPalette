@@ -8,6 +8,10 @@
 
 <img src="https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png"/>
 
+Downloading and Installing
+--------------------------
+<a href="https://github.com/PrestoPalette/PrestoPalette/releases">For latest version, click here</a>
+
 Building
 --------
 

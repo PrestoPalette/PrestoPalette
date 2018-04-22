@@ -59,5 +59,9 @@ CONFIG(debug, debug|release) {
 	DESTDIR = build/release
 }
 
+# Windows only icon
 RC_ICONS = graphics/favicon.ico
+
+# Mac only icon
+ICON = graphics/favicon.icns
 

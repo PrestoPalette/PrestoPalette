@@ -1,6 +1,6 @@
 language: cpp
 
-dist: trusty
+dist: artful
 
 sudo: required
 
@@ -13,7 +13,12 @@ os:
   - linux
 
 install:
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker build -t build_bot . ; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+       apt-get update -y
+    && apt-get upgrade -y
+    && apt-get install -y pngcrush
+    && apt-get install -y qt5-default qtmultimedia5-dev
+  fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
        brew update > /dev/null
     && brew install qt5 > /dev/null
@@ -23,7 +28,7 @@ install:
   fi
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run build_bot; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then qmake --version && cd scripts && ./build_ubuntu.sh; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then qmake --version && cd scripts && ./build_osx.sh; fi
 
 addons:
@@ -31,7 +36,4 @@ addons:
     packages:
     - cmake
     - cmake-data
-
-services:
-  - docker
 

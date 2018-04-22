@@ -11,4 +11,4 @@ RUN dnf install -y \
 	pngcrush
 
 WORKDIR /workdir
-CMD ["bash", "scripts/docker-worker.sh"]
+CMD ["bash", "cd scripts && ./docker-worker.sh"]

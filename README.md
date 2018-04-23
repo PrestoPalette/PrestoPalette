@@ -12,8 +12,8 @@ Downloading and Installing
 --------------------------
 <a href="https://github.com/PrestoPalette/PrestoPalette/releases">For latest version, click here</a>
 
-Building
---------
+Building for Development
+------------------------
 
 **(Easiest) Use QT Creator**
 

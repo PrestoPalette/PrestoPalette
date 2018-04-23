@@ -2,6 +2,8 @@
 
 pushd `pwd`
 
+cd $(dirname $(realpath -s "$BASH_SOURCE"))
+
 ./fix_graphics.sh
 
 cd ..

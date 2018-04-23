@@ -1,25 +1,7 @@
 language: cpp
 
-dist: artful
-
-sudo: required
-
-compiler:
-  - gcc
-  - clang
-  
-os:
-  - osx
-  - linux
-
 install:
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-       sudo apt-get update -y
-    && sudo apt-get upgrade -y
-    && sudo apt-get install -y pngcrush
-    && sudo apt-get install -y qt5-default qtmultimedia5-dev
-    ;
-  fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker build -t build_bot_${LINENV} -f scripts/Dockerfile.${LINENV} .; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
        brew update > /dev/null
     && brew install qt5 > /dev/null
@@ -29,12 +11,17 @@ install:
   fi
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then qmake --version && cd scripts && ./build_ubuntu.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run build_bot_${LINENV}; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then qmake --version && cd scripts && ./build_osx.sh; fi
 
-addons:
-  apt:
-    packages:
-    - cmake
-    - cmake-data
+services:
+  - docker
+
+matrix:
+  include:
+    - os: linux
+      env: LINENV=ubuntu.artful
+    - os: linux
+      env: LINENV=fedora
+    - os: osx
 

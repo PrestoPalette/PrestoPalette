@@ -1,4 +1,4 @@
-FROM centos7:latest
+FROM centos:7
 
 ENV BUILD_HOME=/usr/local/prestopalette/
 

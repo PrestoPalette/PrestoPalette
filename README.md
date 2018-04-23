@@ -23,62 +23,37 @@ Building
 3. Open the PrestoPalette directory with QT Creator
 4. Build and Run 
 ```
-NOTE: PrestoPalette is a CMake QT project.
 
-**Cross-Compile for Windows from Linux using MinGW**
-
-```
-git clone https://github.com/PrestoPalette/PrestoPalette
-cd PrestoPalette
-cd scripts
-./build_mingw64-release.sh
-cd ../build
-ls *.exe
-```
-
-**Build Release RPM (Fedora / RedHat / CentOS)**
+**Fedora (RedHat / CentOS)**
 
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
 cd scripts
-./build_linux-release.sh
-cd ../build
-cpack -G "RPM"
-sudo rpm -i PrestoPalette*.rpm
+./setup_fedora.sh
+./build_fedora.sh
 ```
 
-**Debug Build for Development (Linux)**
+**Ubuntu**
 
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
 cd scripts
-./build_linux-debug.sh
-cd ../build
-./prestopalette
-```
-
-**Building with CMake Manually**
-
-```
-git clone https://github.com/PrestoPalette/PrestoPalette
-cd PrestoPalette
-mkdir build
-cd build
-cmake ..
-make && make install
+./setup_ubuntu.sh
+./build_qmake.sh
 ```
 
 **Mac OSX**
 
-This is untested, however the steps should be the same as Linux.  Be sure to have at least version 3.0 of cmake installed
-
 ```
+   brew update > /dev/null
+&& brew install qt5 > /dev/null
+&& brew install pngcrush > /dev/null
+&& export PATH=/usr/local/opt/qt5/bin/:$PATH
+
 git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
-mkdir build
-cd build
-cmake ..
-make
+cd scripts
+./build_osx.sh
 ```

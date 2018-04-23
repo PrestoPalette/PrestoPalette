@@ -26,4 +26,6 @@ matrix:
     - os: osx
     - os: linux
       env: LINENV=debian
+    - os: linux
+      env: LINENV=centos7
 

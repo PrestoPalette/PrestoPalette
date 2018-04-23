@@ -57,3 +57,8 @@ cd PrestoPalette
 cd scripts
 ./build_osx.sh
 ```
+
+How to Package
+--------------
+
+<a href="https://github.com/PrestoPalette/PrestoPalette-Packaging">For packaging directions, click here</a>

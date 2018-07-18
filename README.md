@@ -15,16 +15,16 @@ Downloading and Installing
 Building for Development
 ------------------------
 
-**(Easiest) Use QT Creator**
+**(Easiest) Use Qt Creator**
 
 ```
 1. git clone https://github.com/PrestoPalette/PrestoPalette
-2. Launch QT Creator
-3. Open the PrestoPalette directory with QT Creator
+2. Launch Qt Creator
+3. Open the PrestoPalette directory with Qt Creator
 4. Build and Run 
 ```
 
-**Fedora (RedHat / CentOS)**
+**Fedora (Red Hat Enterprise / CentOS)**
 
 ```
 git clone https://github.com/PrestoPalette/PrestoPalette
@@ -44,7 +44,7 @@ cd scripts
 ./build_qmake.sh
 ```
 
-**Mac OSX**
+**macOS**
 
 ```
    brew update > /dev/null

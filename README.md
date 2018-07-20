@@ -6,7 +6,7 @@
 
 **A tool for artists to create harmonious color palettes in seconds**
 
-<img src="https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png"/>
+![]("https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png" "screenshot")
 
 Downloading and Installing
 --------------------------

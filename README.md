@@ -10,9 +10,17 @@
 
 Downloading and Installing
 --------------------------
-<a href="https://github.com/PrestoPalette/PrestoPalette/releases">For latest version, click here</a>
 
-Building for Development
+- <a href="https://github.com/PrestoPalette/PrestoPalette/releases">Windows</a>
+- Mac - Coming Soon
+- Linux Fedora - `sudo dnf install prestopalette`
+- Linux RedHat / CentOS - Coming Soon to EPEL
+- Linux Ubuntu - Not available as a pre-compiled package. We are looking for an Ubuntu maintainer. In the mean time, you may fetch the source and compile it yourself. See below.
+- Linux Other - You may fetch the source and compile it yourself. See below.
+
+
+
+Compiling
 ------------------------
 
 **(Easiest) Use Qt Creator**

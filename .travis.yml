@@ -6,7 +6,7 @@ install:
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run build_bot_${LINENV}; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./scripts/build_osx.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./scripts/build_qmake.sh; fi
 
 services:
   - docker

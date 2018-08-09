@@ -2,11 +2,11 @@ language: cpp
 
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker build -t build_bot_${LINENV} -f scripts/Dockerfile.${LINENV} .; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd scripts && ./setup_osx.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./scripts/setup_osx.sh; fi
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run build_bot_${LINENV}; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd scripts && ./build_osx.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./scripts/build_osx.sh; fi
 
 services:
   - docker

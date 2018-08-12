@@ -2,7 +2,7 @@
 
 pushd `pwd`
 
-cd $(dirname $(realpath -s "$BASH_SOURCE"))
+cd $(dirname $(readlink -f -s "$BASH_SOURCE"))
 
 export PATH=/usr/local/opt/qt5/bin:$PATH
 

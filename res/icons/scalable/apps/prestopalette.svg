@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg64"
+   width="91"
+   height="91"
+   viewBox="0 0 91 91.000001"
+   sodipodi:docname="icon.svg"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:export-filename="/home/polesz/Verkefni/NotOwn/PrestoPalette/icon-256.png"
+   inkscape:export-xdpi="270.07001"
+   inkscape:export-ydpi="270.07001">
+  <metadata
+     id="metadata70">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs68" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1080"
+     inkscape:window-height="1920"
+     id="namedview66"
+     showgrid="false"
+     inkscape:zoom="10.346875"
+     inkscape:cx="28.928898"
+     inkscape:cy="45.610419"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg64"
+     fit-margin-top="5.25132"
+     fit-margin-left="0.36779"
+     fit-margin-right="0.36779"
+     fit-margin-bottom="5.25031" />
+  <g
+     id="g98"
+     style="fill:#ffffff;fill-opacity:1"
+     transform="translate(-0.06536472,4.7546175)">
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke-width:2.53968263"
+       d="M 60.692916,72.02911 C 76.798768,67.543667 90.483251,55.731293 86.929775,49.381584 85.686146,47.159341 81.903903,43.970048 78.524792,42.294264 69.822844,37.978757 69.284322,27.998411 77.344817,20.42597 90.824597,7.7623749 81.719007,0.14930271 59.126826,5.1941274 25.246441,12.759602 -5.7395108,49.208304 6.2079654,67.442458 13.675325,78.839088 31.002764,80.297747 60.692916,72.02911 Z"
+       id="path95"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sssssss" />
+  </g>
+  <path
+     style="fill:#000000;stroke-width:2.53968263"
+     d="M 12.660277,81.576071 C -5.3311048,72.560754 -3.3886606,51.001507 17.274784,30.359526 38.706383,8.9501875 69.841821,-1.0365004 82.780503,9.4406095 c 0,0 2.919327,2.2889005 3.145974,4.9551405 0.348832,4.103609 -4.189248,9.187736 -4.189248,9.187736 C 71.610059,35.117695 71.505048,39.366126 81.211014,44.87274 101.30635,56.273693 88.018199,73.867456 53.094795,82.099159 31.864879,87.103207 23.473853,86.994656 12.660277,81.576071 Z M 60.627552,76.783728 C 76.733404,72.298285 90.417887,60.485911 86.864411,54.136202 85.620782,51.913959 81.838539,48.724666 78.459428,47.048882 69.75748,42.733375 69.218958,32.753029 77.279453,25.180588 90.759233,12.516993 81.653643,4.9039205 59.061462,9.9487445 25.181077,17.51422 -5.8048753,53.962922 6.1426009,72.197076 13.609961,83.593706 30.9374,85.052365 60.627552,76.783728 Z M 36.881804,57.453032 c 2.836401,-13.041239 5.866299,-19.68254 8.979581,-19.68254 1.835762,0 2.273897,2.406398 1.209951,6.645494 -0.917351,3.655022 -2.326962,9.940737 -3.132465,13.968254 -0.808556,4.042791 -3.119081,7.322761 -5.158405,7.322761 -2.84255,0 -3.280125,-1.902255 -1.898662,-8.253969 z m 7.497278,-27.301588 c 0.863286,-1.396825 2.645018,-2.539682 3.959408,-2.539682 1.31439,0 2.389798,1.142857 2.389798,2.539682 0,1.396826 -1.781734,2.539683 -3.959408,2.539683 -2.177674,0 -3.253085,-1.142857 -2.389798,-2.539683 z"
+     id="path74"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssssssssssssssssssssssssss" />
+</svg>

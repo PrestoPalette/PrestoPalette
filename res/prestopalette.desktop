@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Presto Palette
+Comment="An artist's tool for creating harmonious color palettes"
+Exec=presto-palette
+Icon=presto-palette
+Categories=Graphics;

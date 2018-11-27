@@ -70,3 +70,8 @@ How to Package
 --------------
 
 <a href="https://github.com/PrestoPalette/PrestoPalette-Packaging">For packaging directions, click here</a>
+
+How to Help
+-----------
+
+We are looking for package maintainers.  Currently, PrestoPalette is only packaged for Fedora and CentOS.  If you have an interest in packaing it for Ubuntu or some other distribution, write in and tell us: prestopalette@darrylagostinelli.com

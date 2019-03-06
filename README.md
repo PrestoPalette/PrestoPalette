@@ -8,20 +8,17 @@
 
 ![](https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png)
 
-Downloading and Installing
---------------------------
+Install
+-------
 
 - <a href="https://github.com/PrestoPalette/PrestoPalette/releases">Windows</a>
 - Mac - Coming Soon
 - Linux Fedora - `sudo dnf install prestopalette`
 - Linux RedHat / CentOS - Install EPEL, then `sudo yum install prestopalette`
-- Linux Ubuntu - Not available as a pre-compiled package. We are looking for an Ubuntu maintainer. In the mean time, you may fetch the source and compile it yourself. See below.
 - Linux Other - You may fetch the source and compile it yourself. See below.
 
-
-
-Compiling
-------------------------
+Compile Yourself (Hard)
+-----------------------
 
 **(Easiest) Use Qt Creator**
 
@@ -66,12 +63,13 @@ cd scripts
 ./build_osx.sh
 ```
 
-How to Package
---------------
-
-<a href="https://github.com/PrestoPalette/PrestoPalette-Packaging">For packaging directions, click here</a>
-
 How to Help
 -----------
 
-We are looking for package maintainers.  Currently, PrestoPalette is only packaged for Fedora and CentOS.  If you have an interest in packaing it for Ubuntu or some other distribution, write in and tell us: prestopalette@darrylagostinelli.com
+**Package Maintainers**
+
+We are looking for package maintainers.  Head over to [PrestoPalette-Packaging](https://github.com/PrestoPalette/PrestoPalette-Packaging) and help us out!
+
+**Features**
+
+Send us a Pull Request or file an issue to start the conversation.

@@ -8,7 +8,7 @@
 
 ![](https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png)
 
-Install
+Install (easy way)
 -------
 
 - <a href="https://github.com/PrestoPalette/PrestoPalette/releases">Windows</a>
@@ -17,17 +17,10 @@ Install
 - Linux RedHat / CentOS - Install EPEL, then `sudo yum install prestopalette`
 - Linux Other - You may fetch the source and compile it yourself. See below.
 
-Compile Yourself (Hard)
+Install (hard way - compile it yourself)
 -----------------------
 
-**(Easiest) Use Qt Creator**
-
-```
-1. git clone https://github.com/PrestoPalette/PrestoPalette
-2. Launch Qt Creator
-3. Open the PrestoPalette directory with Qt Creator
-4. Build and Run 
-```
+There are mulitple ways to do this.  
 
 **Fedora (Red Hat Enterprise / CentOS)**
 
@@ -61,6 +54,15 @@ git clone https://github.com/PrestoPalette/PrestoPalette
 cd PrestoPalette
 cd scripts
 ./build_osx.sh
+```
+
+**Qt Creator**
+
+```
+1. git clone https://github.com/PrestoPalette/PrestoPalette
+2. Launch Qt Creator
+3. Open the PrestoPalette directory with Qt Creator
+4. Build and Run 
 ```
 
 How to Help

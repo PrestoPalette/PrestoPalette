@@ -59,6 +59,12 @@ CONFIG(debug, debug|release) {
 	DESTDIR = build/release
 }
 
+CONFIG (debug, debug|release) {
+	mac {
+		QMAKE_INFO_PLIST = build/Info.plist
+	}
+}
+
 # Windows only icon
 RC_ICONS = graphics/favicon.ico
 

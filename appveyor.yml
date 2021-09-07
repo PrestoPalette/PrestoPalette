@@ -1,13 +1,13 @@
 environment:
   matrix:
-    - job_name: Windows-VS2017
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+#    - job_name: Windows-VS2017
+#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
-    - job_name: Windows-VS2019
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+#    - job_name: Windows-VS2019
+#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
-    - job_name: Linux
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+#    - job_name: Linux
+#      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: macOS
       APPVEYOR_BUILD_WORKER_IMAGE: macos
@@ -112,6 +112,7 @@ for:
 
   build_script:
   - echo "Build for macOS"
+  - cmake -Bbuild .
   - ./scripts/build_qmake.sh
 
   test: off

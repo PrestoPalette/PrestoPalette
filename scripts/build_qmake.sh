@@ -11,6 +11,6 @@ cd $(dirname $(realpath -s "$BASH_SOURCE"))
 
 cd ..
 qmake -config debug_and_release PrestoPalette.pro
-make all
+make all -j4
 
 popd

@@ -16,6 +16,7 @@ QMAKE_TARGET_COMPANY = John Cboins and Darryl T. Agostinelli
 QMAKE_TARGET_PRODUCT = PrestoPalette
 QMAKE_TARGET_DESCRIPTION = "An artist's tool for creating harmonious color palettes"
 QMAKE_TARGET_COPYRIGHT = (c) 2018 by John Cboins and Darryl T. Agostinelli. All Rights Reserved.
+QMAKE_INFO_PLIST = build/Info.plist
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -57,12 +58,6 @@ CONFIG(debug, debug|release) {
 	DESTDIR = build/debug
 } else {
 	DESTDIR = build/release
-}
-
-CONFIG (debug, debug|release) {
-	mac {
-		QMAKE_INFO_PLIST = build/Info.plist
-	}
 }
 
 # Windows only icon

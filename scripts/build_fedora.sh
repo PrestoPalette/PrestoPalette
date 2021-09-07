@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -x
+
 pushd `pwd`
 
 cd $(dirname $(realpath -s "$BASH_SOURCE"))

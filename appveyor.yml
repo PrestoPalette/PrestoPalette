@@ -1,18 +1,124 @@
-image: Visual Studio 2017
-
 environment:
   matrix:
-  - QTDIR: C:\Qt\5.10.1\msvc2017_64
+    - job_name: Windows-VS2017
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
-init:
-- set PATH=%QTDIR%\bin;%PATH%;
-- set PATH=C:\Program Files (x86)\Inno Setup 5;%PATH%;
-- call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+    - job_name: Windows-VS2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
-build_script:
-- call scripts\build_windows.bat
+    - job_name: Linux
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-test: off
+    - job_name: macOS
+      APPVEYOR_BUILD_WORKER_IMAGE: macos
 
-artifacts:
-- path: installer\*
+matrix:
+  fast_finish: true
+
+for:
+
+# ======================================
+#      Windows - VS2017
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Windows-VS2017
+
+  init:
+  - echo "Init for Windows"
+  - set QTDIR=C:\Qt\5.10.1\msvc2017_64
+  - set PATH=%QTDIR%\bin;%PATH%;
+  - set PATH=C:\Program Files (x86)\Inno Setup 5;%PATH%;
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+  build_script:
+  - echo "Build for Windows"
+  - call scripts\build_windows.bat
+
+  test: off
+
+  artifacts:
+  - path: installer\*.exe
+    name: windows-vs2017-prestopalette-installer
+
+# ======================================
+#      Windows - VS2019
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Windows-VS2019
+
+  init:
+  - echo "Init for Windows"
+  - set QTDIR=C:\Qt\5.15.2\msvc2019_64
+  - set PATH=%QTDIR%\bin;%PATH%;
+  - set PATH=C:\Program Files (x86)\Inno Setup 6;%PATH%;
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+  build_script:
+  - echo "Build for Windows"
+  - call scripts\build_windows.bat
+
+  test: off
+
+  artifacts:
+  - path: installer\*.exe
+    name: windows-vs2019-prestopalette-installer
+
+# ======================================
+#      Linux
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Linux
+
+  init:
+  - echo "Init for Linux"
+
+  install:
+  - echo "Install for Linux"
+  - sh: sudo ./scripts/setup_ubuntu.sh
+
+  build_script:
+  - echo "Build for Linux"
+  - ./scripts/build_qmake.sh
+  - find .
+
+  test: off
+
+# ======================================
+#      macOS
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: macOS
+
+  init:
+  - echo "Init for macOS"
+  - export QTDIR=$HOME/Qt/5.15/clang_64
+  - export PATH=$QTDIR/bin:$PATH
+
+  install:
+  - echo "Install for macOS"
+  - sh: brew install pngcrush
+
+  build_script:
+  - echo "Build for macOS"
+  - ./scripts/build_qmake.sh
+
+  test: off
+
+  artifacts:
+  - path: build/release/
+    name: osx-prestopalette-release
+
+  - path: build/debug/
+    name: osx-prestopalette-debug

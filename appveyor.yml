@@ -122,7 +122,7 @@ for:
   - security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
   - 'security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$psw" build.keychain'
   - security find-identity -v
-  - /usr/bin/codesign --force -s "<identity-id>" ./build/release/ -v
+  - /usr/bin/codesign --force -s "64E50FB8FE487F18D7793B126068D156DEAD6C65" ./build/release/ -v
 
   test: off
 

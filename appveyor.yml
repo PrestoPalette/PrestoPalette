@@ -114,6 +114,15 @@ for:
   - echo "Build for macOS"
   - cmake -Bbuild .
   - ./scripts/build_qmake.sh
+  - echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+  - psw=`cat /usr/local/var/appveyor/build-agent/psw`
+  - security create-keychain -p "$psw" build.keychain
+  - security default-keychain -s build.keychain
+  - security unlock-keychain -p "$psw" build.keychain
+  - security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+  - 'security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$psw" build.keychain'
+  - security find-identity -v
+  - /usr/bin/codesign --force -s "<identity-id>" ./build/release/ -v
 
   test: off
 

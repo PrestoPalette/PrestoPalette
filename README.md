@@ -1,4 +1,4 @@
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/prestopalette/prestopalette?svg=true&passingText=AppVeyor)](https://ci.appveyor.com/project/dagostinelli/prestopalette) 
+[![Build status](https://ci.appveyor.com/api/projects/status/2blmcpfiv4w3dtjh/branch/master?svg=true)](https://ci.appveyor.com/project/dagostinelli/prestopalette/branch/master)
 
 
 # PrestoPalette

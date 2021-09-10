@@ -124,7 +124,7 @@ for:
   - security find-identity -v
 # - /usr/bin/codesign --force --sign '64E50FB8FE487F18D7793B126068D156DEAD6C65 "Developer ID Application: Saggio Technologies LLC (77QR77825Z)"' ./build/release/ -v
 # - /usr/bin/codesign --force -s  ./build/release/ -v
-  - macdeployqt ./build/release/PrestoPalette.app
+  - macdeployqt ./build/release/PrestoPalette.app -codesign=77QR77825Z
   - /usr/bin/codesign --force --deep -s "77QR77825Z" ./build/release/PrestoPalette.app -v
   - find .
 

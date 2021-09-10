@@ -123,7 +123,8 @@ for:
   - 'security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$psw" build.keychain'
   - security find-identity -v
   - macdeployqt ./build/release/PrestoPalette.app -codesign=77QR77825Z
-  - /usr/bin/codesign --deep --force --verify --verbose --sign "Developer ID Application: 77QR77825Z" ./build/release/PrestoPalette.app
+#  - /usr/bin/codesign --deep --force --verify --verbose --sign "Developer ID Application: 77QR77825Z" ./build/release/PrestoPalette.app
+  - /usr/bin/codesign --verify ./build/release/PrestoPalette.app
 
   test: off
 

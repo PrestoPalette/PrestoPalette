@@ -112,7 +112,19 @@ for:
 
   build_script:
   - echo "Build for macOS"
+  - cmake -Bbuild .
   - ./scripts/build_qmake.sh
+  - echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+  - psw=`cat /usr/local/var/appveyor/build-agent/psw`
+  - security create-keychain -p "$psw" build.keychain
+  - security default-keychain -s build.keychain
+  - security unlock-keychain -p "$psw" build.keychain
+  - security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+  - 'security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$psw" build.keychain'
+  - security find-identity -v
+  - macdeployqt ./build/release/PrestoPalette.app -codesign=77QR77825Z
+#  - /usr/bin/codesign --deep --force --verify --verbose --sign "Developer ID Application: 77QR77825Z" ./build/release/PrestoPalette.app
+  - /usr/bin/codesign --verify --verbose ./build/release/PrestoPalette.app
 
   test: off
 

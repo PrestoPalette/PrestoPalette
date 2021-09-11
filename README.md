@@ -7,17 +7,15 @@
 
 ![](https://raw.githubusercontent.com/PrestoPalette/PrestoPalette-Packaging/master/screenshots/1.png)
 
-Install (easy way)
+Download
+--------
+
+All download links are available on the official webpage
+
+https://prestopalette.github.io/
+
+Compile
 -------
-
-- <a href="https://github.com/PrestoPalette/PrestoPalette/releases">Windows</a>
-- Mac - Help us by becoming a packager for Mac OSX (the app already builds for Mac) (See Package Maintainers section below)
-- Linux Fedora - `sudo dnf install prestopalette`
-- Linux RedHat / CentOS - Install EPEL, then `sudo yum install prestopalette`
-- Linux Other - You may fetch the source and compile it yourself. See below.
-
-Install (hard way - compile it yourself)
------------------------
 
 There are mulitple ways to do this.  
 
